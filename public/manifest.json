@@ -1,0 +1,20 @@
+{
+  "short_name": "ENEM Tracker",
+  "name": "ENEM Study Tracker",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/study/192/192",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://picsum.photos/seed/study/512/512",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#4f46e5",
+  "background_color": "#fafaf9"
+}
