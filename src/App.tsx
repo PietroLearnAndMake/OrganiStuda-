@@ -629,7 +629,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="px-6 mt-8">
+      <main className="px-6 mt-8 pb-32">
         <AnimatePresence mode="wait">
           {currentTab === 'home' ? (
             !selectedSubjectId ? (
@@ -1565,7 +1565,7 @@ export default function App() {
       </main>
 
       {/* Bottom Navigation (Mobile Feel) */}
-      <nav className={`fixed bottom-0 left-0 right-0 border-t px-4 py-4 flex justify-around items-center z-20 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+      <nav className={`fixed bottom-0 left-0 right-0 border-t px-4 py-4 pb-8 flex justify-around items-center z-20 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{paddingBottom: 'max(1rem, env(safe-area-inset-bottom))', paddingLeft: 'max(1rem, env(safe-area-inset-left))', paddingRight: 'max(1rem, env(safe-area-inset-right))'}}>
         <button 
           onClick={() => {
             setCurrentTab('home');
