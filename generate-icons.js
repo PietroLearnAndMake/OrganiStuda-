@@ -21,5 +21,7 @@ function generateIcon(size, filename) {
   console.log(`Generated ${filename} (${buffer.length} bytes)`);
 }
 
-generateIcon(192, './public/icon-192.png');
-generateIcon(512, './public/icon-512.png');
+const sizes = [48, 72, 96, 144, 192, 512];
+sizes.forEach(size => {
+  generateIcon(size, `./public/icon-${size}.png`);
+});
