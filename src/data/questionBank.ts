@@ -3067,6 +3067,21 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       "institution": "ENEM",
       "year": 2017,
       "topic": "Questões Oficiais ENEM (2017-2021)"
+    },
+    {
+      "text": "(2015) Nesse poema, o líder angolano Agostinho Neto, na década de 1940, evoca o pan-africanismo com o objetivo de",
+      "options": [
+        "incitar a luta por políticas de ações afirmativas na América e na África.",
+        "reconhecer as desigualdades sociais entre os negros de Angola e dos Estados Unidos.",
+        "descrever o quadro de pobreza após os processos de independência no continente africano.",
+        "solicitar o engajamento dos negros estadunidenses na luta armada pela independência em Angola.",
+        "conclamar as populações negras de diferentes países a apoiar as lutas por igualdade e independência."
+      ],
+      "correctAnswer": 4,
+      "explanation": "O pan-africanismo busca a união e solidariedade entre todos os povos de ascendência africana, visando a libertação e igualdade.",
+      "topic": "História da África",
+      "institution": "ENEM",
+      "year": 2015
     }
   ],
   "por": [
@@ -5403,6 +5418,21 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       "institution": "ENEM",
       "year": 2017,
       "topic": "Questões Oficiais ENEM (2017-2021)"
+    },
+    {
+      "text": "(2009) A utilização de nanopartículas na indústria e na medicina requer estudos mais detalhados, pois",
+      "options": [
+        "as partículas, quanto menores, mais potentes e radiativas se tornam.",
+        "as partículas podem ser manipuladas, mas não caracterizadas com a atual tecnologia.",
+        "as propriedades biológicas das partículas somente podem ser testadas em microrganismos.",
+        "as partículas podem atravessar poros e canais celulares, o que poderia causar impactos desconhecidos aos seres vivos e, até mesmo, aos ecossistemas.",
+        "o organismo humano apresenta imunidade contra partículas tão pequenas, já que apresentam a mesma dimensão das bactérias."
+      ],
+      "correctAnswer": 3,
+      "explanation": "O tamanho reduzido das nanopartículas permite que elas interajam com estruturas celulares de formas ainda não totalmente compreendidas.",
+      "topic": "Biotecnologia",
+      "institution": "ENEM",
+      "year": 2009
     }
   ],
   "red": [
@@ -5864,6 +5894,56 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       "institution": "ENEM",
       "year": 2019,
       "topic": "Análise de Temas Anteriores (ENEM)"
+    }
+  ],
+  "geo": [
+    {
+      "text": "(2009) Com base nas informações do mapa acerca dos conflitos pela posse de terra no Brasil, a região",
+      "options": [
+        "conhecida historicamente como das Missões Jesuíticas é a de maior violência.",
+        "do Bico do Papagaio apresenta os números mais expressivos.",
+        "conhecida como oeste baiano tem o maior número de mortes.",
+        "do norte do Mato Grosso, área de expansão da agricultura mecanizada, é a mais violenta do país.",
+        "da Zona da Mata mineira teve o maior registro de mortes."
+      ],
+      "correctAnswer": 1,
+      "explanation": "A região do Bico do Papagaio (confluência de TO, PA e MA) é historicamente marcada por intensos conflitos agrários.",
+      "topic": "Geografia Agrária",
+      "institution": "ENEM",
+      "year": 2009
+    }
+  ],
+  "fis": [
+    {
+      "text": "(2012) Uma empresa de transportes precisa efetuar a entrega de uma encomenda o mais breve possível. Para tanto, a equipe de logística analisa o trajeto desde a empresa até o local da entrega. Ela verifica que o trajeto apresenta dois trechos de distâncias diferentes. No primeiro trecho, a velocidade máxima permitida é de 80 km/h e a distância a ser percorrida é de 80 km. No segundo trecho, cujo comprimento vale 60 km, a velocidade máxima permitida é 120 km/h. Supondo que as condições de trânsito sejam favoráveis para que o veículo da empresa ande continuamente na velocidade máxima permitida, qual será o tempo necessário, em horas, para a realização da entrega?",
+      "options": [
+        "0,7",
+        "1,4",
+        "1,5",
+        "2,0"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Tempo 1 = 80km / 80km/h = 1h. Tempo 2 = 60km / 120km/h = 0,5h. Tempo total = 1 + 0,5 = 1,5h.",
+      "topic": "Cinemática",
+      "institution": "ENEM",
+      "year": 2012
+    }
+  ],
+  "qui": [
+    {
+      "text": "(2010) Em visita a uma usina sucroalcooleira, um grupo de alunos pôde observar a série de processos de beneficiamento da cana-de-açúcar, entre os quais se destacam: 1. A cana chega cortada da lavoura... e é passada por um eletroímã para a retirada de materiais metálicos. 2. Após se esmagar a cana, o bagaço segue para as caldeiras... 3. O caldo primário... é passado por filtros e sofre tratamento para transformar-se em açúcar refinado e etanol. Com base nos destaques da observação dos alunos, quais operações físicas de separação de materiais foram realizadas nas etapas de beneficiamento da cana-de-açúcar?",
+      "options": [
+        "Separação mecânica, extração, decantação.",
+        "Separação magnética, combustão, filtração.",
+        "Separação magnética, extração, filtração.",
+        "Imantação, combustão, peneiração.",
+        "Imantação, destilação, filtração."
+      ],
+      "correctAnswer": 2,
+      "explanation": "1. Eletroímã = Separação magnética (ou imantação). 2. Esmagamento para tirar o caldo = Extração. 3. Filtros = Filtração.",
+      "topic": "Separação de misturas",
+      "institution": "ENEM",
+      "year": 2010
     }
   ]
 };
