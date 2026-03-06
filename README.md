@@ -8,7 +8,7 @@ O OrganiStuda transforma a preparação para o vestibular em uma jornada envolve
 
 ## ✨ Funcionalidades Principais
 
-- **Banco de Questões Extenso:** Acesse um vasto banco de dados com milhares de questões do ENEM e de simulados renomados, categorizadas por matéria e origem.
+- **Banco de Questões Extenso:** Acesse um vasto banco de dados com milhares de questões, categorizadas por matéria e origem. As questões são **sugestões geradas por Inteligência Artificial** para fins pedagógicos, garantindo um aprendizado diversificado e sem violação de direitos autorais.
 - **Cronograma de Estudos Inteligente:** Organize seu tempo de estudo por matérias (Matemática, Linguagens, Humanas, Natureza) com um cronograma intuitivo.
 - **Gamificação Avançada:**
   - **Sistema de Conquistas:** Desbloqueie mais de 25 medalhas exclusivas (Comum, Raro, Épico, Lendário) ao responder questões, manter sequências de acertos e concluir tópicos.
