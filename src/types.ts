@@ -19,6 +19,12 @@ export interface UserProfile {
   achievements: string[];
   streak: number;
   lastLogin: string | null;
+  xp: number;
+  level: number;
+  totalCorrect: number;
+  totalAnswered: number;
+  consecutiveCorrect: number;
+  bestConsecutive: number;
 }
 
 export interface Question {
@@ -41,4 +47,24 @@ export interface SavedQuestion extends Question {
   id: string;
   subjectId: string;
   attempts: Attempt[];
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  xpReward: number;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  category: 'questions' | 'topics' | 'streak' | 'accuracy' | 'special';
+  condition: (profile: UserProfile, subjects: Subject[], savedQuestions: SavedQuestion[]) => boolean;
+}
+
+export interface ToastNotification {
+  id: string;
+  type: 'achievement' | 'levelup' | 'streak' | 'info' | 'error';
+  title: string;
+  message: string;
+  icon?: string;
+  duration?: number;
 }
