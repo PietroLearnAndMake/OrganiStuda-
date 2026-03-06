@@ -17,6 +17,22 @@
           navigator.serviceWorker.register('/service-worker.js')
             .then(registration => {
               console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              
+              // Request notification permission
+              if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                  if (permission === 'granted') {
+                    console.log('Notification permission granted.');
+                  }
+                });
+              }
+
+              // Register for background sync if supported
+              if ('sync' in registration) {
+                registration.sync.register('sync-data')
+                  .then(() => console.log('Background sync registered'))
+                  .catch(err => console.log('Background sync failed', err));
+              }
             })
             .catch(err => {
               console.log('ServiceWorker registration failed: ', err);

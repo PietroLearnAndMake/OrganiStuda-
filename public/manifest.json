@@ -7,6 +7,9 @@
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#6c2cff",
+  "categories": ["education", "productivity"],
+  "lang": "pt-BR",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -20,5 +23,13 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.organistuda.app",
+      "id": "com.organistuda.app"
+    }
+  ],
+  "prefer_related_applications": false
 }
