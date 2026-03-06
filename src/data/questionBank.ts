@@ -1590,14 +1590,30 @@ export const QUESTION_BANK: Record<string, Question[]> = {
     }
   ],
   "his": [
-    {
+        {
       "text": "O sistema de Capitanias Hereditárias, implementado pela Coroa Portuguesa no Brasil, tinha como principal objetivo:",
       "options": [
         "Promover a igualdade social.",
         "Garantir a ocupação e defesa do território com baixo custo para a Coroa.",
         "Implantar a democracia parlamentar.",
         "Eliminar a escravidão indígena.",
-        "Estabelecer relações comerciais com a Espanha."
+        "Estabelecer relações comerciais com a Espanha.",
+        {
+            text: "(SAS 2022) Nessa passagem da narrativa 'The Help', há um diálogo entre Aibileen e Miss Leefolt. O posicionamento desta última reflete, primordialmente, uma argumentação sobre",
+            options: [
+                "relações trabalhistas.",
+                "equidade de gênero.",
+                "práticas segregacionistas.",
+                "patriarcado norte-americano.",
+                "reconhecimento meritocrático."
+            ],
+            correctAnswer: 2,
+            explanation: "A patroa sugere que a empregada negra use um banheiro separado na garagem em vez do banheiro da casa, o que caracteriza a segregação racial comum no sul dos EUA na época.",
+            topic: "Ciências Humanas",
+            institution: "SAS",
+            year: 2022
+        }
+    
       ],
       "correctAnswer": 1,
       "explanation": "As capitanias foram uma forma de delegar a colonização a particulares, transferindo os custos e riscos para os donatários.",
@@ -3085,14 +3101,45 @@ export const QUESTION_BANK: Record<string, Question[]> = {
     }
   ],
   "por": [
-    {
+        {
       "text": "No contexto da comunicação digital, o uso de emojis e figurinhas cumpre qual função primordial?",
       "options": [
         "Substituir completamente a linguagem escrita.",
         "Dificultar a compreensão para quem não é nativo digital.",
         "Complementar a carga emocional e o sentido da mensagem.",
         "Reduzir o tempo de digitação sem agregar valor semântico.",
-        "Isolar grupos sociais específicos através de códigos secretos."
+        "Isolar grupos sociais específicos através de códigos secretos.",
+        {
+            text: "(SAS 2022) No excerto da narrativa do escritor nigeriano Chinua Achebe, há menção às expressões 'ekwe' e 'ogene', as quais, nesse contexto, referem-se a",
+            options: [
+                "armas letais.",
+                "comidas típicas.",
+                "utensílios agrícolas.",
+                "vestimentas religiosas.",
+                "instrumentos musicais."
+            ],
+            correctAnswer: 4,
+            explanation: "O texto menciona que Unoka 'podia ouvir em sua mente os ritmos intrincados do ekwe e do udu e do ogene', associando-os a música e instrumentos.",
+            topic: "Linguagens e Códigos",
+            institution: "SAS",
+            year: 2022
+        },
+        {
+            text: "(SAS 2022) No infográfico 'Hispanic Buying Power', os elementos verbais e não verbais destacam que",
+            options: [
+                "a comunidade latina nos EUA é a mais poderosa economicamente.",
+                "os latinos são grandes consumidores de produtos canadenses.",
+                "os canadenses constituem a população com maior poder de compra.",
+                "os latinos apresentam crescimento no mercado consumidor.",
+                "as crianças latinas correspondem a 30% do mercado consumidor."
+            ],
+            correctAnswer: 3,
+            explanation: "O infográfico mostra um gráfico de crescimento ('Spending Growth') e dados sobre o aumento da população hispânica e seu poder de compra de 1 trilhão de dólares.",
+            topic: "Linguagens e Códigos",
+            institution: "SAS",
+            year: 2022
+        }
+    
       ],
       "correctAnswer": 2,
       "explanation": "Emojis e figurinhas funcionam como elementos não-verbais que ajudam a transmitir entonação, emoção e contexto, complementando o texto escrito.",
@@ -4115,14 +4162,30 @@ export const QUESTION_BANK: Record<string, Question[]> = {
     }
   ],
   "bio": [
-    {
+        {
       "text": "Qual organela celular é responsável pela produção de energia (ATP) através da respiração celular?",
       "options": [
         "Ribossomo",
         "Lisossomo",
         "Mitocôndria",
         "Complexo de Golgi",
-        "Retículo Endoplasmático"
+        "Retículo Endoplasmático",
+        {
+            text: "(SAS 2022) O Ziziphus joazeiro é uma árvore de tronco espinhento de porte mediano... Essas características (raízes profundas, folhas coriáceas, sempre verde na seca) estão relacionadas à adaptação ao bioma",
+            options: [
+                "Pampas.",
+                "Pantanal.",
+                "Caatinga.",
+                "Amazônia.",
+                "Mata Atlântica."
+            ],
+            correctAnswer: 2,
+            explanation: "As adaptações descritas (espinhos, raízes profundas para buscar água e resistência à seca) são típicas de plantas da Caatinga (xerofitismo).",
+            topic: "Ciências da Natureza",
+            institution: "SAS",
+            year: 2022
+        }
+    
       ],
       "correctAnswer": 2,
       "explanation": "As mitocôndrias são as 'usinas' da célula, onde ocorre a respiração celular aeróbica para produção de ATP.",
@@ -5914,13 +5977,29 @@ export const QUESTION_BANK: Record<string, Question[]> = {
     }
   ],
   "fis": [
-    {
+        {
       "text": "(2012) Uma empresa de transportes precisa efetuar a entrega de uma encomenda o mais breve possível. Para tanto, a equipe de logística analisa o trajeto desde a empresa até o local da entrega. Ela verifica que o trajeto apresenta dois trechos de distâncias diferentes. No primeiro trecho, a velocidade máxima permitida é de 80 km/h e a distância a ser percorrida é de 80 km. No segundo trecho, cujo comprimento vale 60 km, a velocidade máxima permitida é 120 km/h. Supondo que as condições de trânsito sejam favoráveis para que o veículo da empresa ande continuamente na velocidade máxima permitida, qual será o tempo necessário, em horas, para a realização da entrega?",
       "options": [
         "0,7",
         "1,4",
         "1,5",
-        "2,0"
+        "2,0",
+        {
+            text: "(SAS 2022) Um físico está desenvolvendo um projeto de uma grande piscina de ondas... Para a amplitude de oscilação vertical da boia ser máxima, o maior comprimento de onda que as ondas de água geradas pelas fontes F1 e F2 podem ter é de",
+            options: [
+                "2 m.",
+                "4 m.",
+                "8 m.",
+                "12 m.",
+                "16 m."
+            ],
+            correctAnswer: 1,
+            explanation: "Para interferência construtiva máxima, a diferença de caminho (Δd) deve ser um múltiplo inteiro do comprimento de onda (λ). Δd = d2 - d1. d1 = 6m, d2 = sqrt(6^2 + 8^2) = 10m. Δd = 10 - 6 = 4m. Para o maior λ, Δd = 1*λ => λ = 4m.",
+            topic: "Ciências da Natureza",
+            institution: "SAS",
+            year: 2022
+        }
+    
       ],
       "correctAnswer": 2,
       "explanation": "Tempo 1 = 80km / 80km/h = 1h. Tempo 2 = 60km / 120km/h = 0,5h. Tempo total = 1 + 0,5 = 1,5h.",
