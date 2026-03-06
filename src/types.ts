@@ -16,6 +16,9 @@ export interface Subject {
 export interface UserProfile {
   name: string;
   photo: string | null;
+  achievements: string[];
+  streak: number;
+  lastLogin: string | null;
 }
 
 export interface Question {
@@ -23,6 +26,9 @@ export interface Question {
   options: string[];
   correctAnswer: number;
   explanation: string;
+  topic?: string;
+  institution?: string;
+  year?: number;
 }
 
 export interface Attempt {

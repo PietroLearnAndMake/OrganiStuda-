@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { QUESTION_BANK } from './data/questionBank';
 import { 
   Calculator, 
   BookOpen, 
@@ -22,7 +23,19 @@ import {
   X,
   Trash2,
   MoreVertical,
-  Share2
+  Share2,
+  Lightbulb,
+  Search,
+  Building2,
+  Bookmark,
+  Clock,
+  List,
+  ChevronDown,
+  SlidersHorizontal,
+  Target,
+  Play,
+  XCircle,
+  Brain
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Subject, Topic, UserProfile, Question, SavedQuestion, Attempt } from './types';
@@ -47,13 +60,22 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 export default function App() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [profile, setProfile] = useState<UserProfile>({ name: 'Estudante', photo: null });
+  const [profile, setProfile] = useState<UserProfile>({ name: 'Estudante', photo: null, achievements: [], streak: 0, lastLogin: null });
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
-  const [currentTab, setCurrentTab] = useState<'home' | 'achievements' | 'questions'>('home');
+  const [currentTab, setCurrentTab] = useState<'home' | 'achievements' | 'questions' | 'pomodoro' | 'tasks'>('home');
   const [isInitialized, setIsInitialized] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [newTopicTitle, setNewTopicTitle] = useState('');
   const [showSubjectMenu, setShowSubjectMenu] = useState(false);
+  
+  // Pomodoro & Tasks State
+  const [pomodoroTime, setPomodoroTime] = useState(25 * 60);
+  const [pomodoroActive, setPomodoroActive] = useState(false);
+  const [pomodoroMode, setPomodoroMode] = useState<'work' | 'break'>('work');
+  const [isEditingTime, setIsEditingTime] = useState(false);
+  const [customTimeInput, setCustomTimeInput] = useState('25');
+  const [tasks, setTasks] = useState<{id: string, text: string, completed: boolean}[]>([]);
+  const [newTaskText, setNewTaskText] = useState('');
   
   // Question Generator State
   const [savedQuestions, setSavedQuestions] = useState<SavedQuestion[]>([]);
@@ -62,9 +84,25 @@ export default function App() {
   const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [questionMode, setQuestionMode] = useState<'random' | 'filter' | 'stats'>('random');
+
+  // Filter State
+  const [filterInstitution, setFilterInstitution] = useState<string>('');
+  const [filterDiscipline, setFilterDiscipline] = useState<string>('');
+  const [filterTopic, setFilterTopic] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<SavedQuestion[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Load data from localStorage
   useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
     const savedSubjects = localStorage.getItem('enem_subjects');
     const savedProfile = localStorage.getItem('enem_profile');
     const savedTheme = localStorage.getItem('enem_theme');
@@ -113,7 +151,31 @@ export default function App() {
     }
 
     if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
+      const parsedProfile = JSON.parse(savedProfile);
+      const today = new Date().toISOString().split('T')[0];
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      if (parsedProfile.lastLogin === yesterdayStr) {
+        parsedProfile.streak += 1;
+        // Show streak notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-10 right-10 bg-orange-600 text-white p-4 rounded-xl shadow-2xl z-50 flex items-center gap-4 animate-bounce';
+        notification.innerHTML = `
+          <div class="text-3xl">🔥</div>
+          <div>
+            <div class="font-bold">Sequência de ${parsedProfile.streak} dias!</div>
+            <div class="text-sm text-orange-100">Continue assim!</div>
+          </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+      } else if (parsedProfile.lastLogin !== today) {
+        parsedProfile.streak = 1;
+      }
+      parsedProfile.lastLogin = today;
+      setProfile(parsedProfile);
     }
 
     if (savedTheme) {
@@ -123,6 +185,11 @@ export default function App() {
     if (savedQs) {
       setSavedQuestions(JSON.parse(savedQs));
     }
+
+    const savedTasks = localStorage.getItem('enem_tasks');
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks));
+    }
     
     // Simple hash-based routing
     const handleHashChange = () => {
@@ -131,6 +198,10 @@ export default function App() {
         setCurrentTab('questions');
       } else if (hash === '#achievements') {
         setCurrentTab('achievements');
+      } else if (hash === '#pomodoro') {
+        setCurrentTab('pomodoro');
+      } else if (hash === '#tasks') {
+        setCurrentTab('tasks');
       } else {
         setCurrentTab('home');
       }
@@ -150,8 +221,29 @@ export default function App() {
       localStorage.setItem('enem_profile', JSON.stringify(profile));
       localStorage.setItem('enem_theme', darkMode ? 'dark' : 'light');
       localStorage.setItem('enem_saved_questions', JSON.stringify(savedQuestions));
+      localStorage.setItem('enem_tasks', JSON.stringify(tasks));
     }
-  }, [subjects, profile, isInitialized, darkMode, savedQuestions]);
+  }, [subjects, profile, isInitialized, darkMode, savedQuestions, tasks]);
+
+  // Pomodoro Timer Logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (pomodoroActive && pomodoroTime > 0) {
+      interval = setInterval(() => {
+        setPomodoroTime((time) => time - 1);
+      }, 1000);
+    } else if (pomodoroTime === 0) {
+      setPomodoroActive(false);
+      if (pomodoroMode === 'work') {
+        setPomodoroMode('break');
+        setPomodoroTime(5 * 60);
+      } else {
+        setPomodoroMode('work');
+        setPomodoroTime(25 * 60);
+      }
+    }
+    return () => clearInterval(interval);
+  }, [pomodoroActive, pomodoroTime, pomodoroMode]);
 
   const totalTopics = useMemo(() => 
     subjects.reduce((acc, s) => acc + s.topics.length, 0), 
@@ -278,72 +370,62 @@ export default function App() {
     }
   };
 
-  const selectQuestion = async () => {
+  const handleSearch = () => {
     setLoadingQuestion(true);
+    setHasSearched(true);
+    setActiveQuestionId(null);
     setSelectedOption(null);
     setShowExplanation(false);
 
     try {
-      const subject = subjects.find(s => s.id === selectedSubjectForQuestion);
-      
       let allPreDefined: SavedQuestion[] = [];
       
-      // Collect all questions from the selected subject or all subjects if 'geral'
-      const subjectsToSearch = selectedSubjectForQuestion === 'geral' ? subjects : (subject ? [subject] : []);
-      
-      subjectsToSearch.forEach(s => {
-        s.topics.forEach(t => {
-          if (t.questions && t.questions.length > 0) {
-            t.questions.forEach((q, idx) => {
-              allPreDefined.push({
-                ...q,
-                id: `pre-${t.id}-${idx}`,
-                subjectId: s.id,
-                attempts: []
-              });
-            });
-          }
+      Object.entries(QUESTION_BANK).forEach(([subjectId, questions]) => {
+        questions.forEach((q, idx) => {
+          allPreDefined.push({
+            ...q,
+            id: `bank-${subjectId}-${idx}`,
+            subjectId: subjectId,
+            attempts: []
+          });
         });
       });
 
-      if (allPreDefined.length === 0) {
-        alert("Não há questões cadastradas para este tema no momento.");
-        setLoadingQuestion(false);
-        return;
+      let results = allPreDefined;
+
+      if (filterInstitution) {
+        results = results.filter(q => (q.institution || 'ENEM') === filterInstitution);
+      }
+      if (filterDiscipline) {
+        results = results.filter(q => q.subjectId === filterDiscipline);
+      }
+      if (filterTopic) {
+        const term = filterTopic.toLowerCase();
+        results = results.filter(q => 
+          (q.topic && q.topic.toLowerCase().includes(term)) || 
+          (q.text && q.text.toLowerCase().includes(term))
+        );
       }
 
-      // Prioritize questions that haven't been done yet (no successful attempts in savedQuestions)
-      // First, check which of these IDs are already in savedQuestions and have a correct attempt
-      const getCorrectAttemptsCount = (qId: string) => {
-        const saved = savedQuestions.find(sq => sq.id === qId);
-        return saved ? saved.attempts.filter(a => a.isCorrect).length : 0;
-      };
-
-      const unattempted = allPreDefined.filter(pq => getCorrectAttemptsCount(pq.id) === 0);
-      
-      let selectedPre: SavedQuestion;
-      
-      if (unattempted.length > 0) {
-        // Pick a random unattempted question
-        selectedPre = unattempted[Math.floor(Math.random() * unattempted.length)];
-      } else {
-        // All questions have been answered correctly at least once, pick a random one from all
-        selectedPre = allPreDefined[Math.floor(Math.random() * allPreDefined.length)];
-      }
-
-      // Check if it's already in savedQuestions to preserve history, or add it
-      const existing = savedQuestions.find(sq => sq.id === selectedPre.id);
-      if (!existing) {
-        setSavedQuestions(prev => [selectedPre, ...prev]);
-      }
-      
-      setActiveQuestionId(selectedPre.id);
+      setSearchResults(results);
     } catch (error: any) {
-      console.error("Erro ao selecionar questão:", error);
-      alert("Ocorreu um erro ao selecionar a questão. Tente novamente.");
+      console.error("Erro ao buscar questões:", error);
+      alert("Ocorreu um erro ao buscar as questões. Tente novamente.");
     } finally {
       setLoadingQuestion(false);
     }
+  };
+
+
+
+  const openQuestion = (q: SavedQuestion) => {
+    const existing = savedQuestions.find(sq => sq.id === q.id);
+    if (!existing) {
+      setSavedQuestions(prev => [q, ...prev]);
+    }
+    setActiveQuestionId(q.id);
+    setSelectedOption(null);
+    setShowExplanation(false);
   };
 
   const handleAnswer = (optionIdx: number) => {
@@ -370,12 +452,81 @@ export default function App() {
     }));
 
     setSelectedOption(optionIdx);
+
+    if (isCorrect) {
+      // Play sound
+      const audio = new Audio('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
+      audio.play().catch(e => console.warn("Audio play failed (expected on first interaction):", e));
+      
+      // Achievement notification
+      const newAchievements = [...profile.achievements];
+      if (!newAchievements.includes('correct_answer')) {
+          newAchievements.push('correct_answer');
+          setProfile(prev => ({ ...prev, achievements: newAchievements }));
+      }
+    }
   };
 
   const redoQuestion = (qId: string) => {
     setActiveQuestionId(qId);
     setSelectedOption(null);
     setShowExplanation(false);
+  };
+
+  const generateBankQuestion = async () => {
+    if (!selectedSubjectForQuestion) {
+      alert("Por favor, selecione uma matéria para buscar uma questão.");
+      return;
+    }
+
+    setIsGenerating(true);
+    setLoadingQuestion(true);
+    setActiveQuestionId(null);
+    setSelectedOption(null);
+    setShowExplanation(false);
+
+    // Simulate a small delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Collect all questions from selected subject(s)
+    let availableQuestions: SavedQuestion[] = [];
+    
+    const subjectsToSearch = selectedSubjectForQuestion === 'geral' 
+      ? Object.keys(QUESTION_BANK)
+      : [selectedSubjectForQuestion];
+
+    subjectsToSearch.forEach(subjectId => {
+      const bankQuestions = QUESTION_BANK[subjectId] || [];
+      bankQuestions.forEach((q, idx) => {
+        availableQuestions.push({
+          ...q,
+          id: `bank-${subjectId}-${idx}`,
+          subjectId: subjectId,
+          attempts: []
+        });
+      });
+    });
+
+    if (availableQuestions.length === 0) {
+      alert("Ainda não temos questões disponíveis para esta seleção.");
+      setIsGenerating(false);
+      setLoadingQuestion(false);
+      return;
+    }
+
+    const randomQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+
+    // Check if this question is already in savedQuestions to preserve attempts
+    const existing = savedQuestions.find(sq => sq.id === randomQuestion.id);
+    const finalQuestion = existing ? existing : randomQuestion;
+
+    if (!existing) {
+      setSavedQuestions(prev => [finalQuestion, ...prev]);
+    }
+
+    setActiveQuestionId(finalQuestion.id);
+    setIsGenerating(false);
+    setLoadingQuestion(false);
   };
 
   const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
@@ -416,10 +567,9 @@ export default function App() {
                   <User className={`w-8 h-8 ${darkMode ? 'text-stone-600' : 'text-stone-400'}`} />
                 )}
               </div>
-              <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full cursor-pointer shadow-lg hover:bg-indigo-700 transition-colors">
-                <Camera className="w-3.5 h-3.5" />
-                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-              </label>
+              <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-stone-900 flex items-center gap-1 shadow-lg">
+                🔥 {profile.streak}
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -435,7 +585,7 @@ export default function App() {
               <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Rumo à aprovação 🚀</p>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col items-end gap-2 bg-stone-900 p-4 rounded-2xl shadow-lg border border-stone-800">
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => {
@@ -507,7 +657,7 @@ export default function App() {
                     const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
 
                     return (
-                      <div
+                      <motion.div
                         key={subject.id}
                         className={`group relative p-5 rounded-2xl border shadow-sm flex flex-col gap-4 transition-all ${
                           darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
@@ -518,29 +668,29 @@ export default function App() {
                               onClick={() => setSelectedSubjectId(subject.id)}
                               className="flex flex-col items-center gap-3 w-full"
                             >
-                              <div className={`p-4 rounded-2xl ${subject.color} text-white shadow-md`}>
-                                <Icon className="w-8 h-8" />
+                              <div className={`p-5 rounded-3xl ${subject.color} text-white shadow-xl shadow-indigo-500/20`}>
+                                <Icon className="w-10 h-10" />
                               </div>
                               <div>
-                                <h3 className={`font-bold text-lg leading-tight ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}>{subject.name}</h3>
-                                <p className={`text-xs mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>{completed} de {total} tópicos</p>
+                                <h3 className={`font-black text-xl leading-tight ${darkMode ? 'text-white' : 'text-stone-900'}`}>{subject.name}</h3>
+                                <p className={`text-sm mt-1 font-medium ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{completed} de {total} tópicos</p>
                               </div>
                             </button>
                           </div>
                         
-                        <div className="space-y-2 text-center">
-                          <div className="text-[10px] font-black uppercase tracking-widest text-stone-500">
-                            Progresso: {percent}%
+                          <div className="space-y-3 text-center">
+                            <div className="text-xs font-black uppercase tracking-widest text-indigo-500">
+                              {percent}% Concluído
+                            </div>
+                            <div className={`h-3 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${percent}%` }}
+                                className={`h-full ${subject.color} rounded-full`}
+                              />
+                            </div>
                           </div>
-                          <div className={`h-1.5 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${percent}%` }}
-                              className={`h-full ${subject.color}`}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                        </motion.div>
                     );
                   })}
                 </div>
@@ -826,7 +976,7 @@ export default function App() {
                 </div>
               )}
             </motion.div>
-          ) : (
+          ) : currentTab === 'questions' ? (
             <motion.div 
               key="questions"
               initial={{ opacity: 0, y: 20 }}
@@ -835,77 +985,202 @@ export default function App() {
               className="space-y-6"
             >
               <div className="flex flex-col gap-4 mb-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <BrainCircuit className="w-5 h-5 text-indigo-600" />
-                    <h2 className="font-bold text-lg">Gerador de Questões</h2>
+                {/* Question Bank Mode */}
+                <div className={`p-6 rounded-xl shadow-sm border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                  <div className="flex items-center gap-2 mb-6">
+                    <Brain className="w-5 h-5 text-purple-500" />
+                    <h2 className="font-bold text-lg">Banco de Questões</h2>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => {
-                        const url = `${window.location.origin}${window.location.pathname}#questions`;
-                        navigator.clipboard.writeText(url);
-                        alert("Link copiado! Compartilhe este link para abrir o Gerador de Questões diretamente.");
-                      }}
-                      className={`p-2 rounded-xl transition-colors ${darkMode ? 'text-stone-400 hover:bg-stone-800' : 'text-stone-500 hover:bg-stone-100'}`}
-                      title="Compartilhar Link"
-                    >
-                      <Share2 className="w-5 h-5" />
-                    </button>
-                    <button 
-                      onClick={selectQuestion}
-                      disabled={loadingQuestion}
-                      className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 disabled:opacity-50"
-                    >
-                      {loadingQuestion ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-                      Nova Questão
-                    </button>
-                  </div>
-                </div>
-
-                {/* Subject Selector for Questions */}
-                <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                  <button
-                    onClick={() => setSelectedSubjectForQuestion('geral')}
-                    className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
-                      selectedSubjectForQuestion === 'geral'
-                        ? 'bg-indigo-600 text-white'
-                        : darkMode ? 'bg-stone-900 text-stone-500 border border-stone-800' : 'bg-white text-stone-500 border border-stone-200'
-                    }`}
-                  >
-                    Geral
-                  </button>
-                  {subjects.map(s => (
+                  
+                  <div className="flex p-1 bg-stone-100 rounded-xl mb-6 dark:bg-stone-800">
                     <button
-                      key={s.id}
-                      onClick={() => setSelectedSubjectForQuestion(s.id)}
-                      className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
-                        selectedSubjectForQuestion === s.id
-                          ? 'bg-indigo-600 text-white'
-                          : darkMode ? 'bg-stone-900 text-stone-500 border border-stone-800' : 'bg-white text-stone-500 border border-stone-200'
-                      }`}
+                      onClick={() => setQuestionMode('random')}
+                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${questionMode === 'random' ? 'bg-white shadow-sm text-stone-800 dark:bg-stone-700 dark:text-stone-200' : 'text-stone-500 hover:text-stone-700 dark:text-stone-400'}`}
                     >
-                      {s.name}
+                      Aleatório
                     </button>
-                  ))}
+                    <button
+                      onClick={() => setQuestionMode('filter')}
+                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${questionMode === 'filter' ? 'bg-white shadow-sm text-stone-800 dark:bg-stone-700 dark:text-stone-200' : 'text-stone-500 hover:text-stone-700 dark:text-stone-400'}`}
+                    >
+                      Filtros
+                    </button>
+                    <button
+                      onClick={() => setQuestionMode('stats')}
+                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${questionMode === 'stats' ? 'bg-white shadow-sm text-stone-800 dark:bg-stone-700 dark:text-stone-200' : 'text-stone-500 hover:text-stone-700 dark:text-stone-400'}`}
+                    >
+                      Feitas
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {questionMode === 'stats' ? (
+                      <div className={`p-4 rounded-xl ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                        <h3 className="font-bold mb-2">Estatísticas</h3>
+                        {(() => {
+                          const total = savedQuestions.filter(q => q.attempts.length > 0).length;
+                          const correct = savedQuestions.filter(q => q.attempts.some(a => a.isCorrect)).length;
+                          const wrong = total - correct;
+                          return (
+                            <div className="space-y-4 text-sm">
+                              <div className="space-y-2">
+                                <p>Total de questões feitas: {total}</p>
+                                <p className="text-emerald-500">Acertos: {correct}</p>
+                                <p className="text-red-500">Erros: {wrong}</p>
+                              </div>
+                              <div className="border-t pt-4">
+                                <h4 className="font-bold mb-2">Questões Feitas:</h4>
+                                {savedQuestions.filter(q => q.attempts.length > 0).map(q => (
+                                  <div key={q.id} className="flex justify-between items-center py-2 border-b last:border-0">
+                                    <span className="truncate flex-1 mr-2">{q.text.substring(0, 30)}...</span>
+                                    <button 
+                                      onClick={() => redoQuestion(q.id)}
+                                      className="text-xs bg-indigo-600 text-white px-2 py-1 rounded"
+                                    >
+                                      Refazer
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    ) : questionMode === 'random' ? (
+                      <>
+                        <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>
+                          Selecione uma matéria e buscaremos uma questão exclusiva do nosso banco de dados.
+                        </p>
+
+                        <div className="relative">
+                          <select 
+                            value={selectedSubjectForQuestion}
+                            onChange={(e) => setSelectedSubjectForQuestion(e.target.value)}
+                            className={`w-full pl-4 pr-10 py-3 rounded-xl appearance-none outline-none font-medium transition-colors ${
+                              darkMode 
+                                ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
+                                : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
+                            }`}
+                          >
+                            <option value="geral">Todas as Matérias</option>
+                            {subjects.map(s => (
+                              <option key={s.id} value={s.id}>{s.name}</option>
+                            ))}
+                          </select>
+                          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <ChevronDown className="w-4 h-4 text-stone-400" />
+                          </div>
+                        </div>
+
+                        <button 
+                          onClick={generateBankQuestion}
+                          disabled={isGenerating}
+                          className="w-full py-4 rounded-xl font-bold text-white bg-purple-600 hover:bg-purple-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
+                          {isGenerating ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <>
+                              <Brain className="w-5 h-5" />
+                              BUSCAR QUESTÃO
+                            </>
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="relative">
+                            <select 
+                              value={filterInstitution}
+                              onChange={(e) => setFilterInstitution(e.target.value)}
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl appearance-none outline-none text-sm font-medium transition-colors ${
+                                darkMode 
+                                  ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
+                                  : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
+                              }`}
+                            >
+                              <option value="">Instituição</option>
+                              <option value="ENEM">ENEM</option>
+                              <option value="FUVEST">FUVEST</option>
+                              <option value="UNICAMP">UNICAMP</option>
+                            </select>
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                              <ChevronDown className="w-3 h-3 text-stone-400" />
+                            </div>
+                          </div>
+                          
+                          <div className="relative">
+                            <select 
+                              value={filterDiscipline}
+                              onChange={(e) => setFilterDiscipline(e.target.value)}
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl appearance-none outline-none text-sm font-medium transition-colors ${
+                                darkMode 
+                                  ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
+                                  : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
+                              }`}
+                            >
+                              <option value="">Disciplina</option>
+                              {subjects.map(s => (
+                                <option key={s.id} value={s.id}>{s.name}</option>
+                              ))}
+                            </select>
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                              <ChevronDown className="w-3 h-3 text-stone-400" />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="relative">
+                          <input 
+                            type="text"
+                            placeholder="Assunto ou palavra-chave..."
+                            value={filterTopic}
+                            onChange={(e) => setFilterTopic(e.target.value)}
+                            className={`w-full pl-4 pr-4 py-3 rounded-xl outline-none font-medium transition-colors ${
+                              darkMode 
+                                ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50 placeholder-stone-600' 
+                                : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20 placeholder-stone-400'
+                            }`}
+                          />
+                        </div>
+
+                        <button 
+                          onClick={handleSearch}
+                          disabled={isGenerating}
+                          className="w-full py-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
+                          {isGenerating ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <>
+                              <Search className="w-5 h-5" />
+                              FILTRAR QUESTÕES
+                            </>
+                          )}
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 
               {loadingQuestion && (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <Loader2 className="w-12 h-12 text-indigo-600 animate-spin" />
-                  <p className={`font-medium animate-pulse ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Criando questão personalizada...</p>
+                  <Loader2 className="w-12 h-12 text-[#1a569d] animate-spin" />
+                  <p className={`font-medium animate-pulse ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Buscando questões...</p>
                 </div>
               )}
 
-              {activeQuestionId ? (
+              {activeQuestionId && (
                 (() => {
-                  const q = savedQuestions.find(sq => sq.id === activeQuestionId);
+                  const q = searchResults.find(sq => sq.id === activeQuestionId) || savedQuestions.find(sq => sq.id === activeQuestionId);
                   if (!q) return null;
                   
-                  const lastAttempt = q.attempts[q.attempts.length - 1];
+                  const savedQ = savedQuestions.find(sq => sq.id === activeQuestionId);
+                  const lastAttempt = savedQ?.attempts[savedQ.attempts.length - 1];
                   const isAnswered = !!lastAttempt && selectedOption !== null;
-                  const isRedo = q.attempts.length > 1;
+                  const isRedo = savedQ ? savedQ.attempts.length > 1 : false;
 
                   return (
                     <motion.div 
@@ -919,15 +1194,21 @@ export default function App() {
                             {isRedo ? 'Questão (Refeita)' : 'Questão Atual'}
                           </span>
                           <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-tighter bg-emerald-500/10 text-emerald-500 border border-emerald-500/20`}>
-                            Oficial ENEM
+                            {q.institution || 'ENEM'} {q.year || '2023'}
                           </span>
                         </div>
-                        <button 
-                          onClick={() => setActiveQuestionId(null)}
-                          className={`text-xs font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}
-                        >
-                          Fechar
-                        </button>
+                        {questionMode === 'filter' && (
+                          <button 
+                            onClick={() => setActiveQuestionId(null)}
+                            className={`text-xs font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}
+                          >
+                            Voltar aos Resultados
+                          </button>
+                        )}
+                      </div>
+
+                      <div className={`text-xs font-bold uppercase tracking-widest ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                        Assunto: {q.topic}
                       </div>
 
                       <div className={`text-sm font-medium leading-relaxed ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
@@ -985,73 +1266,292 @@ export default function App() {
                               {q.explanation}
                             </div>
                           )}
+
+                          {questionMode === 'random' && (
+                            <button 
+                              onClick={generateBankQuestion}
+                              className="w-full py-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm"
+                            >
+                              PRÓXIMA QUESTÃO
+                              <ChevronRight className="w-5 h-5" />
+                            </button>
+                          )}
                         </motion.div>
                       )}
                     </motion.div>
                   );
                 })()
-              ) : (
+              )}
+              {questionMode === 'filter' && hasSearched && searchResults.length > 0 && !activeQuestionId && (
                 <div className="space-y-4">
-                  <h3 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-stone-700' : 'text-stone-400'}`}>Histórico de Questões</h3>
-                  
-                  {savedQuestions.filter(q => selectedSubjectForQuestion === 'geral' || q.subjectId === selectedSubjectForQuestion).length > 0 ? (
-                    <div className="space-y-3">
-                      {savedQuestions
-                        .filter(q => selectedSubjectForQuestion === 'geral' || q.subjectId === selectedSubjectForQuestion)
-                        .map((q) => {
-                          const lastAttempt = q.attempts[q.attempts.length - 1];
-                          const isCorrect = lastAttempt?.isCorrect;
-                          const redoCount = q.attempts.length;
+                  <h3 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-stone-700' : 'text-stone-400'}`}>Resultados ({searchResults.length})</h3>
+                  <div className="space-y-3">
+                    {searchResults.map((q) => {
+                      const savedQ = savedQuestions.find(sq => sq.id === q.id);
+                      const lastAttempt = savedQ?.attempts[savedQ.attempts.length - 1];
+                      const isCorrect = lastAttempt?.isCorrect;
+                      const redoCount = savedQ?.attempts.length || 0;
 
-                          return (
-                            <div 
-                              key={q.id}
-                              className={`p-4 rounded-2xl border flex items-center justify-between gap-4 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}
-                            >
-                              <div className="flex-1 min-w-0">
-                                <p className={`text-sm font-medium truncate ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>{q.text}</p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  {lastAttempt ? (
-                                    <div className="flex items-center gap-1.5">
-                                      <div className={`w-2 h-2 rounded-full ${isCorrect ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                                      <span className={`text-[10px] font-black uppercase tracking-tighter ${isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
-                                        {isCorrect ? 'Green' : 'Red'} {redoCount > 1 && `(Refeita ${redoCount-1}x)`}
-                                      </span>
-                                    </div>
-                                  ) : (
-                                    <span className={`text-[10px] font-black uppercase tracking-tighter ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Não respondida</span>
-                                  )}
-                                </div>
-                              </div>
-                              <button 
-                                onClick={() => redoQuestion(q.id)}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
-                                  darkMode ? 'bg-stone-800 text-stone-300 hover:bg-stone-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                                }`}
-                              >
-                                {lastAttempt ? 'Refazer' : 'Responder'}
-                              </button>
+                      return (
+                        <div 
+                          key={q.id}
+                          className={`p-4 rounded-2xl border flex items-center justify-between gap-4 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold bg-gray-100 text-gray-600 ${darkMode ? 'bg-stone-800 text-stone-400' : ''}`}>
+                                {q.institution || 'ENEM'} {q.year || '2023'}
+                              </span>
                             </div>
-                          );
-                        })}
-                    </div>
-                  ) : (
-                    <div className={`p-12 rounded-2xl border border-dashed text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-300'}`}>
-                      <BrainCircuit className={`w-16 h-16 mx-auto mb-4 ${darkMode ? 'text-stone-800' : 'text-stone-200'}`} />
-                      <h3 className={`font-bold text-lg mb-2 ${darkMode ? 'text-stone-300' : 'text-stone-800'}`}>Banco de Questões</h3>
-                      <p className={`text-sm max-w-xs mx-auto ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>
-                        Pratique com questões oficiais do ENEM selecionadas para o seu progresso.
-                      </p>
-                      <button 
-                        onClick={selectQuestion}
-                        className="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-indigo-700 transition-colors"
-                      >
-                        Começar a Praticar
-                      </button>
-                    </div>
-                  )}
+                            <p className={`text-sm font-medium truncate ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>{q.text}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              {lastAttempt ? (
+                                <div className="flex items-center gap-1.5">
+                                  <div className={`w-2.5 h-2.5 rounded-full ${isCorrect ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                                  <span className={`text-[10px] font-black uppercase tracking-tighter ${isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
+                                    {isCorrect ? 'ACERTOU' : 'ERROU'} 
+                                    {redoCount > 1 && ` • ${redoCount-1}x REFEITA`}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className={`text-[10px] font-black uppercase tracking-tighter ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Não respondida</span>
+                              )}
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => openQuestion(q)}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
+                              darkMode ? 'bg-stone-800 text-stone-300 hover:bg-stone-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                            }`}
+                          >
+                            {lastAttempt ? 'Refazer' : 'Responder'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
+              {questionMode === 'filter' && hasSearched && searchResults.length === 0 && (
+                <div className={`p-12 rounded-2xl border border-dashed text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-300'}`}>
+                  <Search className={`w-12 h-12 mx-auto mb-4 ${darkMode ? 'text-stone-800' : 'text-stone-200'}`} />
+                  <h3 className={`font-bold text-lg mb-2 ${darkMode ? 'text-stone-300' : 'text-stone-800'}`}>Nenhuma questão encontrada</h3>
+                  <p className={`text-sm max-w-xs mx-auto ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>
+                    Tente ajustar os filtros para encontrar mais resultados.
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          ) : null}
+
+          {currentTab === 'pomodoro' && (
+            <motion.div
+              key="pomodoro"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6 pb-24"
+            >
+              {/* Pomodoro Timer */}
+              <div className={`p-8 rounded-3xl border text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <h2 className={`text-xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-stone-800'}`}>
+                  {pomodoroMode === 'work' ? 'Tempo de Foco' : 'Pausa Curta'}
+                </h2>
+                
+                <div className="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center">
+                  <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="88"
+                      className={`stroke-current ${darkMode ? 'text-stone-800' : 'text-stone-100'}`}
+                      strokeWidth="12"
+                      fill="none"
+                    />
+                    <circle
+                      cx="96"
+                      cy="96"
+                      r="88"
+                      className={`stroke-current ${pomodoroMode === 'work' ? 'text-indigo-500' : 'text-emerald-500'} transition-all duration-1000 ease-linear`}
+                      strokeWidth="12"
+                      fill="none"
+                      strokeDasharray={2 * Math.PI * 88}
+                      strokeDashoffset={2 * Math.PI * 88 * (1 - pomodoroTime / (pomodoroMode === 'work' ? 25 * 60 : 5 * 60))}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className={`text-5xl font-black font-mono tracking-tighter relative z-10 ${darkMode ? 'text-white' : 'text-stone-800'}`}>
+                    {isEditingTime ? (
+                      <input 
+                        type="number"
+                        value={customTimeInput}
+                        onChange={(e) => setCustomTimeInput(e.target.value)}
+                        onBlur={() => {
+                          setIsEditingTime(false);
+                          const newTime = parseInt(customTimeInput);
+                          if (!isNaN(newTime) && newTime > 0) {
+                            setPomodoroTime(newTime * 60);
+                          } else {
+                            setCustomTimeInput(Math.floor(pomodoroTime / 60).toString());
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setIsEditingTime(false);
+                            const newTime = parseInt(customTimeInput);
+                            if (!isNaN(newTime) && newTime > 0) {
+                              setPomodoroTime(newTime * 60);
+                            } else {
+                              setCustomTimeInput(Math.floor(pomodoroTime / 60).toString());
+                            }
+                          }
+                        }}
+                        className={`w-24 text-center bg-transparent border-b-2 outline-none ${darkMode ? 'border-stone-700 text-white' : 'border-stone-300 text-stone-800'}`}
+                        autoFocus
+                      />
+                    ) : (
+                      <span 
+                        onClick={() => {
+                          if (!pomodoroActive) {
+                            setIsEditingTime(true);
+                            setCustomTimeInput(Math.floor(pomodoroTime / 60).toString());
+                          }
+                        }}
+                        className={!pomodoroActive ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}
+                        title={!pomodoroActive ? "Clique para editar o tempo" : ""}
+                      >
+                        {Math.floor(pomodoroTime / 60).toString().padStart(2, '0')}:{(pomodoroTime % 60).toString().padStart(2, '0')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {!pomodoroActive && !isEditingTime && (
+                  <p className={`text-xs mb-6 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+                    Clique no tempo para editar (em minutos)
+                  </p>
+                )}
+
+                <div className="flex items-center justify-center gap-4">
+                  <button
+                    onClick={() => setPomodoroActive(!pomodoroActive)}
+                    className={`w-16 h-16 rounded-full flex items-center justify-center text-white shadow-lg transition-transform active:scale-95 ${
+                      pomodoroMode === 'work' 
+                        ? (pomodoroActive ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-500 hover:bg-indigo-600')
+                        : (pomodoroActive ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-emerald-500 hover:bg-emerald-600')
+                    }`}
+                  >
+                    {pomodoroActive ? <X className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPomodoroActive(false);
+                      setPomodoroTime(pomodoroMode === 'work' ? 25 * 60 : 5 * 60);
+                    }}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center border transition-colors ${
+                      darkMode ? 'border-stone-700 text-stone-400 hover:bg-stone-800' : 'border-stone-200 text-stone-500 hover:bg-stone-50'
+                    }`}
+                  >
+                    <Loader2 className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {currentTab === 'tasks' && (
+            <motion.div
+              key="tasks"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6 pb-24"
+            >
+              {/* To-Do List */}
+              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <h3 className={`font-bold mb-4 flex items-center gap-2 ${darkMode ? 'text-white' : 'text-stone-800'}`}>
+                  <List className="w-5 h-5 text-indigo-500" />
+                  Tarefas de Hoje
+                </h3>
+                
+                <div className="flex gap-2 mb-6">
+                  <input
+                    type="text"
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newTaskText.trim()) {
+                        setTasks([...tasks, { id: Date.now().toString(), text: newTaskText.trim(), completed: false }]);
+                        setNewTaskText('');
+                      }
+                    }}
+                    placeholder="Adicionar nova tarefa..."
+                    className={`flex-1 px-4 py-3 rounded-xl text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-colors ${
+                      darkMode 
+                        ? 'bg-stone-950 border-stone-800 text-white placeholder-stone-500' 
+                        : 'bg-stone-50 border-stone-200 text-stone-800 placeholder-stone-400'
+                    }`}
+                  />
+                  <button
+                    onClick={() => {
+                      if (newTaskText.trim()) {
+                        setTasks([...tasks, { id: Date.now().toString(), text: newTaskText.trim(), completed: false }]);
+                        setNewTaskText('');
+                      }
+                    }}
+                    className="px-4 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-colors"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {tasks.length === 0 ? (
+                    <p className={`text-sm text-center py-4 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+                      Nenhuma tarefa para hoje. Adicione uma acima!
+                    </p>
+                  ) : (
+                    tasks.map(task => (
+                      <div 
+                        key={task.id}
+                        className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                          darkMode 
+                            ? `border-stone-800 ${task.completed ? 'bg-stone-950/50' : 'bg-stone-800/50'}` 
+                            : `border-stone-100 ${task.completed ? 'bg-stone-50' : 'bg-white'}`
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => setTasks(tasks.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t))}
+                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                              task.completed 
+                                ? 'bg-emerald-500 border-emerald-500 text-white' 
+                                : darkMode ? 'border-stone-600' : 'border-stone-300'
+                            }`}
+                          >
+                            {task.completed && <Check className="w-3.5 h-3.5" />}
+                          </button>
+                          <span className={`text-sm font-medium transition-all ${
+                            task.completed 
+                              ? `line-through ${darkMode ? 'text-stone-600' : 'text-stone-400'}` 
+                              : darkMode ? 'text-stone-200' : 'text-stone-700'
+                          }`}>
+                            {task.text}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setTasks(tasks.filter(t => t.id !== task.id))}
+                          className={`p-2 rounded-lg transition-colors ${
+                            darkMode ? 'text-stone-500 hover:text-red-400 hover:bg-stone-800' : 'text-stone-400 hover:text-red-500 hover:bg-red-50'
+                          }`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1091,6 +1591,28 @@ export default function App() {
         >
           <Trophy className="w-6 h-6" />
           <span className="text-[10px] font-bold uppercase tracking-wider">Conquistas</span>
+        </button>
+
+        <button 
+          onClick={() => {
+            setCurrentTab('pomodoro');
+            window.location.hash = 'pomodoro';
+          }}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'pomodoro' ? 'text-indigo-600' : 'text-stone-400'}`}
+        >
+          <Target className="w-6 h-6" />
+          <span className="text-[10px] font-bold uppercase tracking-wider">Foco</span>
+        </button>
+
+        <button 
+          onClick={() => {
+            setCurrentTab('tasks');
+            window.location.hash = 'tasks';
+          }}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'tasks' ? 'text-indigo-600' : 'text-stone-400'}`}
+        >
+          <List className="w-6 h-6" />
+          <span className="text-[10px] font-bold uppercase tracking-wider">Tarefas</span>
         </button>
       </nav>
     </div>
