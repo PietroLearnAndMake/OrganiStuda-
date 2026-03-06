@@ -1,10 +1,14 @@
-const CACHE_NAME = 'organistuda-cache-v2';
-const DYNAMIC_CACHE = 'organistuda-dynamic-v2';
+const CACHE_NAME = 'organistuda-cache-v3';
+const DYNAMIC_CACHE = 'organistuda-dynamic-v3';
 
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/icon-48.png',
+  '/icon-72.png',
+  '/icon-96.png',
+  '/icon-144.png',
   '/icon-192.png',
   '/icon-512.png'
 ];
