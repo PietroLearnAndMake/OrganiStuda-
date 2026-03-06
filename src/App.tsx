@@ -560,14 +560,21 @@ export default function App() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <div className={`w-16 h-16 rounded-full border-2 overflow-hidden flex items-center justify-center transition-colors ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-100 border-stone-200'}`}>
+              <label htmlFor="photo-upload" className={`w-16 h-16 rounded-full border-2 overflow-hidden flex items-center justify-center transition-colors cursor-pointer ${darkMode ? 'bg-stone-800 border-stone-700 hover:border-indigo-500' : 'bg-stone-100 border-stone-200 hover:border-indigo-500'}`}>
                 {profile.photo ? (
                   <img src={profile.photo} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 ) : (
                   <User className={`w-8 h-8 ${darkMode ? 'text-stone-600' : 'text-stone-400'}`} />
                 )}
-              </div>
-              <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-stone-900 flex items-center gap-1 shadow-lg">
+              </label>
+              <input 
+                id="photo-upload" 
+                type="file" 
+                accept="image/*" 
+                className="hidden" 
+                onChange={handlePhotoUpload} 
+              />
+              <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-stone-900 flex items-center gap-1 shadow-lg pointer-events-none">
                 🔥 {profile.streak}
               </div>
             </div>
@@ -585,7 +592,7 @@ export default function App() {
               <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Rumo à aprovação 🚀</p>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2 bg-stone-900 p-4 rounded-2xl shadow-lg border border-stone-800">
+          <div className={`flex flex-col items-end gap-2 p-4 rounded-2xl shadow-sm border transition-colors ${darkMode ? 'bg-stone-900 border-stone-800 shadow-none' : 'bg-white border-stone-200'}`}>
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => {
@@ -593,20 +600,20 @@ export default function App() {
                   navigator.clipboard.writeText(url);
                   alert("Link do App copiado!");
                 }}
-                className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-500'}`}
+                className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
                 title="Compartilhar App"
               >
                 <Share2 className="w-5 h-5" />
               </button>
               <button 
                 onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-stone-800 text-yellow-400' : 'bg-stone-100 text-stone-600'}`}
+                className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-stone-800 text-yellow-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
               >
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
             </div>
             <div className="text-right">
-              <div className="text-3xl font-black text-indigo-600 leading-none">{overallPercentage}%</div>
+              <div className={`text-3xl font-black leading-none ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{overallPercentage}%</div>
               <div className={`text-[10px] uppercase tracking-wider font-bold mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Progresso Total</div>
             </div>
           </div>
@@ -617,7 +624,7 @@ export default function App() {
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${overallPercentage}%` }}
-            className="h-full bg-indigo-600"
+            className={`h-full ${darkMode ? 'bg-indigo-500' : 'bg-indigo-600'}`}
           />
         </div>
       </header>
