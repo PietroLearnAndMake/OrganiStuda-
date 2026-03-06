@@ -1,20 +1,24 @@
 {
-  "short_name": "ENEM Tracker",
-  "name": "ENEM Study Tracker",
+  "name": "Organistuda",
+  "short_name": "Organistuda",
+  "description": "Aplicativo para organizar estudos e resolver questões do ENEM.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#6c2cff",
   "icons": [
     {
-      "src": "https://picsum.photos/seed/study/192/192",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "sizes": "192x192"
+      "purpose": "any maskable"
     },
     {
-      "src": "https://picsum.photos/seed/study/512/512",
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "any maskable"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#4f46e5",
-  "background_color": "#fafaf9"
+  ]
 }
