@@ -6,3 +6,4 @@ coverage/
 *.log
 .env*
 !.env.example
+android_project_v1.8.3.zip
