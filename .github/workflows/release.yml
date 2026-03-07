@@ -48,23 +48,59 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
-          cp app/build/outputs/apk/debug/app-debug.apk ../OrganiStuda.apk
+          cp app/build/outputs/apk/debug/app-debug.apk ../OrganiStuda-${{ github.ref_name }}.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            OrganiStuda.apk
-          name: Release ${{ github.ref_name }}
+            OrganiStuda-${{ github.ref_name }}.apk
+          name: "OrganiStuda ${{ github.ref_name }}"
           body: |
-            Nova versão do OrganiStuda (Organizador e Banco de Questões para ENEM).
-            
-            Alterações nesta versão:
-            - Nome do aplicativo alterado para **OrganiStuda**.
-            - Novo ícone personalizado (centralizado e sem fundo).
-            - Reformulação completa da gamificação.
-            - Lógica de XP progressiva.
-            - Melhorias de UX/UI para dispositivos móveis.
+            ## 🚀 OrganiStuda ${{ github.ref_name }}
+
+            ### 📱 Como instalar
+            1. Baixe o arquivo `OrganiStuda-${{ github.ref_name }}.apk` abaixo
+            2. No Android, vá em **Configurações → Segurança → Fontes desconhecidas** e ative
+            3. Abra o arquivo APK e instale
+
+            ---
+
+            ### ✅ Correções de Bugs
+            - **Acerto de questões**: Som e conquista agora funcionam corretamente ao acertar uma questão
+            - **Streak no primeiro uso**: A sequência de dias agora inicia corretamente no primeiro acesso
+            - **Loading de busca**: O indicador de carregamento agora aparece ao buscar questões
+            - **Erro TypeScript (periodicSync)**: Corrigido com cast de tipo seguro
+            - **Modo escuro nos filtros**: Selects e abas agora respeitam o tema escuro corretamente
+            - **Memory leak**: Event listeners agora são removidos corretamente ao desmontar componentes
+
+            ### 🆕 Novos Widgets
+            - **🔥 Widget de Sequência de Estudos**: Exibe dias consecutivos, recorde pessoal e indicador visual da semana atual — integrado na aba Início
+            - **📊 Widget de Desempenho**: Mostra total de questões feitas, acertos e taxa de acerto com barra de progresso — aparece na aba Início e Conquistas
+            - **🏆 Card de Streak nas Conquistas**: Marcos de sequência (3, 7, 14, 30, 100 dias) com visual de progresso
+            - **⭐ Conquistas por Matéria**: Lista de conquistas desbloqueadas por matéria na aba Conquistas
+            - **💡 Dicas Pomodoro**: Card informativo com dicas de uso do método Pomodoro
+
+            ### 🎮 Melhorias de Gamificação
+            - **+50 XP** ao completar uma sessão Pomodoro (com notificação toast)
+            - **+25 XP** ao concluir uma tarefa na lista de tarefas
+            - **Recorde de streak** (`bestStreak`) agora é rastreado e exibido
+            - Feedback visual melhorado: ✅ CORRETO! / ❌ ERRADO
+
+            ### 🎨 Melhorias de UX
+            - Texto das questões preserva formatação original (quebras de linha)
+            - Ícones da navegação inferior com cor correta no modo escuro
+            - Tela vazia com mensagem amigável na aba Tarefas
+            - Contador de tarefas pendentes/concluídas
+            - Mensagem "Nenhuma questão encontrada" no modo filtro
+
+            ### 📚 Banco de Questões
+            - **387 questões** no total (205 originais + 182 novas)
+            - Questões de ENEM, FUVEST e UNICAMP (2018–2025)
+            - Matérias: Matemática, Linguagens, C. Humanas, C. Natureza, Redação
+
+            ---
+            *Desenvolvido com ❤️ para estudantes do ENEM*
           draft: false
           prerelease: false
         env:
