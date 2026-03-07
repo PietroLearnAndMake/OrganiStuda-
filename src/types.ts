@@ -19,6 +19,8 @@ export interface UserProfile {
   achievements: string[];
   streak: number;
   lastLogin: string | null;
+  xp: number;
+  level: number;
 }
 
 export interface Question {

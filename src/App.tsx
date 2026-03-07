@@ -427,20 +427,48 @@ export default function App() {
     setSelectedOption(null);
     setShowExplanation(false);
   };
+  const addXP = (amount: number) => {
+    setProfile(prev => {
+      const currentXP = prev.xp || 0;
+      const currentLevel = prev.level || 1;
+      const newXP = currentXP + amount;
+      const newLevel = Math.floor(newXP / 1000) + 1;
+      
+      if (newLevel > currentLevel) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-purple-600 text-white p-6 rounded-2xl shadow-2xl z-50 flex flex-col items-center gap-2 animate-bounce border-4 border-purple-400';
+        notification.innerHTML = `
+          <div class="text-4xl">⭐</div>
+          <div class="text-xl font-black italic">LEVEL UP!</div>
+          <div class="text-lg text-center">Você alcançou o nível ${newLevel}!</div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 4000);
+      }
+      
+      return { ...prev, xp: newXP, level: newLevel };
+    });
+  };
 
   const handleAnswer = (optionIdx: number) => {
-    if (!activeQuestionId) return;
+    if (!activeQuestionId || selectedOption !== null) return;
     
     const question = savedQuestions.find(q => q.id === activeQuestionId);
     if (!question) return;
 
     const isCorrect = optionIdx === question.correctAnswer;
+    
+    if (isCorrect) {
+      addXP(50);
+    }
+
     const newAttempt: Attempt = {
       timestamp: Date.now(),
       selectedOption: optionIdx,
       isCorrect
     };
 
+    setSelectedOption(optionIdx);
     setSavedQuestions(prev => prev.map(q => {
       if (q.id === activeQuestionId) {
         return {
@@ -450,9 +478,9 @@ export default function App() {
       }
       return q;
     }));
+  };
 
-    setSelectedOption(optionIdx);
-
+  const handleCorrectAnswer = (isCorrect: boolean) => {
     if (isCorrect) {
       // Play sound
       const audio = new Audio('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
@@ -613,8 +641,19 @@ export default function App() {
           </div>
           <div className={`flex flex-col items-end gap-2 p-4 rounded-2xl shadow-sm border transition-colors ${darkMode ? 'bg-stone-900 border-stone-800 shadow-none' : 'bg-white border-stone-200'}`}>
             <div className="text-right">
-              <div className={`text-3xl font-black leading-none ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{overallPercentage}%</div>
-              <div className={`text-[10px] uppercase tracking-wider font-bold mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Progresso Total</div>
+              <div className="flex items-center gap-2 justify-end">
+                <div className={`text-xs font-bold px-2 py-0.5 rounded-full ${darkMode ? 'bg-purple-900 text-purple-300' : 'bg-purple-100 text-purple-700'}`}>NÍVEL {profile.level || 1}</div>
+                <div className={`text-3xl font-black leading-none ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{overallPercentage}%</div>
+              </div>
+              <div className="w-32 h-1.5 bg-stone-200 rounded-full mt-2 overflow-hidden">
+                <div 
+                  className="h-full bg-purple-500 transition-all duration-500" 
+                  style={{ width: `${((profile.xp || 0) % 1000) / 10}%` }}
+                />
+              </div>
+              <div className={`text-[10px] uppercase tracking-wider font-bold mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+                {profile.xp || 0} XP • Progresso Total
+              </div>
             </div>
           </div>
         </div>
@@ -950,38 +989,57 @@ export default function App() {
                 <h2 className="font-bold text-lg">Minhas Conquistas</h2>
               </div>
 
-              {achievements.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
-                  {achievements.map((achievement, idx) => (
-                    <motion.div
-                      key={`${achievement.subjectName}-${achievement.type}-${idx}`}
-                      initial={{ scale: 0.95, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: idx * 0.05 }}
-                      className={`p-5 rounded-2xl border shadow-sm flex items-center gap-4 ${
-                        darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
-                      }`}
-                    >
-                      <div className={`p-3 rounded-full ${achievement.color} text-white`}>
-                        <Trophy className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h3 className={`font-bold ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
-                          {achievement.type === 'bem' && 'Indo bem'}
-                          {achievement.type === 'melhor' && 'Indo melhor'}
-                          {achievement.type === 'perfeito' && 'Indo perfeito'}
-                        </h3>
-                        <p className={`text-xs ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>Em {achievement.subjectName}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              ) : (
-                <div className={`p-10 rounded-2xl border border-dashed text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-300'}`}>
-                  <Trophy className={`w-12 h-12 mx-auto mb-3 ${darkMode ? 'text-stone-800' : 'text-stone-200'}`} />
-                  <p className={`font-medium ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Complete tópicos para ganhar conquistas!</p>
-                </div>
-              )}
+              <div className="grid grid-cols-1 gap-4">
+                {/* Conquistas de Nível */}
+                {[1, 5, 10, 20, 50].map((lvl) => (
+                  <div 
+                    key={`lvl-${lvl}`}
+                    className={`p-5 rounded-2xl border shadow-sm flex items-center gap-4 transition-all ${
+                      profile.level >= lvl 
+                        ? (darkMode ? 'bg-stone-900 border-purple-500/50' : 'bg-white border-purple-200 shadow-purple-100/50')
+                        : (darkMode ? 'bg-stone-900/50 border-stone-800 opacity-50 grayscale' : 'bg-stone-50 border-stone-100 opacity-50 grayscale')
+                    }`}
+                  >
+                    <div className={`p-3 rounded-full ${profile.level >= lvl ? 'bg-purple-600' : 'bg-stone-400'} text-white`}>
+                      <Trophy className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className={`font-bold ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
+                        Alcançar Nível {lvl}
+                      </h3>
+                      <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
+                        {profile.level >= lvl ? 'Conquista desbloqueada!' : `Faltam ${lvl - profile.level} níveis`}
+                      </p>
+                    </div>
+                    {profile.level >= lvl && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
+                  </div>
+                ))}
+
+                {/* Conquistas de XP */}
+                {[1000, 5000, 10000].map((xpGoal) => (
+                  <div 
+                    key={`xp-${xpGoal}`}
+                    className={`p-5 rounded-2xl border shadow-sm flex items-center gap-4 transition-all ${
+                      profile.xp >= xpGoal 
+                        ? (darkMode ? 'bg-stone-900 border-orange-500/50' : 'bg-white border-orange-200 shadow-orange-100/50')
+                        : (darkMode ? 'bg-stone-900/50 border-stone-800 opacity-50 grayscale' : 'bg-stone-50 border-stone-100 opacity-50 grayscale')
+                    }`}
+                  >
+                    <div className={`p-3 rounded-full ${profile.xp >= xpGoal ? 'bg-orange-500' : 'bg-stone-400'} text-white`}>
+                      <BrainCircuit className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className={`font-bold ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
+                        Acumular {xpGoal} XP
+                      </h3>
+                      <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
+                        {profile.xp >= xpGoal ? 'Conquista desbloqueada!' : `Faltam ${xpGoal - profile.xp} XP`}
+                      </p>
+                    </div>
+                    {profile.xp >= xpGoal && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
+                  </div>
+                ))}
+              </div>
             </motion.div>
           ) : currentTab === 'questions' ? (
             <motion.div 
