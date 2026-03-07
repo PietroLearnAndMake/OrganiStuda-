@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     namespace = "com.pietro.organizador.enem"
     compileSdk = rootProject.ext.compileSdkVersion
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "34.0.0"
 
     defaultConfig {
         applicationId "com.pietro.organizador.enem"
@@ -35,6 +35,13 @@ repositories {
     flatDir {
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
     }
+}
+
+// Kotlin 1.8+ unificou jdk7/jdk8 no módulo principal.
+// Excluir módulos antigos para evitar 'checkDebugDuplicateClasses FAILED'.
+configurations.configureEach {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }
 
 dependencies {
