@@ -267,11 +267,12 @@ function StatsWidget({ savedQuestions, darkMode }: StatsWidgetProps) {
 
 export default function App() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [profile, setProfile] = useState<UserProfile & { bestStreak?: number }>({ 
+  const [profile, setProfile] = useState<UserProfile>({ 
     name: 'Estudante', 
     photo: null, 
     achievements: [], 
-    streak: 0, 
+    streak: 0,
+    bestStreak: 0,
     lastLogin: null, 
     xp: 0, 
     level: 1,
