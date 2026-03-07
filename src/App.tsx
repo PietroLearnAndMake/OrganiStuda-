@@ -35,7 +35,11 @@ import {
   Target,
   Play,
   XCircle,
-  Brain
+  Brain,
+  Flame,
+  Zap,
+  BarChart2,
+  Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Subject, Topic, UserProfile, Question, SavedQuestion, Attempt } from './types';
@@ -58,16 +62,180 @@ const ICON_MAP: Record<string, React.ElementType> = {
   PenTool,
 };
 
+// ─── Streak Widget Component ────────────────────────────────────────────────
+interface StreakWidgetProps {
+  streak: number;
+  bestStreak: number;
+  darkMode: boolean;
+}
+
+function StreakWidget({ streak, bestStreak, darkMode }: StreakWidgetProps) {
+  const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  const today = new Date().getDay(); // 0 = domingo
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`p-5 rounded-2xl border shadow-sm ${
+        darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
+      }`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Flame className="w-5 h-5 text-orange-500" />
+          <h3 className={`font-bold text-base ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
+            Sequência de Estudos
+          </h3>
+        </div>
+        <div className={`text-xs font-bold px-2 py-1 rounded-full ${
+          streak > 0
+            ? 'bg-orange-500/10 text-orange-500 border border-orange-500/20'
+            : darkMode ? 'bg-stone-800 text-stone-500' : 'bg-stone-100 text-stone-400'
+        }`}>
+          {streak > 0 ? `🔥 Ativo` : 'Inativo'}
+        </div>
+      </div>
+
+      <div className="flex items-end gap-4 mb-4">
+        <div>
+          <div className={`text-5xl font-black leading-none ${
+            streak > 0 ? 'text-orange-500' : darkMode ? 'text-stone-600' : 'text-stone-300'
+          }`}>
+            {streak}
+          </div>
+          <div className={`text-xs font-bold uppercase tracking-wider mt-1 ${
+            darkMode ? 'text-stone-500' : 'text-stone-400'
+          }`}>
+            {streak === 1 ? 'dia' : 'dias'} seguidos
+          </div>
+        </div>
+        <div className={`ml-auto text-right`}>
+          <div className={`text-xs font-bold uppercase tracking-wider ${
+            darkMode ? 'text-stone-600' : 'text-stone-400'
+          }`}>
+            Recorde
+          </div>
+          <div className={`text-2xl font-black ${
+            darkMode ? 'text-stone-400' : 'text-stone-600'
+          }`}>
+            🏆 {bestStreak}
+          </div>
+        </div>
+      </div>
+
+      {/* Days of week indicator */}
+      <div className="flex justify-between gap-1">
+        {days.map((day, idx) => {
+          const isToday = idx === today;
+          const isPast = idx < today;
+          // Simplified: mark today and past days in current streak as active
+          const isActive = isToday || (streak > 1 && isPast && idx >= today - (streak - 1));
+
+          return (
+            <div key={idx} className="flex flex-col items-center gap-1 flex-1">
+              <div className={`w-full aspect-square rounded-lg flex items-center justify-center text-[10px] font-black transition-all ${
+                isToday
+                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                  : isActive
+                  ? darkMode ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-500'
+                  : darkMode ? 'bg-stone-800 text-stone-600' : 'bg-stone-100 text-stone-400'
+              }`}>
+                {isToday ? '🔥' : isActive ? '✓' : day}
+              </div>
+              <span className={`text-[9px] font-bold ${
+                isToday
+                  ? 'text-orange-500'
+                  : darkMode ? 'text-stone-600' : 'text-stone-400'
+              }`}>
+                {day}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {streak === 0 && (
+        <p className={`text-xs mt-3 text-center ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+          Abra o app todos os dias para manter sua sequência! 🚀
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+// ─── Stats Widget Component ──────────────────────────────────────────────────
+interface StatsWidgetProps {
+  savedQuestions: SavedQuestion[];
+  darkMode: boolean;
+}
+
+function StatsWidget({ savedQuestions, darkMode }: StatsWidgetProps) {
+  const total = savedQuestions.filter(q => q.attempts.length > 0).length;
+  const correct = savedQuestions.filter(q => {
+    const last = q.attempts[q.attempts.length - 1];
+    return last?.isCorrect;
+  }).length;
+  const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`p-5 rounded-2xl border shadow-sm ${
+        darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
+      }`}
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <BarChart2 className="w-5 h-5 text-indigo-500" />
+        <h3 className={`font-bold text-base ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
+          Desempenho nas Questões
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        <div className={`p-3 rounded-xl text-center ${darkMode ? 'bg-stone-800' : 'bg-stone-50'}`}>
+          <div className={`text-2xl font-black ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>{total}</div>
+          <div className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Feitas</div>
+        </div>
+        <div className={`p-3 rounded-xl text-center ${darkMode ? 'bg-emerald-950/30' : 'bg-emerald-50'}`}>
+          <div className="text-2xl font-black text-emerald-500">{correct}</div>
+          <div className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${darkMode ? 'text-emerald-700' : 'text-emerald-600'}`}>Acertos</div>
+        </div>
+        <div className={`p-3 rounded-xl text-center ${darkMode ? 'bg-indigo-950/30' : 'bg-indigo-50'}`}>
+          <div className="text-2xl font-black text-indigo-500">{accuracy}%</div>
+          <div className={`text-[10px] font-bold uppercase tracking-wider mt-0.5 ${darkMode ? 'text-indigo-700' : 'text-indigo-600'}`}>Taxa</div>
+        </div>
+      </div>
+
+      {total > 0 && (
+        <div className="mt-3">
+          <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${accuracy}%` }}
+              className="h-full bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-full"
+            />
+          </div>
+          <p className={`text-[10px] text-center mt-1 font-medium ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+            {accuracy >= 70 ? '🎯 Ótimo desempenho!' : accuracy >= 50 ? '📈 Continue praticando!' : '💪 Não desista!'}
+          </p>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 export default function App() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [profile, setProfile] = useState<UserProfile>({ 
+  const [profile, setProfile] = useState<UserProfile & { bestStreak?: number }>({ 
     name: 'Estudante', 
     photo: null, 
     achievements: [], 
     streak: 0, 
     lastLogin: null, 
     xp: 0, 
-    level: 1 
+    level: 1,
   });
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState<'home' | 'achievements' | 'questions' | 'pomodoro' | 'tasks'>('home');
@@ -103,7 +271,7 @@ export default function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // Load data from localStorage
+  // ─── Load data from localStorage ──────────────────────────────────────────
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -118,12 +286,6 @@ export default function App() {
 
     if (savedSubjects) {
       const local = JSON.parse(savedSubjects) as Subject[];
-      
-      // Merge logic:
-      // 1. Keep local progress (completed status)
-      // 2. Update questions from ENEM_DATA
-      // 3. Add new topics from ENEM_DATA if they don't exist locally
-      // 4. Keep custom topics added by the user
       
       const merged = ENEM_DATA.map(originalSubject => {
         const localSubject = local.find(ls => ls.id === originalSubject.id);
@@ -140,53 +302,77 @@ export default function App() {
               return {
                 ...originalTopic,
                 completed: localTopic ? localTopic.completed : false,
-                // Always take questions from ENEM_DATA as it's the source of truth for official questions
                 questions: originalTopic.questions 
               };
             }),
-            // Add custom topics that are not in ENEM_DATA
             ...localSubject.topics.filter(lt => !originalSubject.topics.some(ot => ot.id === lt.id))
           ]
         };
       });
 
-      // Add custom subjects that are not in ENEM_DATA
       const customSubjects = local.filter(ls => !ENEM_DATA.some(os => os.id === ls.id));
-      
       setSubjects([...merged, ...customSubjects]);
     } else {
       setSubjects(ENEM_DATA);
     }
 
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
     if (savedProfile) {
       const parsedProfile = JSON.parse(savedProfile);
-      // Garantir que xp e level existam para evitar NaN
+
+      // Garantir que campos existam
       if (parsedProfile.xp === undefined || parsedProfile.xp === null) parsedProfile.xp = 0;
       if (parsedProfile.level === undefined || parsedProfile.level === null) parsedProfile.level = 1;
-      const today = new Date().toISOString().split('T')[0];
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      if (parsedProfile.bestStreak === undefined || parsedProfile.bestStreak === null) parsedProfile.bestStreak = parsedProfile.streak || 0;
 
+      // ── Lógica de Streak ──────────────────────────────────────────────────
       if (parsedProfile.lastLogin === yesterdayStr) {
-        parsedProfile.streak += 1;
-        // Show streak notification
+        // Usuário abriu ontem → incrementar streak
+        parsedProfile.streak = (parsedProfile.streak || 0) + 1;
+        if (parsedProfile.streak > (parsedProfile.bestStreak || 0)) {
+          parsedProfile.bestStreak = parsedProfile.streak;
+        }
+        // Notificação de streak
         const notification = document.createElement('div');
-        notification.className = 'fixed top-10 right-10 bg-orange-600 text-white p-4 rounded-xl shadow-2xl z-50 flex items-center gap-4 animate-bounce';
+        notification.className = 'fixed top-10 right-4 left-4 sm:left-auto sm:w-72 bg-orange-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-4';
         notification.innerHTML = `
           <div class="text-3xl">🔥</div>
           <div>
-            <div class="font-bold">Sequência de ${parsedProfile.streak} dias!</div>
-            <div class="text-sm text-orange-100">Continue assim!</div>
+            <div class="font-black text-base">Sequência de ${parsedProfile.streak} dias!</div>
+            <div class="text-sm text-orange-100">Continue assim! Você é incrível! 🚀</div>
           </div>
         `;
         document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
-      } else if (parsedProfile.lastLogin !== today) {
+        setTimeout(() => {
+          notification.style.transition = 'opacity 0.5s';
+          notification.style.opacity = '0';
+          setTimeout(() => notification.remove(), 500);
+        }, 3000);
+      } else if (parsedProfile.lastLogin === today) {
+        // Já abriu hoje → manter streak
+      } else if (parsedProfile.lastLogin === null) {
+        // Primeiro uso → iniciar streak em 1
+        parsedProfile.streak = 1;
+        parsedProfile.bestStreak = 1;
+      } else {
+        // Perdeu um dia → resetar streak
         parsedProfile.streak = 1;
       }
+
       parsedProfile.lastLogin = today;
       setProfile(parsedProfile);
+    } else {
+      // ── Primeiro uso do app ───────────────────────────────────────────────
+      setProfile(prev => ({
+        ...prev,
+        streak: 1,
+        bestStreak: 1,
+        lastLogin: today,
+      }));
     }
 
     if (savedTheme) {
@@ -202,7 +388,7 @@ export default function App() {
       setTasks(JSON.parse(savedTasks));
     }
     
-    // Simple hash-based routing
+    // Hash-based routing
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash === '#questions') {
@@ -219,13 +405,17 @@ export default function App() {
     };
 
     window.addEventListener('hashchange', handleHashChange);
-    handleHashChange(); // Initial check
+    handleHashChange();
     
     setIsInitialized(true);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
 
-  // Save data to localStorage
+  // ─── Save data to localStorage ────────────────────────────────────────────
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem('enem_subjects', JSON.stringify(subjects));
@@ -236,9 +426,9 @@ export default function App() {
     }
   }, [subjects, profile, isInitialized, darkMode, savedQuestions, tasks]);
 
-  // Pomodoro Timer Logic
+  // ─── Pomodoro Timer Logic ─────────────────────────────────────────────────
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (pomodoroActive && pomodoroTime > 0) {
       interval = setInterval(() => {
         setPomodoroTime((time) => time - 1);
@@ -246,8 +436,19 @@ export default function App() {
     } else if (pomodoroTime === 0) {
       setPomodoroActive(false);
       if (pomodoroMode === 'work') {
+        addXP(50); // XP por completar uma sessão Pomodoro
         setPomodoroMode('break');
         setPomodoroTime(5 * 60);
+        // Notificação de sessão concluída
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-10 right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3';
+        toast.innerHTML = `<div class="text-2xl">⏰</div><div><div class="font-black">Sessão concluída!</div><div class="text-sm text-emerald-100">+50 XP • Hora de descansar 5 min</div></div>`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.style.transition = 'opacity 0.5s';
+          toast.style.opacity = '0';
+          setTimeout(() => toast.remove(), 500);
+        }, 3000);
       } else {
         setPomodoroMode('work');
         setPomodoroTime(25 * 60);
@@ -256,6 +457,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, [pomodoroActive, pomodoroTime, pomodoroMode]);
 
+  // ─── Memos ────────────────────────────────────────────────────────────────
   const totalTopics = useMemo(() => 
     subjects.reduce((acc, s) => acc + s.topics.length, 0), 
   [subjects]);
@@ -266,6 +468,7 @@ export default function App() {
 
   const overallPercentage = totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0;
 
+  // ─── Subject / Topic Functions ────────────────────────────────────────────
   const toggleTopic = (subjectId: string, topicId: string) => {
     setSubjects(prev => prev.map(s => {
       if (s.id === subjectId) {
@@ -275,7 +478,7 @@ export default function App() {
             if (t.id === topicId) {
               const newState = !t.completed;
               if (newState) {
-                addXP(100); // 100 XP por completar um conteúdo
+                addXP(100);
               }
               return { ...t, completed: newState };
             }
@@ -390,12 +593,16 @@ export default function App() {
     }
   };
 
-  const handleSearch = () => {
+  // ─── Question Search ──────────────────────────────────────────────────────
+  const handleSearch = async () => {
     setLoadingQuestion(true);
     setHasSearched(true);
     setActiveQuestionId(null);
     setSelectedOption(null);
     setShowExplanation(false);
+
+    // Pequeno delay para mostrar o loading
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
       let allPreDefined: SavedQuestion[] = [];
@@ -428,15 +635,13 @@ export default function App() {
       }
 
       setSearchResults(results);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erro ao buscar questões:", error);
       alert("Ocorreu um erro ao buscar as questões. Tente novamente.");
     } finally {
       setLoadingQuestion(false);
     }
   };
-
-
 
   const openQuestion = (q: SavedQuestion) => {
     const existing = savedQuestions.find(sq => sq.id === q.id);
@@ -447,8 +652,8 @@ export default function App() {
     setSelectedOption(null);
     setShowExplanation(false);
   };
-  // Lógica de XP Progressiva: Nível = floor(sqrt(XP / 100)) + 1
-  // Ex: Nível 1: 0 XP, Nível 2: 100 XP, Nível 3: 400 XP, Nível 4: 900 XP, Nível 5: 1600 XP...
+
+  // ─── XP & Level System ───────────────────────────────────────────────────
   const calculateLevel = (xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1;
   const xpForLevel = (level: number) => Math.pow(level - 1, 2) * 100;
   const xpForNextLevel = (level: number) => Math.pow(level, 2) * 100;
@@ -460,13 +665,14 @@ export default function App() {
       const newXP = currentXP + amount;
       const newLevel = calculateLevel(newXP);
       
-      // Feedback de XP ganho
+      // Toast de XP
       const xpToast = document.createElement('div');
-      xpToast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold animate-bounce flex items-center gap-2';
+      xpToast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2';
       xpToast.innerHTML = `<span>+${amount} XP</span> <span class="text-xs">✨</span>`;
       document.body.appendChild(xpToast);
       setTimeout(() => {
-        xpToast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        xpToast.style.transition = 'opacity 0.5s';
+        xpToast.style.opacity = '0';
         setTimeout(() => xpToast.remove(), 500);
       }, 2000);
 
@@ -474,8 +680,8 @@ export default function App() {
         const notification = document.createElement('div');
         notification.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/60 backdrop-blur-sm p-6';
         notification.innerHTML = `
-          <div class="bg-purple-600 text-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-300 border-4 border-purple-400 max-w-xs w-full text-center">
-            <div class="text-6xl animate-bounce">🏆</div>
+          <div class="bg-purple-600 text-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border-4 border-purple-400 max-w-xs w-full text-center">
+            <div class="text-6xl">🏆</div>
             <div class="text-3xl font-black italic tracking-tighter">LEVEL UP!</div>
             <div class="text-xl font-bold">NÍVEL ${newLevel}</div>
             <p class="text-purple-100">Você está evoluindo rápido! Continue assim rumo à aprovação. 🚀</p>
@@ -489,6 +695,7 @@ export default function App() {
     });
   };
 
+  // ─── Answer Handling ──────────────────────────────────────────────────────
   const handleAnswer = (optionIdx: number) => {
     if (!activeQuestionId || selectedOption !== null) return;
     
@@ -498,13 +705,27 @@ export default function App() {
     const isCorrect = optionIdx === question.correctAnswer;
     
     if (isCorrect) {
-      addXP(150); // Aumentado para 150 XP por acerto
+      addXP(150);
       
+      // Som de acerto
+      try {
+        const audio = new Audio('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
+        audio.play().catch(() => {});
+      } catch (_) {}
+
+      // Conquista de primeiro acerto
+      if (!profile.achievements.includes('correct_answer')) {
+        setProfile(prev => ({
+          ...prev,
+          achievements: [...prev.achievements, 'correct_answer']
+        }));
+      }
+
       // Popup de acerto
       const successPopup = document.createElement('div');
       successPopup.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/40 backdrop-blur-sm p-6 pointer-events-none';
       successPopup.innerHTML = `
-        <div class="bg-emerald-500 text-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-2 animate-in zoom-in duration-200 border-4 border-emerald-400 text-center">
+        <div class="bg-emerald-500 text-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-2 border-4 border-emerald-400 text-center">
           <div class="text-4xl">✅</div>
           <div class="text-xl font-black">RESPOSTA CORRETA!</div>
           <div class="font-bold">+150 XP</div>
@@ -512,7 +733,8 @@ export default function App() {
       `;
       document.body.appendChild(successPopup);
       setTimeout(() => {
-        successPopup.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        successPopup.style.transition = 'opacity 0.5s';
+        successPopup.style.opacity = '0';
         setTimeout(() => successPopup.remove(), 500);
       }, 1500);
     } else {
@@ -520,7 +742,7 @@ export default function App() {
       const errorPopup = document.createElement('div');
       errorPopup.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/40 backdrop-blur-sm p-6 pointer-events-none';
       errorPopup.innerHTML = `
-        <div class="bg-red-500 text-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-2 animate-in zoom-in duration-200 border-4 border-red-400 text-center">
+        <div class="bg-red-500 text-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-2 border-4 border-red-400 text-center">
           <div class="text-4xl">❌</div>
           <div class="text-xl font-black">NÃO FOI DESSA VEZ</div>
           <p class="text-sm opacity-90">Leia a explicação para aprender!</p>
@@ -528,7 +750,8 @@ export default function App() {
       `;
       document.body.appendChild(errorPopup);
       setTimeout(() => {
-        errorPopup.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        errorPopup.style.transition = 'opacity 0.5s';
+        errorPopup.style.opacity = '0';
         setTimeout(() => errorPopup.remove(), 500);
       }, 1500);
     }
@@ -551,27 +774,13 @@ export default function App() {
     }));
   };
 
-  const handleCorrectAnswer = (isCorrect: boolean) => {
-    if (isCorrect) {
-      // Play sound
-      const audio = new Audio('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
-      audio.play().catch(e => console.warn("Audio play failed (expected on first interaction):", e));
-      
-      // Achievement notification
-      const newAchievements = [...profile.achievements];
-      if (!newAchievements.includes('correct_answer')) {
-          newAchievements.push('correct_answer');
-          setProfile(prev => ({ ...prev, achievements: newAchievements }));
-      }
-    }
-  };
-
   const redoQuestion = (qId: string) => {
     setActiveQuestionId(qId);
     setSelectedOption(null);
     setShowExplanation(false);
   };
 
+  // ─── Generate Bank Question ───────────────────────────────────────────────
   const generateBankQuestion = async () => {
     if (!selectedSubjectForQuestion) {
       alert("Por favor, selecione uma matéria para buscar uma questão.");
@@ -584,10 +793,8 @@ export default function App() {
     setSelectedOption(null);
     setShowExplanation(false);
 
-    // Simulate a small delay for better UX
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Collect all questions from selected subject(s)
     let availableQuestions: SavedQuestion[] = [];
     
     const subjectsToSearch = selectedSubjectForQuestion === 'geral' 
@@ -614,8 +821,6 @@ export default function App() {
     }
 
     const randomQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-
-    // Check if this question is already in savedQuestions to preserve attempts
     const existing = savedQuestions.find(sq => sq.id === randomQuestion.id);
     const finalQuestion = existing ? existing : randomQuestion;
 
@@ -630,7 +835,7 @@ export default function App() {
 
   const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
 
-  // Calculate achievements
+  // ─── Achievements ─────────────────────────────────────────────────────────
   const achievements = useMemo(() => {
     const list: { subjectName: string; type: 'bem' | 'melhor' | 'perfeito'; color: string }[] = [];
     
@@ -652,9 +857,11 @@ export default function App() {
 
   if (!isInitialized) return null;
 
+  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className={`h-full w-full flex flex-col overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans`}>
-      {/* Header / Profile Section */}
+      
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
       <header className={`border-b px-6 pt-4 pb-4 sticky top-0 z-10 transition-colors flex-shrink-0 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -692,6 +899,7 @@ export default function App() {
                 className="hidden" 
                 onChange={handlePhotoUpload} 
               />
+              {/* Streak badge */}
               <div className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-stone-900 flex items-center gap-1 shadow-lg pointer-events-none">
                 🔥 {profile.streak}
               </div>
@@ -717,41 +925,34 @@ export default function App() {
           </div>
         </div>
 
-        {/* XP and Level Section - Redesigned */}
-        <div className={`p-4 rounded-2xl border mb-4 transition-all ${darkMode ? 'bg-stone-900/50 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-          <div className="flex items-center justify-between mb-3">
+        {/* XP and Level Section */}
+        <div className={`p-4 rounded-2xl border mb-4 transition-colors ${darkMode ? 'bg-stone-800/50 border-stone-700' : 'bg-stone-50 border-stone-200'}`}>
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-                <Trophy className="w-5 h-5 text-white" />
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm ${darkMode ? 'bg-indigo-600' : 'bg-indigo-600'} text-white`}>
+                {profile.level}
               </div>
               <div>
-                <h3 className="text-xs font-black uppercase tracking-widest text-purple-500">Meu Nível</h3>
-                <p className={`text-lg font-bold leading-none ${darkMode ? 'text-white' : 'text-stone-900'}`}>Nível {profile.level || 1}</p>
+                <div className={`text-xs font-black uppercase tracking-wider ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Nível {profile.level}</div>
+                <div className={`text-[10px] ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>{profile.xp || 0} XP total</div>
               </div>
             </div>
-            <div className="text-right">
-              <p className={`text-xs font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
-                {profile.xp - xpForLevel(profile.level)} / {xpForNextLevel(profile.level) - xpForLevel(profile.level)} XP
-              </p>
-              <p className={`text-[10px] font-medium ${darkMode ? 'text-stone-600' : 'text-stone-500'}`}>
-                Total: {profile.xp} XP
-              </p>
+            <div className={`text-xs font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+              {Math.max(0, xpForNextLevel(profile.level) - (profile.xp || 0))} XP para Nível {profile.level + 1}
             </div>
           </div>
-          
-          {/* XP Progress Bar - Fixed for Mobile */}
-          <div className={`w-full h-3 rounded-full overflow-hidden relative ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+          <div className={`w-full h-2 rounded-full overflow-hidden ${darkMode ? 'bg-stone-700' : 'bg-stone-200'}`}>
             <motion.div 
               initial={{ width: 0 }}
               animate={{ 
-                width: `${((profile.xp - xpForLevel(profile.level)) / (xpForNextLevel(profile.level) - xpForLevel(profile.level))) * 100}%` 
+                width: `${Math.min(100, Math.max(0, ((profile.xp || 0) - xpForLevel(profile.level)) / (xpForNextLevel(profile.level) - xpForLevel(profile.level)) * 100))}%` 
               }}
-              className="h-full bg-gradient-to-r from-purple-600 to-indigo-500 shadow-[0_0_10px_rgba(168,85,247,0.4)]"
+              className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
             />
           </div>
         </div>
 
-        {/* Overall Progress Bar - Fixed for Mobile */}
+        {/* Overall Progress Bar */}
         <div className="space-y-1">
           <div className="flex justify-between items-center px-1">
             <span className={`text-[10px] font-black uppercase tracking-tighter ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Progresso Geral</span>
@@ -766,8 +967,11 @@ export default function App() {
         </div>
       </header>
 
+      {/* ── Main Content ────────────────────────────────────────────────────── */}
       <main className="flex-1 overflow-y-auto px-6 py-6 pb-24">
         <AnimatePresence mode="wait">
+
+          {/* ── HOME TAB ──────────────────────────────────────────────────── */}
           {currentTab === 'home' ? (
             !selectedSubjectId ? (
               <motion.div 
@@ -777,6 +981,19 @@ export default function App() {
                 exit={{ opacity: 0, y: -20 }}
                 className="space-y-6"
               >
+                {/* ── Streak Widget ──────────────────────────────────────── */}
+                <StreakWidget 
+                  streak={profile.streak || 0} 
+                  bestStreak={(profile as any).bestStreak || profile.streak || 0}
+                  darkMode={darkMode}
+                />
+
+                {/* ── Stats Widget ───────────────────────────────────────── */}
+                {savedQuestions.some(q => q.attempts.length > 0) && (
+                  <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
+                )}
+
+                {/* ── Subjects Dashboard ─────────────────────────────────── */}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <LayoutDashboard className="w-5 h-5 text-indigo-600" />
@@ -807,39 +1024,39 @@ export default function App() {
                           darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
                         }`}
                       >
-                          <div className="flex flex-col items-center text-center gap-3">
-                            <button
-                              onClick={() => setSelectedSubjectId(subject.id)}
-                              className="flex flex-col items-center gap-3 w-full"
-                            >
-                              <div className={`p-5 rounded-3xl ${subject.color} text-white shadow-xl shadow-indigo-500/20`}>
-                                <Icon className="w-10 h-10" />
-                              </div>
-                              <div>
-                                <h3 className={`font-black text-xl leading-tight ${darkMode ? 'text-white' : 'text-stone-900'}`}>{subject.name}</h3>
-                                <p className={`text-sm mt-1 font-medium ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{completed} de {total} tópicos</p>
-                              </div>
-                            </button>
-                          </div>
-                        
-                          <div className="space-y-3 text-center">
-                            <div className="text-xs font-black uppercase tracking-widest text-indigo-500">
-                              {percent}% Concluído
+                        <div className="flex flex-col items-center text-center gap-3">
+                          <button
+                            onClick={() => setSelectedSubjectId(subject.id)}
+                            className="flex flex-col items-center gap-3 w-full"
+                          >
+                            <div className={`p-5 rounded-3xl ${subject.color} text-white shadow-xl shadow-indigo-500/20`}>
+                              <Icon className="w-10 h-10" />
                             </div>
-                            <div className={`h-3 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-                              <motion.div 
-                                initial={{ width: 0 }}
-                                animate={{ width: `${percent}%` }}
-                                className={`h-full ${subject.color} rounded-full`}
-                              />
+                            <div>
+                              <h3 className={`font-black text-xl leading-tight ${darkMode ? 'text-white' : 'text-stone-900'}`}>{subject.name}</h3>
+                              <p className={`text-sm mt-1 font-medium ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>{completed} de {total} tópicos</p>
                             </div>
+                          </button>
+                        </div>
+                      
+                        <div className="space-y-3 text-center">
+                          <div className="text-xs font-black uppercase tracking-widest text-indigo-500">
+                            {percent}% Concluído
                           </div>
-                        </motion.div>
+                          <div className={`h-3 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${percent}%` }}
+                              className={`h-full ${subject.color} rounded-full`}
+                            />
+                          </div>
+                        </div>
+                      </motion.div>
                     );
                   })}
                 </div>
 
-                {overallPercentage === 100 && (
+                {overallPercentage === 100 && subjects.length > 0 && (
                   <motion.div 
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -854,6 +1071,7 @@ export default function App() {
                 )}
               </motion.div>
             ) : (
+              /* ── Subject Detail ──────────────────────────────────────────── */
               <motion.div 
                 key="subject-detail"
                 initial={{ opacity: 0, x: 20 }}
@@ -949,7 +1167,6 @@ export default function App() {
                               </button>
                               <button
                                 onClick={() => {
-                                  // Re-run the merge logic manually
                                   const local = subjects;
                                   const merged = ENEM_DATA.map(originalSubject => {
                                     const localSubject = local.find(ls => ls.id === originalSubject.id);
@@ -962,7 +1179,6 @@ export default function App() {
                                           return {
                                             ...originalTopic,
                                             completed: localTopic ? localTopic.completed : false,
-                                            questions: originalTopic.questions 
                                           };
                                         }),
                                         ...localSubject.topics.filter(lt => !originalSubject.topics.some(ot => ot.id === lt.id))
@@ -972,12 +1188,12 @@ export default function App() {
                                   const customSubjects = local.filter(ls => !ENEM_DATA.some(os => os.id === ls.id));
                                   setSubjects([...merged, ...customSubjects]);
                                   setShowSubjectMenu(false);
-                                  alert('Banco de questões atualizado com sucesso!');
+                                  alert('Questões sincronizadas com sucesso!');
                                 }}
                                 className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-2 ${darkMode ? 'text-stone-300 hover:bg-stone-800' : 'text-stone-600 hover:bg-stone-50'}`}
                               >
-                                <Loader2 className="w-4 h-4" />
-                                Sincronizar Questões
+                                <Share2 className="w-4 h-4" />
+                                Sincronizar questões
                               </button>
                             </motion.div>
                           </>
@@ -987,72 +1203,53 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Add Topic Input */}
-                <div className={`mb-6 p-4 rounded-xl border flex gap-2 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
-                  <input 
-                    type="text" 
-                    placeholder="Adicionar novo conteúdo..."
-                    value={newTopicTitle}
-                    onChange={(e) => setNewTopicTitle(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addTopic(selectedSubject!.id)}
-                    className={`flex-1 bg-transparent outline-none text-sm ${darkMode ? 'placeholder-stone-700' : 'placeholder-stone-400'}`}
-                  />
-                  <button 
-                    onClick={() => addTopic(selectedSubject!.id)}
-                    className="bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <div className="space-y-3">
+                {/* Topic List */}
+                <div className="space-y-3 mb-6">
                   {selectedSubject?.topics.map((topic) => (
-                    <div
+                    <div 
                       key={topic.id}
-                      className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                      className={`flex items-center gap-3 p-4 rounded-2xl border transition-all ${
                         topic.completed 
-                          ? darkMode ? 'bg-stone-900/50 border-stone-800 text-stone-600' : 'bg-stone-50 border-stone-200 text-stone-400' 
-                          : darkMode ? 'bg-stone-900 border-stone-800 text-stone-100 shadow-sm' : 'bg-white border-stone-200 text-stone-800 shadow-sm'
+                          ? darkMode ? 'bg-emerald-950/20 border-emerald-900/50' : 'bg-emerald-50 border-emerald-200'
+                          : darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
                       }`}
                     >
-                      <div className="flex items-center gap-4 flex-1">
-                        <button
-                          onClick={() => toggleTopic(selectedSubject.id, topic.id)}
-                          className="shrink-0"
-                        >
-                          {topic.completed ? (
-                            <CheckCircle2 className="w-6 h-6 text-emerald-500" />
-                          ) : (
-                            <Circle className={`w-6 h-6 ${darkMode ? 'text-stone-700' : 'text-stone-300'}`} />
-                          )}
-                        </button>
-                        <div className="flex flex-col flex-1">
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="text"
-                              value={topic.title}
-                              onChange={(e) => updateTopic(selectedSubject.id, topic.id, e.target.value)}
-                              className={`bg-transparent outline-none font-medium w-full ${topic.completed ? 'line-through' : ''}`}
-                            />
-                          </div>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                              topic.questions && topic.questions.length > 0 
-                                ? 'bg-emerald-500/10 text-emerald-500' 
-                                : 'bg-stone-500/10 text-stone-500'
-                            }`}>
-                              {topic.questions?.length || 0} questões
+                      <button
+                        onClick={() => toggleTopic(selectedSubject.id, topic.id)}
+                        className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                          topic.completed 
+                            ? 'bg-emerald-500 border-emerald-500 text-white' 
+                            : darkMode ? 'border-stone-700 hover:border-emerald-500' : 'border-stone-300 hover:border-emerald-500'
+                        }`}
+                      >
+                        {topic.completed && <Check className="w-3.5 h-3.5" />}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={topic.title}
+                            onChange={(e) => updateTopic(selectedSubject.id, topic.id, e.target.value)}
+                            className={`bg-transparent outline-none font-medium w-full ${topic.completed ? 'line-through' : ''} ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                            topic.questions && topic.questions.length > 0 
+                              ? 'bg-emerald-500/10 text-emerald-500' 
+                              : 'bg-stone-500/10 text-stone-500'
+                          }`}>
+                            {topic.questions?.length || 0} questões
+                          </span>
+                          {topic.questions && topic.questions.length > 0 ? (
+                            <span className={`text-[10px] font-medium ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+                              • {topic.completed ? 'Revisão recomendada' : 'Excelente para praticar'}
                             </span>
-                            {topic.questions && topic.questions.length > 0 ? (
-                              <span className={`text-[10px] font-medium ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
-                                • {topic.completed ? 'Revisão recomendada' : 'Excelente para praticar'}
-                              </span>
-                            ) : (
-                              <span className={`text-[10px] font-medium ${darkMode ? 'text-stone-700' : 'text-stone-500'}`}>
-                                • Aguardando questões oficiais
-                              </span>
-                            )}
-                          </div>
+                          ) : (
+                            <span className={`text-[10px] font-medium ${darkMode ? 'text-stone-700' : 'text-stone-500'}`}>
+                              • Aguardando questões oficiais
+                            </span>
+                          )}
                         </div>
                       </div>
                       <button
@@ -1072,8 +1269,29 @@ export default function App() {
                     </div>
                   ))}
                 </div>
+
+                {/* Add Topic */}
+                <div className={`flex gap-3 p-4 rounded-2xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                  <input
+                    type="text"
+                    value={newTopicTitle}
+                    onChange={(e) => setNewTopicTitle(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && addTopic(selectedSubject!.id)}
+                    placeholder="Adicionar novo conteúdo..."
+                    className={`flex-1 bg-transparent outline-none text-sm font-medium ${darkMode ? 'text-stone-200 placeholder:text-stone-700' : 'text-stone-800 placeholder:text-stone-400'}`}
+                  />
+                  <button
+                    onClick={() => addTopic(selectedSubject!.id)}
+                    disabled={!newTopicTitle.trim()}
+                    className="bg-indigo-600 text-white p-2 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
               </motion.div>
             )
+
+          /* ── ACHIEVEMENTS TAB ─────────────────────────────────────────── */
           ) : currentTab === 'achievements' ? (
             <motion.div 
               key="achievements"
@@ -1087,8 +1305,46 @@ export default function App() {
                 <h2 className="font-bold text-lg">Minhas Conquistas</h2>
               </div>
 
+              {/* Streak Achievement Card */}
+              <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Flame className="w-5 h-5 text-orange-500" />
+                  <h3 className="font-black text-base">Sequência de Estudos</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className={`p-4 rounded-xl text-center ${darkMode ? 'bg-orange-950/30' : 'bg-orange-50'}`}>
+                    <div className="text-3xl font-black text-orange-500">{profile.streak || 0}</div>
+                    <div className={`text-[10px] font-bold uppercase tracking-wider mt-1 ${darkMode ? 'text-orange-700' : 'text-orange-600'}`}>Atual</div>
+                  </div>
+                  <div className={`p-4 rounded-xl text-center ${darkMode ? 'bg-stone-800' : 'bg-stone-50'}`}>
+                    <div className={`text-3xl font-black ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>{(profile as any).bestStreak || profile.streak || 0}</div>
+                    <div className={`text-[10px] font-bold uppercase tracking-wider mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Recorde 🏆</div>
+                  </div>
+                </div>
+                {/* Streak milestones */}
+                <div className="flex justify-between gap-2 mt-4">
+                  {[3, 7, 14, 30, 100].map((milestone) => (
+                    <div key={milestone} className="flex flex-col items-center gap-1 flex-1">
+                      <div className={`w-full aspect-square rounded-lg flex items-center justify-center text-[10px] font-black border-2 transition-all ${
+                        (profile.streak || 0) >= milestone
+                          ? 'bg-orange-500 border-orange-400 text-white shadow-lg shadow-orange-500/20'
+                          : darkMode ? 'bg-stone-800 border-stone-700 text-stone-600' : 'bg-stone-100 border-stone-200 text-stone-400'
+                      }`}>
+                        {(profile.streak || 0) >= milestone ? '🔥' : milestone}
+                      </div>
+                      <span className={`text-[9px] font-bold ${(profile.streak || 0) >= milestone ? 'text-orange-500' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+                        {milestone}d
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stats Widget in Achievements */}
+              <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
+
               <div className="grid grid-cols-1 gap-4">
-                {/* Conquistas de Nível - Simplificadas */}
+                {/* Level Journey */}
                 <div className={`p-6 rounded-3xl border transition-all ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
                   <h3 className="font-black text-lg mb-4 flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-purple-500" />
@@ -1100,27 +1356,27 @@ export default function App() {
                         <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all ${
                           profile.level >= lvl 
                             ? 'bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-500/20' 
-                            : 'bg-stone-100 border-stone-200 text-stone-400 opacity-50'
+                            : darkMode ? 'bg-stone-800 border-stone-700 text-stone-600 opacity-50' : 'bg-stone-100 border-stone-200 text-stone-400 opacity-50'
                         }`}>
                           <span className="text-xs font-black">{lvl}</span>
                         </div>
-                        <span className={`text-[10px] font-bold ${profile.level >= lvl ? 'text-purple-500' : 'text-stone-400'}`}>Nível {lvl}</span>
+                        <span className={`text-[10px] font-bold ${profile.level >= lvl ? 'text-purple-500' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Nível {lvl}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Conquistas de XP */}
+                {/* XP Achievements */}
                 {[1000, 5000, 10000].map((xpGoal) => (
                   <div 
                     key={`xp-${xpGoal}`}
                     className={`p-5 rounded-2xl border shadow-sm flex items-center gap-4 transition-all ${
-                      profile.xp >= xpGoal 
+                      (profile.xp || 0) >= xpGoal 
                         ? (darkMode ? 'bg-stone-900 border-orange-500/50' : 'bg-white border-orange-200 shadow-orange-100/50')
                         : (darkMode ? 'bg-stone-900/50 border-stone-800 opacity-50 grayscale' : 'bg-stone-50 border-stone-100 opacity-50 grayscale')
                     }`}
                   >
-                    <div className={`p-3 rounded-full ${profile.xp >= xpGoal ? 'bg-orange-500' : 'bg-stone-400'} text-white`}>
+                    <div className={`p-3 rounded-full ${(profile.xp || 0) >= xpGoal ? 'bg-orange-500' : 'bg-stone-400'} text-white`}>
                       <BrainCircuit className="w-6 h-6" />
                     </div>
                     <div>
@@ -1128,16 +1384,43 @@ export default function App() {
                         Acumular {xpGoal} XP
                       </h3>
                       <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                        {profile.xp >= xpGoal 
+                        {(profile.xp || 0) >= xpGoal 
                           ? 'Conquista desbloqueada! 🧠' 
                           : `Faltam ${Math.max(0, xpGoal - (profile.xp || 0))} XP para desbloquear`}
                       </p>
                     </div>
-                    {profile.xp >= xpGoal && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
+                    {(profile.xp || 0) >= xpGoal && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
                   </div>
                 ))}
+
+                {/* Subject Achievements */}
+                {achievements.length > 0 && (
+                  <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                    <h3 className="font-black text-base mb-3 flex items-center gap-2">
+                      <Star className="w-5 h-5 text-yellow-500" />
+                      Conquistas por Matéria
+                    </h3>
+                    <div className="space-y-2">
+                      {achievements.map((ach, idx) => (
+                        <div key={idx} className={`flex items-center gap-3 p-3 rounded-xl ${darkMode ? 'bg-stone-800' : 'bg-stone-50'}`}>
+                          <div className={`p-2 rounded-lg ${ach.color} text-white`}>
+                            <Trophy className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className={`font-bold text-sm ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{ach.subjectName}</div>
+                            <div className={`text-xs ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+                              {ach.type === 'perfeito' ? '🏆 100% Concluído!' : ach.type === 'melhor' ? '⭐ 5+ tópicos concluídos' : '✅ 2+ tópicos concluídos'}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
+
+          /* ── QUESTIONS TAB ────────────────────────────────────────────── */
           ) : currentTab === 'questions' ? (
             <motion.div 
               key="questions"
@@ -1154,22 +1437,35 @@ export default function App() {
                     <h2 className="font-bold text-lg">Banco de Questões</h2>
                   </div>
                   
-                  <div className="flex p-1 bg-stone-100 rounded-xl mb-6 dark:bg-stone-800">
+                  {/* Mode Tabs */}
+                  <div className={`flex p-1 rounded-xl mb-6 ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
                     <button
                       onClick={() => setQuestionMode('random')}
-                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${questionMode === 'random' ? 'bg-white shadow-sm text-stone-800 dark:bg-stone-700 dark:text-stone-200' : 'text-stone-500 hover:text-stone-700 dark:text-stone-400'}`}
+                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                        questionMode === 'random' 
+                          ? darkMode ? 'bg-stone-700 text-stone-200 shadow-sm' : 'bg-white shadow-sm text-stone-800'
+                          : darkMode ? 'text-stone-400 hover:text-stone-300' : 'text-stone-500 hover:text-stone-700'
+                      }`}
                     >
                       Aleatório
                     </button>
                     <button
                       onClick={() => setQuestionMode('filter')}
-                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${questionMode === 'filter' ? 'bg-white shadow-sm text-stone-800 dark:bg-stone-700 dark:text-stone-200' : 'text-stone-500 hover:text-stone-700 dark:text-stone-400'}`}
+                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                        questionMode === 'filter' 
+                          ? darkMode ? 'bg-stone-700 text-stone-200 shadow-sm' : 'bg-white shadow-sm text-stone-800'
+                          : darkMode ? 'text-stone-400 hover:text-stone-300' : 'text-stone-500 hover:text-stone-700'
+                      }`}
                     >
                       Filtros
                     </button>
                     <button
                       onClick={() => setQuestionMode('stats')}
-                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${questionMode === 'stats' ? 'bg-white shadow-sm text-stone-800 dark:bg-stone-700 dark:text-stone-200' : 'text-stone-500 hover:text-stone-700 dark:text-stone-400'}`}
+                      className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                        questionMode === 'stats' 
+                          ? darkMode ? 'bg-stone-700 text-stone-200 shadow-sm' : 'bg-white shadow-sm text-stone-800'
+                          : darkMode ? 'text-stone-400 hover:text-stone-300' : 'text-stone-500 hover:text-stone-700'
+                      }`}
                     >
                       Feitas
                     </button>
@@ -1230,7 +1526,7 @@ export default function App() {
                             ))}
                           </select>
                           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                            <ChevronDown className="w-4 h-4 text-stone-400" />
+                            <ChevronDown className={`w-4 h-4 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
                           </div>
                         </div>
 
@@ -1250,6 +1546,7 @@ export default function App() {
                         </button>
                       </>
                     ) : (
+                      /* Filter Mode */
                       <>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="relative">
@@ -1268,10 +1565,9 @@ export default function App() {
                               <option value="UNICAMP">UNICAMP</option>
                             </select>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                              <ChevronDown className="w-3 h-3 text-stone-400" />
+                              <ChevronDown className={`w-3 h-3 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
                             </div>
                           </div>
-                          
                           <div className="relative">
                             <select 
                               value={filterDiscipline}
@@ -1283,41 +1579,50 @@ export default function App() {
                               }`}
                             >
                               <option value="">Disciplina</option>
-                              {subjects.map(s => (
-                                <option key={s.id} value={s.id}>{s.name}</option>
-                              ))}
+                              <option value="mat">Matemática</option>
+                              <option value="por">Linguagens</option>
+                              <option value="his">C. Humanas</option>
+                              <option value="bio">C. Natureza</option>
+                              <option value="fis">Física</option>
+                              <option value="qui">Química</option>
+                              <option value="geo">Geografia</option>
+                              <option value="red">Redação</option>
                             </select>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                              <ChevronDown className="w-3 h-3 text-stone-400" />
+                              <ChevronDown className={`w-3 h-3 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
                             </div>
                           </div>
                         </div>
 
                         <div className="relative">
-                          <input 
+                          <input
                             type="text"
-                            placeholder="Assunto ou palavra-chave..."
                             value={filterTopic}
                             onChange={(e) => setFilterTopic(e.target.value)}
-                            className={`w-full pl-4 pr-4 py-3 rounded-xl outline-none font-medium transition-colors ${
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            placeholder="Buscar por palavra-chave..."
+                            className={`w-full pl-4 pr-10 py-3 rounded-xl outline-none text-sm font-medium transition-colors ${
                               darkMode 
-                                ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50 placeholder-stone-600' 
-                                : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20 placeholder-stone-400'
+                                ? 'bg-stone-800 text-stone-200 placeholder:text-stone-600 focus:ring-2 focus:ring-purple-500/50' 
+                                : 'bg-stone-100 text-stone-700 placeholder:text-stone-400 focus:ring-2 focus:ring-purple-500/20'
                             }`}
                           />
+                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <Search className={`w-4 h-4 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`} />
+                          </div>
                         </div>
 
                         <button 
                           onClick={handleSearch}
-                          disabled={isGenerating}
-                          className="w-full py-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+                          disabled={loadingQuestion}
+                          className="w-full py-4 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-70"
                         >
-                          {isGenerating ? (
+                          {loadingQuestion ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
                           ) : (
                             <>
                               <Search className="w-5 h-5" />
-                              FILTRAR QUESTÕES
+                              BUSCAR QUESTÕES
                             </>
                           )}
                         </button>
@@ -1327,21 +1632,21 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Loading */}
               {loadingQuestion && (
-                <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <Loader2 className="w-12 h-12 text-[#1a569d] animate-spin" />
+                <div className="flex items-center justify-center py-8 gap-3">
+                  <Loader2 className={`w-5 h-5 animate-spin ${darkMode ? 'text-stone-400' : 'text-stone-500'}`} />
                   <p className={`font-medium animate-pulse ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Buscando questões...</p>
                 </div>
               )}
 
+              {/* Active Question */}
               {activeQuestionId && (
                 (() => {
                   const q = searchResults.find(sq => sq.id === activeQuestionId) || savedQuestions.find(sq => sq.id === activeQuestionId);
                   if (!q) return null;
                   
                   const savedQ = savedQuestions.find(sq => sq.id === activeQuestionId);
-                  const lastAttempt = savedQ?.attempts[savedQ.attempts.length - 1];
-                  const isAnswered = !!lastAttempt && selectedOption !== null;
                   const isRedo = savedQ ? savedQ.attempts.length > 1 : false;
 
                   return (
@@ -1373,7 +1678,7 @@ export default function App() {
                         Assunto: {q.topic}
                       </div>
 
-                      <div className={`text-sm font-medium leading-relaxed ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
+                      <div className={`text-sm font-medium leading-relaxed whitespace-pre-wrap ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
                         {q.text}
                       </div>
 
@@ -1419,11 +1724,11 @@ export default function App() {
                               {showExplanation ? 'Ocultar Explicação' : 'Ver Explicação'}
                             </button>
                             <div className={`text-xs font-bold ${selectedOption === q.correctAnswer ? 'text-emerald-500' : 'text-red-500'}`}>
-                              {selectedOption === q.correctAnswer ? 'GREEN!' : 'RED!'}
+                              {selectedOption === q.correctAnswer ? '✅ CORRETO!' : '❌ ERRADO'}
                             </div>
                           </div>
                           
-                          {showExplanation && (
+                          {showExplanation && q.explanation && (
                             <div className={`p-4 rounded-xl text-sm leading-relaxed ${darkMode ? 'bg-stone-800 text-stone-400' : 'bg-indigo-50 text-indigo-800'}`}>
                               {q.explanation}
                             </div>
@@ -1444,6 +1749,8 @@ export default function App() {
                   );
                 })()
               )}
+
+              {/* Filter Results */}
               {questionMode === 'filter' && hasSearched && searchResults.length > 0 && !activeQuestionId && (
                 <div className="space-y-4">
                   <h3 className={`text-xs font-black uppercase tracking-widest ${darkMode ? 'text-stone-700' : 'text-stone-400'}`}>Resultados ({searchResults.length})</h3>
@@ -1461,32 +1768,24 @@ export default function App() {
                         >
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold bg-gray-100 text-gray-600 ${darkMode ? 'bg-stone-800 text-stone-400' : ''}`}>
+                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${darkMode ? 'bg-stone-800 text-stone-400' : 'bg-gray-100 text-gray-600'}`}>
                                 {q.institution || 'ENEM'} {q.year || '2023'}
                               </span>
-                            </div>
-                            <p className={`text-sm font-medium truncate ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>{q.text}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              {lastAttempt ? (
-                                <div className="flex items-center gap-1.5">
-                                  <div className={`w-2.5 h-2.5 rounded-full ${isCorrect ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                                  <span className={`text-[10px] font-black uppercase tracking-tighter ${isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
-                                    {isCorrect ? 'ACERTOU' : 'ERROU'} 
-                                    {redoCount > 1 && ` • ${redoCount-1}x REFEITA`}
-                                  </span>
-                                </div>
-                              ) : (
-                                <span className={`text-[10px] font-black uppercase tracking-tighter ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Não respondida</span>
+                              {redoCount > 0 && (
+                                <span className={`text-[10px] font-bold ${isCorrect ? 'text-emerald-500' : 'text-red-500'}`}>
+                                  {isCorrect ? '✅' : '❌'}
+                                </span>
                               )}
                             </div>
+                            <p className={`text-sm font-medium truncate ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>
+                              {q.text.substring(0, 60)}...
+                            </p>
                           </div>
-                          <button 
+                          <button
                             onClick={() => openQuestion(q)}
-                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
-                              darkMode ? 'bg-stone-800 text-stone-300 hover:bg-stone-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                            }`}
+                            className="shrink-0 bg-indigo-600 text-white px-3 py-2 rounded-xl text-xs font-bold hover:bg-indigo-700 transition-colors"
                           >
-                            {lastAttempt ? 'Refazer' : 'Responder'}
+                            {redoCount > 0 ? 'Refazer' : 'Resolver'}
                           </button>
                         </div>
                       );
@@ -1494,240 +1793,265 @@ export default function App() {
                   </div>
                 </div>
               )}
-              {questionMode === 'filter' && hasSearched && searchResults.length === 0 && (
-                <div className={`p-12 rounded-2xl border border-dashed text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-300'}`}>
-                  <Search className={`w-12 h-12 mx-auto mb-4 ${darkMode ? 'text-stone-800' : 'text-stone-200'}`} />
-                  <h3 className={`font-bold text-lg mb-2 ${darkMode ? 'text-stone-300' : 'text-stone-800'}`}>Nenhuma questão encontrada</h3>
-                  <p className={`text-sm max-w-xs mx-auto ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>
-                    Tente ajustar os filtros para encontrar mais resultados.
-                  </p>
+
+              {questionMode === 'filter' && hasSearched && searchResults.length === 0 && !loadingQuestion && (
+                <div className={`p-6 rounded-2xl text-center border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                  <Search className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-stone-600' : 'text-stone-300'}`} />
+                  <p className={`font-bold ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Nenhuma questão encontrada</p>
+                  <p className={`text-sm mt-1 ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Tente outros filtros</p>
                 </div>
               )}
             </motion.div>
-          ) : null}
 
-          {currentTab === 'pomodoro' && (
-            <motion.div
+          /* ── POMODORO TAB ─────────────────────────────────────────────── */
+          ) : currentTab === 'pomodoro' ? (
+            <motion.div 
               key="pomodoro"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6 pb-24"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-6"
             >
-              {/* Pomodoro Timer */}
-              <div className={`p-8 rounded-3xl border text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
-                <h2 className={`text-xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-stone-800'}`}>
-                  {pomodoroMode === 'work' ? 'Tempo de Foco' : 'Pausa Curta'}
-                </h2>
-                
-                <div className="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center">
-                  <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-                    <circle
-                      cx="96"
-                      cy="96"
-                      r="88"
-                      className={`stroke-current ${darkMode ? 'text-stone-800' : 'text-stone-100'}`}
-                      strokeWidth="12"
-                      fill="none"
-                    />
-                    <circle
-                      cx="96"
-                      cy="96"
-                      r="88"
-                      className={`stroke-current ${pomodoroMode === 'work' ? 'text-indigo-500' : 'text-emerald-500'} transition-all duration-1000 ease-linear`}
-                      strokeWidth="12"
-                      fill="none"
-                      strokeDasharray={2 * Math.PI * 88}
-                      strokeDashoffset={2 * Math.PI * 88 * (1 - pomodoroTime / (pomodoroMode === 'work' ? 25 * 60 : 5 * 60))}
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className={`text-5xl font-black font-mono tracking-tighter relative z-10 ${darkMode ? 'text-white' : 'text-stone-800'}`}>
-                    {isEditingTime ? (
-                      <input 
-                        type="number"
-                        value={customTimeInput}
-                        onChange={(e) => setCustomTimeInput(e.target.value)}
-                        onBlur={() => {
-                          setIsEditingTime(false);
-                          const newTime = parseInt(customTimeInput);
-                          if (!isNaN(newTime) && newTime > 0) {
-                            setPomodoroTime(newTime * 60);
-                          } else {
-                            setCustomTimeInput(Math.floor(pomodoroTime / 60).toString());
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            setIsEditingTime(false);
-                            const newTime = parseInt(customTimeInput);
-                            if (!isNaN(newTime) && newTime > 0) {
-                              setPomodoroTime(newTime * 60);
-                            } else {
-                              setCustomTimeInput(Math.floor(pomodoroTime / 60).toString());
-                            }
-                          }
-                        }}
-                        className={`w-24 text-center bg-transparent border-b-2 outline-none ${darkMode ? 'border-stone-700 text-white' : 'border-stone-300 text-stone-800'}`}
-                        autoFocus
-                      />
-                    ) : (
-                      <span 
-                        onClick={() => {
-                          if (!pomodoroActive) {
-                            setIsEditingTime(true);
-                            setCustomTimeInput(Math.floor(pomodoroTime / 60).toString());
-                          }
-                        }}
-                        className={!pomodoroActive ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}
-                        title={!pomodoroActive ? "Clique para editar o tempo" : ""}
-                      >
-                        {Math.floor(pomodoroTime / 60).toString().padStart(2, '0')}:{(pomodoroTime % 60).toString().padStart(2, '0')}
-                      </span>
-                    )}
-                  </div>
+              <div className="flex items-center gap-2 mb-2">
+                <Target className="w-5 h-5 text-indigo-600" />
+                <h2 className="font-bold text-lg">Foco Pomodoro</h2>
+              </div>
+
+              <div className={`p-8 rounded-3xl border text-center space-y-6 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider ${
+                  pomodoroMode === 'work' 
+                    ? 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20' 
+                    : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+                }`}>
+                  {pomodoroMode === 'work' ? '🎯 Sessão de Foco' : '☕ Pausa'}
                 </div>
 
-                {!pomodoroActive && !isEditingTime && (
-                  <p className={`text-xs mb-6 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
-                    Clique no tempo para editar (em minutos)
-                  </p>
+                {isEditingTime ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <input
+                      type="number"
+                      value={customTimeInput}
+                      onChange={(e) => setCustomTimeInput(e.target.value)}
+                      className={`text-6xl font-black w-32 text-center bg-transparent outline-none border-b-2 ${darkMode ? 'border-stone-600 text-stone-100' : 'border-stone-300 text-stone-900'}`}
+                      min="1"
+                      max="120"
+                    />
+                    <span className={`text-2xl font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>min</span>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (!pomodoroActive) {
+                        setIsEditingTime(true);
+                        setCustomTimeInput(String(Math.floor(pomodoroTime / 60)));
+                      }
+                    }}
+                    className={`text-7xl font-black tracking-tighter tabular-nums ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}
+                  >
+                    {String(Math.floor(pomodoroTime / 60)).padStart(2, '0')}:{String(pomodoroTime % 60).padStart(2, '0')}
+                  </button>
+                )}
+
+                {isEditingTime && (
+                  <button
+                    onClick={() => {
+                      const mins = parseInt(customTimeInput) || 25;
+                      setPomodoroTime(Math.max(1, Math.min(120, mins)) * 60);
+                      setIsEditingTime(false);
+                    }}
+                    className="text-sm font-bold text-indigo-600 hover:underline"
+                  >
+                    Confirmar
+                  </button>
                 )}
 
                 <div className="flex items-center justify-center gap-4">
                   <button
-                    onClick={() => setPomodoroActive(!pomodoroActive)}
-                    className={`w-16 h-16 rounded-full flex items-center justify-center text-white shadow-lg transition-transform active:scale-95 ${
-                      pomodoroMode === 'work' 
-                        ? (pomodoroActive ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-500 hover:bg-indigo-600')
-                        : (pomodoroActive ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-emerald-500 hover:bg-emerald-600')
-                    }`}
-                  >
-                    {pomodoroActive ? <X className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
-                  </button>
-                  <button
                     onClick={() => {
                       setPomodoroActive(false);
-                      setPomodoroTime(pomodoroMode === 'work' ? 25 * 60 : 5 * 60);
+                      setPomodoroMode('work');
+                      setPomodoroTime(25 * 60);
+                      setIsEditingTime(false);
                     }}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center border transition-colors ${
-                      darkMode ? 'border-stone-700 text-stone-400 hover:bg-stone-800' : 'border-stone-200 text-stone-500 hover:bg-stone-50'
-                    }`}
+                    className={`p-4 rounded-2xl transition-colors ${darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
                   >
-                    <Loader2 className="w-5 h-5" />
+                    <XCircle className="w-6 h-6" />
                   </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {currentTab === 'tasks' && (
-            <motion.div
-              key="tasks"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6 pb-24"
-            >
-              {/* To-Do List */}
-              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
-                <h3 className={`font-bold mb-4 flex items-center gap-2 ${darkMode ? 'text-white' : 'text-stone-800'}`}>
-                  <List className="w-5 h-5 text-indigo-500" />
-                  Tarefas de Hoje
-                </h3>
-                
-                <div className="flex gap-2 mb-6">
-                  <input
-                    type="text"
-                    value={newTaskText}
-                    onChange={(e) => setNewTaskText(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && newTaskText.trim()) {
-                        setTasks([...tasks, { id: Date.now().toString(), text: newTaskText.trim(), completed: false }]);
-                        setNewTaskText('');
-                      }
-                    }}
-                    placeholder="Adicionar nova tarefa..."
-                    className={`flex-1 px-4 py-3 rounded-xl text-sm border focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-colors ${
-                      darkMode 
-                        ? 'bg-stone-950 border-stone-800 text-white placeholder-stone-500' 
-                        : 'bg-stone-50 border-stone-200 text-stone-800 placeholder-stone-400'
-                    }`}
-                  />
                   <button
                     onClick={() => {
-                      if (newTaskText.trim()) {
-                        setTasks([...tasks, { id: Date.now().toString(), text: newTaskText.trim(), completed: false }]);
-                        setNewTaskText('');
+                      if (isEditingTime) {
+                        const mins = parseInt(customTimeInput) || 25;
+                        setPomodoroTime(Math.max(1, Math.min(120, mins)) * 60);
+                        setIsEditingTime(false);
                       }
+                      setPomodoroActive(!pomodoroActive);
                     }}
-                    className="px-4 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-colors"
+                    className={`p-6 rounded-3xl text-white font-bold transition-all active:scale-95 shadow-lg ${
+                      pomodoroActive 
+                        ? 'bg-red-500 hover:bg-red-600 shadow-red-500/20' 
+                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20'
+                    }`}
                   >
-                    <Plus className="w-5 h-5" />
+                    {pomodoroActive ? <XCircle className="w-8 h-8" /> : <Play className="w-8 h-8" />}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPomodoroMode(pomodoroMode === 'work' ? 'break' : 'work');
+                      setPomodoroTime(pomodoroMode === 'work' ? 5 * 60 : 25 * 60);
+                      setPomodoroActive(false);
+                    }}
+                    className={`p-4 rounded-2xl transition-colors ${darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
+                  >
+                    <Clock className="w-6 h-6" />
                   </button>
                 </div>
 
-                <div className="space-y-2">
-                  {tasks.length === 0 ? (
-                    <p className={`text-sm text-center py-4 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
-                      Nenhuma tarefa para hoje. Adicione uma acima!
-                    </p>
-                  ) : (
-                    tasks.map(task => (
-                      <div 
-                        key={task.id}
-                        className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
-                          darkMode 
-                            ? `border-stone-800 ${task.completed ? 'bg-stone-950/50' : 'bg-stone-800/50'}` 
-                            : `border-stone-100 ${task.completed ? 'bg-stone-50' : 'bg-white'}`
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => setTasks(tasks.map(t => t.id === task.id ? { ...t, completed: !t.completed } : t))}
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                              task.completed 
-                                ? 'bg-emerald-500 border-emerald-500 text-white' 
-                                : darkMode ? 'border-stone-600' : 'border-stone-300'
-                            }`}
-                          >
-                            {task.completed && <Check className="w-3.5 h-3.5" />}
-                          </button>
-                          <span className={`text-sm font-medium transition-all ${
-                            task.completed 
-                              ? `line-through ${darkMode ? 'text-stone-600' : 'text-stone-400'}` 
-                              : darkMode ? 'text-stone-200' : 'text-stone-700'
-                          }`}>
-                            {task.text}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => setTasks(tasks.filter(t => t.id !== task.id))}
-                          className={`p-2 rounded-lg transition-colors ${
-                            darkMode ? 'text-stone-500 hover:text-red-400 hover:bg-stone-800' : 'text-stone-400 hover:text-red-500 hover:bg-red-50'
-                          }`}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))
-                  )}
-                </div>
+                <p className={`text-xs font-medium ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+                  {pomodoroMode === 'work' 
+                    ? pomodoroActive ? 'Mantenha o foco! Você consegue! 💪' : 'Toque em ▶ para iniciar a sessão'
+                    : 'Descanse um pouco, você merece! ☕'
+                  }
+                </p>
+              </div>
+
+              {/* Pomodoro Tips */}
+              <div className={`p-5 rounded-2xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <h3 className={`font-bold text-sm mb-3 ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>💡 Dicas Pomodoro</h3>
+                <ul className={`space-y-2 text-xs ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>
+                  <li>• 25 min de foco + 5 min de pausa = 1 Pomodoro</li>
+                  <li>• A cada 4 Pomodoros, faça uma pausa longa (15-30 min)</li>
+                  <li>• Elimine distrações durante a sessão de foco</li>
+                  <li>• Ganhe +50 XP ao completar cada sessão!</li>
+                </ul>
               </div>
             </motion.div>
-          )}
+
+          /* ── TASKS TAB ────────────────────────────────────────────────── */
+          ) : currentTab === 'tasks' ? (
+            <motion.div 
+              key="tasks"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <List className="w-5 h-5 text-indigo-600" />
+                <h2 className="font-bold text-lg">Lista de Tarefas</h2>
+              </div>
+
+              {/* Add Task */}
+              <div className={`flex gap-3 p-4 rounded-2xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <input
+                  type="text"
+                  value={newTaskText}
+                  onChange={(e) => setNewTaskText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newTaskText.trim()) {
+                      setTasks(prev => [...prev, { id: Date.now().toString(), text: newTaskText.trim(), completed: false }]);
+                      setNewTaskText('');
+                    }
+                  }}
+                  placeholder="Adicionar nova tarefa..."
+                  className={`flex-1 bg-transparent outline-none text-sm font-medium ${darkMode ? 'text-stone-200 placeholder:text-stone-700' : 'text-stone-800 placeholder:text-stone-400'}`}
+                />
+                <button
+                  onClick={() => {
+                    if (newTaskText.trim()) {
+                      setTasks(prev => [...prev, { id: Date.now().toString(), text: newTaskText.trim(), completed: false }]);
+                      setNewTaskText('');
+                    }
+                  }}
+                  disabled={!newTaskText.trim()}
+                  className="bg-indigo-600 text-white p-2 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Task Stats */}
+              {tasks.length > 0 && (
+                <div className={`flex items-center justify-between px-2 text-xs font-bold ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+                  <span>{tasks.filter(t => !t.completed).length} pendentes</span>
+                  <span className="text-emerald-500">{tasks.filter(t => t.completed).length} concluídas</span>
+                </div>
+              )}
+
+              {/* Task List */}
+              <div className="space-y-3">
+                {tasks.length === 0 ? (
+                  <div className={`p-8 rounded-2xl text-center border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                    <List className={`w-8 h-8 mx-auto mb-2 ${darkMode ? 'text-stone-700' : 'text-stone-300'}`} />
+                    <p className={`font-bold ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Nenhuma tarefa ainda</p>
+                    <p className={`text-sm mt-1 ${darkMode ? 'text-stone-700' : 'text-stone-400'}`}>Adicione suas tarefas de estudo acima</p>
+                  </div>
+                ) : (
+                  tasks.map((task) => (
+                    <div 
+                      key={task.id}
+                      className={`flex items-center gap-3 p-4 rounded-2xl border transition-all ${
+                        task.completed 
+                          ? darkMode ? 'bg-stone-900/50 border-stone-800 opacity-60' : 'bg-stone-50 border-stone-100 opacity-60'
+                          : darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <button
+                          onClick={() => {
+                            setTasks(prev => prev.map(t => 
+                              t.id === task.id ? { ...t, completed: !t.completed } : t
+                            ));
+                            if (!task.completed) addXP(25);
+                          }}
+                          className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                            task.completed 
+                              ? 'bg-emerald-500 border-emerald-500 text-white' 
+                              : darkMode ? 'border-stone-700 hover:border-emerald-500' : 'border-stone-300 hover:border-emerald-500'
+                          }`}
+                        >
+                          {task.completed && <Check className="w-3.5 h-3.5" />}
+                        </button>
+                        <span className={`text-sm font-medium transition-all ${
+                          task.completed 
+                            ? `line-through ${darkMode ? 'text-stone-600' : 'text-stone-400'}` 
+                            : darkMode ? 'text-stone-200' : 'text-stone-700'
+                        }`}>
+                          {task.text}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => setTasks(tasks.filter(t => t.id !== task.id))}
+                        className={`p-2 rounded-lg transition-colors ${
+                          darkMode ? 'text-stone-500 hover:text-red-400 hover:bg-stone-800' : 'text-stone-400 hover:text-red-500 hover:bg-red-50'
+                        }`}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </motion.div>
+          ) : null}
         </AnimatePresence>
       </main>
 
-      {/* Bottom Navigation */}
-      <nav className={`flex-shrink-0 border-t px-6 py-3 flex justify-around items-center gap-2 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{paddingBottom: 'max(1rem, env(safe-area-inset-bottom))', paddingLeft: 'max(1rem, env(safe-area-inset-left))', paddingRight: 'max(1rem, env(safe-area-inset-right))'}}>
+      {/* ── Bottom Navigation ───────────────────────────────────────────────── */}
+      <nav 
+        className={`flex-shrink-0 border-t px-6 py-3 flex justify-around items-center gap-2 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} 
+        style={{
+          paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))', 
+          paddingLeft: 'max(1rem, env(safe-area-inset-left))', 
+          paddingRight: 'max(1rem, env(safe-area-inset-right))'
+        }}
+      >
         <button 
           onClick={() => {
             setCurrentTab('home');
             setSelectedSubjectId(null);
             window.location.hash = 'home';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'home' ? 'text-indigo-600' : 'text-stone-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'home' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <LayoutDashboard className="w-6 h-6" />
           <span className="text-[10px] font-bold uppercase tracking-wider">Início</span>
@@ -1738,7 +2062,7 @@ export default function App() {
             setCurrentTab('questions');
             window.location.hash = 'questions';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'questions' ? 'text-indigo-600' : 'text-stone-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'questions' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <BrainCircuit className="w-6 h-6" />
           <span className="text-[10px] font-bold uppercase tracking-wider">Questões</span>
@@ -1749,7 +2073,7 @@ export default function App() {
             setCurrentTab('achievements');
             window.location.hash = 'achievements';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'achievements' ? 'text-indigo-600' : 'text-stone-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'achievements' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <Trophy className="w-6 h-6" />
           <span className="text-[10px] font-bold uppercase tracking-wider">Conquistas</span>
@@ -1760,7 +2084,7 @@ export default function App() {
             setCurrentTab('pomodoro');
             window.location.hash = 'pomodoro';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'pomodoro' ? 'text-indigo-600' : 'text-stone-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'pomodoro' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <Target className="w-6 h-6" />
           <span className="text-[10px] font-bold uppercase tracking-wider">Foco</span>
@@ -1771,7 +2095,7 @@ export default function App() {
             setCurrentTab('tasks');
             window.location.hash = 'tasks';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'tasks' ? 'text-indigo-600' : 'text-stone-400'}`}
+          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'tasks' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <List className="w-6 h-6" />
           <span className="text-[10px] font-bold uppercase tracking-wider">Tarefas</span>

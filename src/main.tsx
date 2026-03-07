@@ -18,7 +18,6 @@ if ('serviceWorker' in navigator) {
 
 // Suporte a Notificações Push
 if ('Notification' in window && 'serviceWorker' in navigator) {
-  // Pedir permissão para notificações (apenas uma vez)
   if (Notification.permission === 'default') {
     // Não pedir automaticamente, deixar o usuário decidir
   }
@@ -29,7 +28,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('message', event => {
     if (event.data.type === 'SHARED_DATA') {
       console.log('[PWA] Dados compartilhados recebidos:', event.data.data);
-      // Você pode disparar uma ação aqui para processar os dados compartilhados
       window.dispatchEvent(new CustomEvent('shared-data', { detail: event.data.data }));
     }
   });
@@ -43,13 +41,21 @@ const isInstalledPWA = window.matchMedia('(display-mode: standalone)').matches |
 console.log('[PWA] Modo instalado:', isInstalledPWA);
 
 // Suporte a Periodic Sync (para notificações periódicas)
-if ('serviceWorker' in navigator && 'periodicSync' in ServiceWorkerRegistration.prototype) {
+// Usando cast de tipo para evitar erro TypeScript em ambientes sem suporte
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.ready.then(registration => {
-    registration.periodicSync.register('periodic-notification', {
-      minInterval: 24 * 60 * 60 * 1000 // 24 horas
-    }).catch(error => {
-      console.log('[PWA] Periodic Sync não suportado ou não permitido:', error);
-    });
+    const reg = registration as ServiceWorkerRegistration & {
+      periodicSync?: {
+        register: (tag: string, options?: { minInterval: number }) => Promise<void>;
+      };
+    };
+    if (reg.periodicSync) {
+      reg.periodicSync.register('periodic-notification', {
+        minInterval: 24 * 60 * 60 * 1000 // 24 horas
+      }).catch(error => {
+        console.log('[PWA] Periodic Sync não suportado ou não permitido:', error);
+      });
+    }
   });
 }
 

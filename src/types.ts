@@ -18,6 +18,7 @@ export interface UserProfile {
   photo: string | null;
   achievements: string[];
   streak: number;
+  bestStreak: number;
   lastLogin: string | null;
   xp: number;
   level: number;
