@@ -7,13 +7,14 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag name for the release (e.g. v3.1.0)'
+        description: 'Tag da release (ex: v3.2.0)'
         required: true
-        default: 'v3.1.0'
+        default: 'v3.2.0'
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
 
@@ -22,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ── 2. Node.js ─────────────────────────────────────────────────────
+      # ── 2. Node.js 22 ──────────────────────────────────────────────────
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,19 +35,19 @@ jobs:
         with:
           version: 10
 
-      # ── 4. Dependências Node ───────────────────────────────────────────
+      # ── 4. ETAPA 3 — Instalar dependências ────────────────────────────
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
-      # ── 5. Build Web ───────────────────────────────────────────────────
+      # ── 5. ETAPA 4 — Build React ───────────────────────────────────────
       - name: Build Web (Vite)
         run: pnpm run build
 
-      # ── 6. Java 17 ─────────────────────────────────────────────────────
-      - name: Set up JDK 17
+      # ── 6. JDK 21 ──────────────────────────────────────────────────────
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       # ── 7. Android SDK ─────────────────────────────────────────────────
@@ -57,7 +58,7 @@ jobs:
         run: |
           sdkmanager "platforms;android-35" "build-tools;35.0.0" --sdk_root=$ANDROID_SDK_ROOT
 
-      # ── 8. Capacitor Sync ──────────────────────────────────────────────
+      # ── 8. ETAPA 5 — Sincronizar Capacitor ────────────────────────────
       - name: Sync Capacitor
         run: pnpm exec cap sync android
 
@@ -65,7 +66,14 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
 
-      # ── 10. Determinar versão ─────────────────────────────────────────
+      # ── 10. ETAPA 6 — Limpar cache Gradle ─────────────────────────────
+      - name: Clean Gradle cache
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew clean --no-daemon
+
+      # ── 11. Determinar versão ─────────────────────────────────────────
       - name: Get version
         id: version
         run: |
@@ -74,16 +82,18 @@ jobs:
           else
             echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
+          echo "DATE=$(date +'%d/%m/%Y')" >> $GITHUB_OUTPUT
+          echo "DATETIME=$(date +'%d/%m/%Y às %H:%M UTC')" >> $GITHUB_OUTPUT
 
-      # ── 11. Build APK ─────────────────────────────────────────────────
+      # ── 12. ETAPA 7 — Compilar APK ────────────────────────────────────
       - name: Build Android APK (Debug)
         run: |
           cd android
-          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk ../OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
+          cp app/build/outputs/apk/debug/app-debug.apk \
+             ../OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
 
-      # ── 12. Upload Artifact ───────────────────────────────────────────
+      # ── 13. ETAPA 9 — Upload APK como artifact ─────────────────────────
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
@@ -91,7 +101,7 @@ jobs:
           path: OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
           retention-days: 90
 
-      # ── 13. Create/Update Release ─────────────────────────────────────
+      # ── 14. ETAPA 10+11 — Criar Release com descrição automática ───────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -99,21 +109,80 @@ jobs:
           files: OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
           name: "OrganiStuda ${{ steps.version.outputs.VERSION }}"
           body: |
-            ## 🚀 OrganiStuda ${{ steps.version.outputs.VERSION }}
+            # OrganiStuda ${{ steps.version.outputs.VERSION }}
+            ### Nova Build do Aplicativo
 
-            ### 📱 Como instalar
-            1. Baixe o arquivo `OrganiStuda-${{ steps.version.outputs.VERSION }}.apk` abaixo
-            2. No Android, vá em **Configurações → Segurança → Instalar apps desconhecidos** e ative para o seu gerenciador de arquivos
-            3. Abra o arquivo APK e instale
-
-            ### ✨ Novidades desta versão
-            - 🔥 **Widget Android** — Adicione na tela inicial para ver sua sequência de estudos
-            - 📊 **Sistema de Streak** — Acompanhe seus dias consecutivos de estudo
-            - 🎨 **Widget com tema** — Detecta automaticamente modo escuro/claro
-            - 📚 **733 questões** de vestibulares (ENEM, FUVEST, UNICAMP, UNESP, UERJ e mais)
-            - 🔧 **Safe Areas corrigidas** — Compatível com notch e home indicator
+            > 📅 Build gerada em: **${{ steps.version.outputs.DATETIME }}**
 
             ---
+
+            ## 📋 Descrição
+
+            Esta versão inclui melhorias de estabilidade, correções de bugs, otimizações de segurança e atualizações no sistema do aplicativo.
+
+            ---
+
+            ## ✨ Novidades
+
+            - ✅ Correção do sistema de build Android (JDK 21 + AGP 8.13.0)
+            - 🔒 Segurança aprimorada: apenas HTTPS, permissões mínimas
+            - 📱 Widget Android nativo na tela inicial com streak de estudos
+            - 🔥 Sistema de sequência de dias (streak) com recorde pessoal
+            - 🎨 Widget com tema automático (escuro/claro)
+            - 📚 Banco com **733 questões** de vestibulares (ENEM, FUVEST, UNICAMP, UNESP, UERJ e mais)
+            - 🏠 Funcionamento 100% local — nenhum dado enviado para servidores
+            - 📶 Funciona offline após a primeira instalação
+
+            ---
+
+            ## 🔧 Correções de Bugs
+
+            - Corrigido erro de build: incompatibilidade JDK 17 vs Java 21 (Capacitor 8.x)
+            - Corrigido AGP 8.7.3 → 8.13.0 (compatível com Capacitor Android 8.2.0)
+            - Corrigidas versões de bibliotecas AndroidX
+            - Removidas dependências desnecessárias do projeto
+            - Corrigidas safe areas (notch, home indicator)
+
+            ---
+
+            ## 🔒 Segurança
+
+            - ✅ Apenas permissão `INTERNET` e `ACCESS_NETWORK_STATE`
+            - ✅ Configuração de segurança de rede (apenas HTTPS)
+            - ✅ Sem coleta de dados pessoais
+            - ✅ Sem analytics ou rastreamento
+            - ✅ Todos os dados armazenados localmente no dispositivo
+            - ✅ `allowBackup="false"` para proteger dados do usuário
+
+            ---
+
+            ## 📱 Compatibilidade
+
+            | Requisito | Versão |
+            |-----------|--------|
+            | Android mínimo | **8.0 (API 24)** |
+            | Android alvo | **15 (API 35)** |
+            | Arquitetura | arm64-v8a, armeabi-v7a, x86_64 |
+
+            ---
+
+            ## 📥 Como instalar
+
+            1. Baixe o arquivo **`OrganiStuda-${{ steps.version.outputs.VERSION }}.apk`** abaixo
+            2. No Android: **Configurações → Segurança → Instalar apps desconhecidos**
+            3. Selecione seu gerenciador de arquivos e ative a permissão
+            4. Abra o arquivo APK e toque em **Instalar**
+
+            ---
+
+            ## 📦 Arquivo disponível
+
+            | Arquivo | Tipo | Descrição |
+            |---------|------|-----------|
+            | `OrganiStuda-${{ steps.version.outputs.VERSION }}.apk` | APK Debug | Pronto para instalação |
+
+            ---
+
             *Desenvolvido com ❤️ para estudantes do ENEM*
           draft: false
           prerelease: false
