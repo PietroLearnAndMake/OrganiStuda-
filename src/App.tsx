@@ -557,6 +557,25 @@ export default function App() {
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans pb-20`}>
       {/* Header / Profile Section */}
       <header className={`border-b px-6 pt-12 pb-6 sticky top-0 z-10 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <BrainCircuit className="w-5 h-5 text-white" />
+            </div>
+            <h1 className={`text-2xl font-black tracking-tighter ${darkMode ? 'text-white' : 'text-stone-900'}`}>
+              Organi<span className="text-indigo-600">Studa</span>
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setDarkMode(!darkMode)}
+              className={`p-2 rounded-xl transition-colors ${darkMode ? 'bg-stone-800 text-yellow-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
+            >
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+          </div>
+        </div>
+
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <div className="relative group">
@@ -593,25 +612,6 @@ export default function App() {
             </div>
           </div>
           <div className={`flex flex-col items-end gap-2 p-4 rounded-2xl shadow-sm border transition-colors ${darkMode ? 'bg-stone-900 border-stone-800 shadow-none' : 'bg-white border-stone-200'}`}>
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={() => {
-                  const url = window.location.origin + window.location.pathname;
-                  navigator.clipboard.writeText(url);
-                  alert("Link do App copiado!");
-                }}
-                className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
-                title="Compartilhar App"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-stone-800 text-yellow-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
-              >
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-            </div>
             <div className="text-right">
               <div className={`text-3xl font-black leading-none ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{overallPercentage}%</div>
               <div className={`text-[10px] uppercase tracking-wider font-bold mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Progresso Total</div>
