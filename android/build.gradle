@@ -1,5 +1,5 @@
 // Top-level build file — OrganiStuda
-// AGP 8.11.1 — compatível com Capacitor Android 8.2.0, Gradle 8.13, compileSdk 34
+// AGP 8.11.1 — compatível com Capacitor Android 8.2.0, Gradle 8.13, compileSdk 35
 
 buildscript {
     repositories {
@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // Versão estável que suporta compileSdk 34 (API level 34)
+        // Versão estável que suporta compileSdk 35 (API level 35)
         classpath 'com.android.tools.build:gradle:8.11.1'
     }
 }
