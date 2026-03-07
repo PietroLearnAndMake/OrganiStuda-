@@ -1,4 +1,43 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { registerPlugin } from '@capacitor/core';
+
+// ── Plugin nativo de Streak (Android Widget) ──────────────────────────────
+interface StreakPluginInterface {
+  saveStreak(data: {
+    streak: number;
+    bestStreak: number;
+    lastDate: string;
+    totalQuestions: number;
+    correctQuestions: number;
+    darkMode: boolean;
+  }): Promise<{ success: boolean }>;
+  getStreak(): Promise<{
+    streak: number;
+    bestStreak: number;
+    lastDate: string;
+    totalQuestions: number;
+    correctQuestions: number;
+    darkMode: boolean;
+  }>;
+}
+
+const StreakPlugin = registerPlugin<StreakPluginInterface>('StreakPlugin');
+
+// Helper: sincronizar dados com o widget Android
+async function syncWidgetData(params: {
+  streak: number;
+  bestStreak: number;
+  lastDate: string;
+  totalQuestions: number;
+  correctQuestions: number;
+  darkMode: boolean;
+}) {
+  try {
+    await StreakPlugin.saveStreak(params);
+  } catch {
+    // Silencioso — plugin só existe no Android nativo
+  }
+}
 import { QUESTION_BANK } from './data/questionBank';
 import { 
   Calculator, 
@@ -423,6 +462,19 @@ export default function App() {
       localStorage.setItem('enem_theme', darkMode ? 'dark' : 'light');
       localStorage.setItem('enem_saved_questions', JSON.stringify(savedQuestions));
       localStorage.setItem('enem_tasks', JSON.stringify(tasks));
+    }
+    // ── Sincronizar com widget Android ──────────────────────────────────
+    if (isInitialized) {
+      const total = savedQuestions.filter(q => q.attempts.length > 0).length;
+      const correct = savedQuestions.filter(q => q.attempts.some(a => a.isCorrect)).length;
+      syncWidgetData({
+        streak: profile.streak || 0,
+        bestStreak: profile.bestStreak || 0,
+        lastDate: profile.lastLogin || '',
+        totalQuestions: total,
+        correctQuestions: correct,
+        darkMode: darkMode,
+      });
     }
   }, [subjects, profile, isInitialized, darkMode, savedQuestions, tasks]);
 

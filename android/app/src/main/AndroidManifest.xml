@@ -9,6 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- ── Atividade principal ──────────────────────────────────── -->
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
@@ -25,6 +26,7 @@
 
         </activity>
 
+        <!-- ── FileProvider ────────────────────────────────────────── -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -32,11 +34,28 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- ── Widget de Streak ────────────────────────────────────── -->
+        <receiver
+            android:name=".StreakWidgetProvider"
+            android:exported="true"
+            android:label="OrganiStuda — Sequência">
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_streak_info" />
+
+        </receiver>
+
     </application>
 
-    <!-- Permissions -->
-
+    <!-- ── Permissões ──────────────────────────────────────────────── -->
     <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for the release (e.g. v3.1.0)'
+        required: true
+        default: 'v3.1.0'
 
 jobs:
   build-and-release:
@@ -12,92 +18,100 @@ jobs:
       contents: write
 
     steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      # ── 2. Node.js ─────────────────────────────────────────────────────
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'
 
+      # ── 3. pnpm ────────────────────────────────────────────────────────
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
 
-      - name: Install dependencies
-        run: pnpm install
+      # ── 4. Dependências Node ───────────────────────────────────────────
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Web Project
-        run: pnpm build
+      # ── 5. Build Web ───────────────────────────────────────────────────
+      - name: Build Web (Vite)
+        run: pnpm run build
 
-      - name: Sync Capacitor
-        run: npx cap sync android
-
-      - name: Setup Java
+      # ── 6. Java 17 ─────────────────────────────────────────────────────
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '21'
+          java-version: '17'
+          distribution: 'temurin'
 
+      # ── 7. Android SDK ─────────────────────────────────────────────────
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build Android APK
+      - name: Install Android SDK platform 35
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" --sdk_root=$ANDROID_SDK_ROOT
+
+      # ── 8. Capacitor Sync ──────────────────────────────────────────────
+      - name: Sync Capacitor
+        run: pnpm exec cap sync android
+
+      # ── 9. local.properties ───────────────────────────────────────────
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+
+      # ── 10. Determinar versão ─────────────────────────────────────────
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.tag_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      # ── 11. Build APK ─────────────────────────────────────────────────
+      - name: Build Android APK (Debug)
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
-          cp app/build/outputs/apk/debug/app-debug.apk ../OrganiStuda-${{ github.ref_name }}.apk
+          ./gradlew assembleDebug --no-daemon --stacktrace
+          cp app/build/outputs/apk/debug/app-debug.apk ../OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
 
-      - name: Create Release
+      # ── 12. Upload Artifact ───────────────────────────────────────────
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OrganiStuda-${{ steps.version.outputs.VERSION }}
+          path: OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
+          retention-days: 90
+
+      # ── 13. Create/Update Release ─────────────────────────────────────
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            OrganiStuda-${{ github.ref_name }}.apk
-          name: "OrganiStuda ${{ github.ref_name }}"
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          files: OrganiStuda-${{ steps.version.outputs.VERSION }}.apk
+          name: "OrganiStuda ${{ steps.version.outputs.VERSION }}"
           body: |
-            ## 🚀 OrganiStuda ${{ github.ref_name }}
+            ## 🚀 OrganiStuda ${{ steps.version.outputs.VERSION }}
 
             ### 📱 Como instalar
-            1. Baixe o arquivo `OrganiStuda-${{ github.ref_name }}.apk` abaixo
-            2. No Android, vá em **Configurações → Segurança → Fontes desconhecidas** e ative
+            1. Baixe o arquivo `OrganiStuda-${{ steps.version.outputs.VERSION }}.apk` abaixo
+            2. No Android, vá em **Configurações → Segurança → Instalar apps desconhecidos** e ative para o seu gerenciador de arquivos
             3. Abra o arquivo APK e instale
 
-            ---
-
-            ### ✅ Correções de Bugs
-            - **Acerto de questões**: Som e conquista agora funcionam corretamente ao acertar uma questão
-            - **Streak no primeiro uso**: A sequência de dias agora inicia corretamente no primeiro acesso
-            - **Loading de busca**: O indicador de carregamento agora aparece ao buscar questões
-            - **Erro TypeScript (periodicSync)**: Corrigido com cast de tipo seguro
-            - **Modo escuro nos filtros**: Selects e abas agora respeitam o tema escuro corretamente
-            - **Memory leak**: Event listeners agora são removidos corretamente ao desmontar componentes
-
-            ### 🆕 Novos Widgets
-            - **🔥 Widget de Sequência de Estudos**: Exibe dias consecutivos, recorde pessoal e indicador visual da semana atual — integrado na aba Início
-            - **📊 Widget de Desempenho**: Mostra total de questões feitas, acertos e taxa de acerto com barra de progresso — aparece na aba Início e Conquistas
-            - **🏆 Card de Streak nas Conquistas**: Marcos de sequência (3, 7, 14, 30, 100 dias) com visual de progresso
-            - **⭐ Conquistas por Matéria**: Lista de conquistas desbloqueadas por matéria na aba Conquistas
-            - **💡 Dicas Pomodoro**: Card informativo com dicas de uso do método Pomodoro
-
-            ### 🎮 Melhorias de Gamificação
-            - **+50 XP** ao completar uma sessão Pomodoro (com notificação toast)
-            - **+25 XP** ao concluir uma tarefa na lista de tarefas
-            - **Recorde de streak** (`bestStreak`) agora é rastreado e exibido
-            - Feedback visual melhorado: ✅ CORRETO! / ❌ ERRADO
-
-            ### 🎨 Melhorias de UX
-            - Texto das questões preserva formatação original (quebras de linha)
-            - Ícones da navegação inferior com cor correta no modo escuro
-            - Tela vazia com mensagem amigável na aba Tarefas
-            - Contador de tarefas pendentes/concluídas
-            - Mensagem "Nenhuma questão encontrada" no modo filtro
-
-            ### 📚 Banco de Questões
-            - **387 questões** no total (205 originais + 182 novas)
-            - Questões de ENEM, FUVEST e UNICAMP (2018–2025)
-            - Matérias: Matemática, Linguagens, C. Humanas, C. Natureza, Redação
+            ### ✨ Novidades desta versão
+            - 🔥 **Widget Android** — Adicione na tela inicial para ver sua sequência de estudos
+            - 📊 **Sistema de Streak** — Acompanhe seus dias consecutivos de estudo
+            - 🎨 **Widget com tema** — Detecta automaticamente modo escuro/claro
+            - 📚 **733 questões** de vestibulares (ENEM, FUVEST, UNICAMP, UNESP, UERJ e mais)
+            - 🔧 **Safe Areas corrigidas** — Compatível com notch e home indicator
 
             ---
             *Desenvolvido com ❤️ para estudantes do ENEM*
