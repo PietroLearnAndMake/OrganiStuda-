@@ -60,7 +60,15 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 export default function App() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [profile, setProfile] = useState<UserProfile>({ name: 'Estudante', photo: null, achievements: [], streak: 0, lastLogin: null });
+  const [profile, setProfile] = useState<UserProfile>({ 
+    name: 'Estudante', 
+    photo: null, 
+    achievements: [], 
+    streak: 0, 
+    lastLogin: null, 
+    xp: 0, 
+    level: 1 
+  });
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState<'home' | 'achievements' | 'questions' | 'pomodoro' | 'tasks'>('home');
   const [isInitialized, setIsInitialized] = useState(false);
@@ -152,6 +160,9 @@ export default function App() {
 
     if (savedProfile) {
       const parsedProfile = JSON.parse(savedProfile);
+      // Garantir que xp e level existam para evitar NaN
+      if (parsedProfile.xp === undefined || parsedProfile.xp === null) parsedProfile.xp = 0;
+      if (parsedProfile.level === undefined || parsedProfile.level === null) parsedProfile.level = 1;
       const today = new Date().toISOString().split('T')[0];
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
@@ -1008,7 +1019,9 @@ export default function App() {
                         Alcançar Nível {lvl}
                       </h3>
                       <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                        {profile.level >= lvl ? 'Conquista desbloqueada!' : `Faltam ${lvl - profile.level} níveis`}
+                        {profile.level >= lvl 
+                          ? 'Conquista desbloqueada! 🎉' 
+                          : `Faltam ${Math.max(0, lvl - (profile.level || 1))} níveis para desbloquear`}
                       </p>
                     </div>
                     {profile.level >= lvl && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
@@ -1033,7 +1046,9 @@ export default function App() {
                         Acumular {xpGoal} XP
                       </h3>
                       <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                        {profile.xp >= xpGoal ? 'Conquista desbloqueada!' : `Faltam ${xpGoal - profile.xp} XP`}
+                        {profile.xp >= xpGoal 
+                          ? 'Conquista desbloqueada! 🧠' 
+                          : `Faltam ${Math.max(0, xpGoal - (profile.xp || 0))} XP para desbloquear`}
                       </p>
                     </div>
                     {profile.xp >= xpGoal && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
