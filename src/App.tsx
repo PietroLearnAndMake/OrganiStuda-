@@ -271,7 +271,16 @@ export default function App() {
       if (s.id === subjectId) {
         return {
           ...s,
-          topics: s.topics.map(t => t.id === topicId ? { ...t, completed: !t.completed } : t)
+          topics: s.topics.map(t => {
+            if (t.id === topicId) {
+              const newState = !t.completed;
+              if (newState) {
+                addXP(100); // 100 XP por completar um conteúdo
+              }
+              return { ...t, completed: newState };
+            }
+            return t;
+          })
         };
       }
       return s;
@@ -438,23 +447,42 @@ export default function App() {
     setSelectedOption(null);
     setShowExplanation(false);
   };
+  // Lógica de XP Progressiva: Nível = floor(sqrt(XP / 100)) + 1
+  // Ex: Nível 1: 0 XP, Nível 2: 100 XP, Nível 3: 400 XP, Nível 4: 900 XP, Nível 5: 1600 XP...
+  const calculateLevel = (xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1;
+  const xpForLevel = (level: number) => Math.pow(level - 1, 2) * 100;
+  const xpForNextLevel = (level: number) => Math.pow(level, 2) * 100;
+
   const addXP = (amount: number) => {
     setProfile(prev => {
       const currentXP = prev.xp || 0;
       const currentLevel = prev.level || 1;
       const newXP = currentXP + amount;
-      const newLevel = Math.floor(newXP / 1000) + 1;
+      const newLevel = calculateLevel(newXP);
       
+      // Feedback de XP ganho
+      const xpToast = document.createElement('div');
+      xpToast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold animate-bounce flex items-center gap-2';
+      xpToast.innerHTML = `<span>+${amount} XP</span> <span class="text-xs">✨</span>`;
+      document.body.appendChild(xpToast);
+      setTimeout(() => {
+        xpToast.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        setTimeout(() => xpToast.remove(), 500);
+      }, 2000);
+
       if (newLevel > currentLevel) {
         const notification = document.createElement('div');
-        notification.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-purple-600 text-white p-6 rounded-2xl shadow-2xl z-50 flex flex-col items-center gap-2 animate-bounce border-4 border-purple-400';
+        notification.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/60 backdrop-blur-sm p-6';
         notification.innerHTML = `
-          <div class="text-4xl">⭐</div>
-          <div class="text-xl font-black italic">LEVEL UP!</div>
-          <div class="text-lg text-center">Você alcançou o nível ${newLevel}!</div>
+          <div class="bg-purple-600 text-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-300 border-4 border-purple-400 max-w-xs w-full text-center">
+            <div class="text-6xl animate-bounce">🏆</div>
+            <div class="text-3xl font-black italic tracking-tighter">LEVEL UP!</div>
+            <div class="text-xl font-bold">NÍVEL ${newLevel}</div>
+            <p class="text-purple-100">Você está evoluindo rápido! Continue assim rumo à aprovação. 🚀</p>
+            <button class="mt-2 bg-white text-purple-600 px-6 py-2 rounded-xl font-bold shadow-lg active:scale-95 transition-transform" onclick="this.parentElement.parentElement.remove()">INCRÍVEL!</button>
+          </div>
         `;
         document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 4000);
       }
       
       return { ...prev, xp: newXP, level: newLevel };
@@ -470,7 +498,39 @@ export default function App() {
     const isCorrect = optionIdx === question.correctAnswer;
     
     if (isCorrect) {
-      addXP(50);
+      addXP(150); // Aumentado para 150 XP por acerto
+      
+      // Popup de acerto
+      const successPopup = document.createElement('div');
+      successPopup.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/40 backdrop-blur-sm p-6 pointer-events-none';
+      successPopup.innerHTML = `
+        <div class="bg-emerald-500 text-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-2 animate-in zoom-in duration-200 border-4 border-emerald-400 text-center">
+          <div class="text-4xl">✅</div>
+          <div class="text-xl font-black">RESPOSTA CORRETA!</div>
+          <div class="font-bold">+150 XP</div>
+        </div>
+      `;
+      document.body.appendChild(successPopup);
+      setTimeout(() => {
+        successPopup.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        setTimeout(() => successPopup.remove(), 500);
+      }, 1500);
+    } else {
+      // Popup de erro
+      const errorPopup = document.createElement('div');
+      errorPopup.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/40 backdrop-blur-sm p-6 pointer-events-none';
+      errorPopup.innerHTML = `
+        <div class="bg-red-500 text-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-2 animate-in zoom-in duration-200 border-4 border-red-400 text-center">
+          <div class="text-4xl">❌</div>
+          <div class="text-xl font-black">NÃO FOI DESSA VEZ</div>
+          <p class="text-sm opacity-90">Leia a explicação para aprender!</p>
+        </div>
+      `;
+      document.body.appendChild(errorPopup);
+      setTimeout(() => {
+        errorPopup.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        setTimeout(() => errorPopup.remove(), 500);
+      }, 1500);
     }
 
     const newAttempt: Attempt = {
@@ -650,32 +710,59 @@ export default function App() {
               <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Rumo à aprovação 🚀</p>
             </div>
           </div>
-          <div className={`flex flex-col items-end gap-2 p-4 rounded-2xl shadow-sm border transition-colors ${darkMode ? 'bg-stone-900 border-stone-800 shadow-none' : 'bg-white border-stone-200'}`}>
-            <div className="text-right">
-              <div className="flex items-center gap-2 justify-end">
-                <div className={`text-xs font-bold px-2 py-0.5 rounded-full ${darkMode ? 'bg-purple-900 text-purple-300' : 'bg-purple-100 text-purple-700'}`}>NÍVEL {profile.level || 1}</div>
-                <div className={`text-3xl font-black leading-none ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{overallPercentage}%</div>
-              </div>
-              <div className="w-32 h-1.5 bg-stone-200 rounded-full mt-2 overflow-hidden">
-                <div 
-                  className="h-full bg-purple-500 transition-all duration-500" 
-                  style={{ width: `${((profile.xp || 0) % 1000) / 10}%` }}
-                />
-              </div>
-              <div className={`text-[10px] uppercase tracking-wider font-bold mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
-                {profile.xp || 0} XP • Progresso Total
-              </div>
-            </div>
+          
+          <div className="flex flex-col items-end">
+            <div className={`text-3xl font-black leading-none ${darkMode ? 'text-indigo-400' : 'text-indigo-600'}`}>{overallPercentage}%</div>
+            <div className={`text-[10px] uppercase tracking-wider font-bold mt-1 ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Concluído</div>
           </div>
         </div>
 
-        {/* Overall Progress Bar */}
-        <div className={`w-full h-2.5 rounded-full overflow-hidden transition-colors ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: `${overallPercentage}%` }}
-            className={`h-full ${darkMode ? 'bg-indigo-500' : 'bg-indigo-600'}`}
-          />
+        {/* XP and Level Section - Redesigned */}
+        <div className={`p-4 rounded-2xl border mb-4 transition-all ${darkMode ? 'bg-stone-900/50 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+                <Trophy className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black uppercase tracking-widest text-purple-500">Meu Nível</h3>
+                <p className={`text-lg font-bold leading-none ${darkMode ? 'text-white' : 'text-stone-900'}`}>Nível {profile.level || 1}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className={`text-xs font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+                {profile.xp - xpForLevel(profile.level)} / {xpForNextLevel(profile.level) - xpForLevel(profile.level)} XP
+              </p>
+              <p className={`text-[10px] font-medium ${darkMode ? 'text-stone-600' : 'text-stone-500'}`}>
+                Total: {profile.xp} XP
+              </p>
+            </div>
+          </div>
+          
+          {/* XP Progress Bar - Fixed for Mobile */}
+          <div className={`w-full h-3 rounded-full overflow-hidden relative ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ 
+                width: `${((profile.xp - xpForLevel(profile.level)) / (xpForNextLevel(profile.level) - xpForLevel(profile.level))) * 100}%` 
+              }}
+              className="h-full bg-gradient-to-r from-purple-600 to-indigo-500 shadow-[0_0_10px_rgba(168,85,247,0.4)]"
+            />
+          </div>
+        </div>
+
+        {/* Overall Progress Bar - Fixed for Mobile */}
+        <div className="space-y-1">
+          <div className="flex justify-between items-center px-1">
+            <span className={`text-[10px] font-black uppercase tracking-tighter ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Progresso Geral</span>
+          </div>
+          <div className={`w-full h-1.5 rounded-full overflow-hidden transition-colors ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${overallPercentage}%` }}
+              className={`h-full ${darkMode ? 'bg-indigo-500' : 'bg-indigo-600'}`}
+            />
+          </div>
         </div>
       </header>
 
@@ -1001,32 +1088,27 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 gap-4">
-                {/* Conquistas de Nível */}
-                {[1, 5, 10, 20, 50].map((lvl) => (
-                  <div 
-                    key={`lvl-${lvl}`}
-                    className={`p-5 rounded-2xl border shadow-sm flex items-center gap-4 transition-all ${
-                      profile.level >= lvl 
-                        ? (darkMode ? 'bg-stone-900 border-purple-500/50' : 'bg-white border-purple-200 shadow-purple-100/50')
-                        : (darkMode ? 'bg-stone-900/50 border-stone-800 opacity-50 grayscale' : 'bg-stone-50 border-stone-100 opacity-50 grayscale')
-                    }`}
-                  >
-                    <div className={`p-3 rounded-full ${profile.level >= lvl ? 'bg-purple-600' : 'bg-stone-400'} text-white`}>
-                      <Trophy className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className={`font-bold ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
-                        Alcançar Nível {lvl}
-                      </h3>
-                      <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                        {profile.level >= lvl 
-                          ? 'Conquista desbloqueada! 🎉' 
-                          : `Faltam ${Math.max(0, lvl - (profile.level || 1))} níveis para desbloquear`}
-                      </p>
-                    </div>
-                    {profile.level >= lvl && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
+                {/* Conquistas de Nível - Simplificadas */}
+                <div className={`p-6 rounded-3xl border transition-all ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                  <h3 className="font-black text-lg mb-4 flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-purple-500" />
+                    Jornada de Níveis
+                  </h3>
+                  <div className="flex justify-between items-center gap-2 overflow-x-auto pb-2">
+                    {[1, 5, 10, 20, 50].map((lvl) => (
+                      <div key={`lvl-badge-${lvl}`} className="flex flex-col items-center gap-2 min-w-[60px]">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all ${
+                          profile.level >= lvl 
+                            ? 'bg-purple-600 border-purple-400 text-white shadow-lg shadow-purple-500/20' 
+                            : 'bg-stone-100 border-stone-200 text-stone-400 opacity-50'
+                        }`}>
+                          <span className="text-xs font-black">{lvl}</span>
+                        </div>
+                        <span className={`text-[10px] font-bold ${profile.level >= lvl ? 'text-purple-500' : 'text-stone-400'}`}>Nível {lvl}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
 
                 {/* Conquistas de XP */}
                 {[1000, 5000, 10000].map((xpGoal) => (
