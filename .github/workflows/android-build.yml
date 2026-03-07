@@ -42,6 +42,7 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: 'gradle'
 
       # ── 7. Android SDK ─────────────────────────────────────────────────
       - name: Setup Android SDK
