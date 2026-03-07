@@ -574,6 +574,421 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       institution: "UNICAMP",
       year: 2025
     },
+  ,
+    {
+      text: "Uma progressão aritmética tem primeiro termo a₁ = 3 e razão r = 5. Qual é o valor do 20º termo dessa progressão?",
+      options: ["a) 93", "b) 98", "c) 103", "d) 108", "e) 113"],
+      correctAnswer: 1,
+      explanation: "O termo geral de uma PA é aₙ = a₁ + (n-1)·r. Para n=20: a₂₀ = 3 + (20-1)·5 = 3 + 95 = 98.",
+      topic: "mat",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "Uma função quadrática f(x) = x² - 6x + 8 tem raízes reais x₁ e x₂. Qual é o valor de x₁ + x₂?",
+      options: ["a) -8", "b) -6", "c) 6", "d) 8", "e) 14"],
+      correctAnswer: 2,
+      explanation: "Pelas relações de Girard, a soma das raízes de ax² + bx + c = 0 é x₁ + x₂ = -b/a = -(-6)/1 = 6.",
+      topic: "mat",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "Em um triângulo retângulo, os catetos medem 6 cm e 8 cm. Qual é o comprimento da hipotenusa?",
+      options: ["a) 7 cm", "b) 9 cm", "c) 10 cm", "d) 12 cm", "e) 14 cm"],
+      correctAnswer: 2,
+      explanation: "Pelo Teorema de Pitágoras: h² = 6² + 8² = 36 + 64 = 100, portanto h = 10 cm.",
+      topic: "mat",
+      institution: "UNESP",
+      year: 2020
+    },
+    {
+      text: "Uma urna contém 4 bolas vermelhas e 6 bolas azuis. Retirando-se uma bola ao acaso, qual é a probabilidade de ser vermelha?",
+      options: ["a) 1/5", "b) 2/5", "c) 3/5", "d) 4/5", "e) 1/2"],
+      correctAnswer: 1,
+      explanation: "Total de bolas = 4 + 6 = 10. P(vermelha) = 4/10 = 2/5.",
+      topic: "mat",
+      institution: "UNESP",
+      year: 2021
+    },
+    {
+      text: "O logaritmo de 1000 na base 10 é igual a:",
+      options: ["a) 1", "b) 2", "c) 3", "d) 4", "e) 10"],
+      correctAnswer: 2,
+      explanation: "log₁₀(1000) = log₁₀(10³) = 3.",
+      topic: "mat",
+      institution: "UNESP",
+      year: 2022
+    },
+    {
+      text: "Uma empresa produz 500 peças por dia. Após uma melhoria no processo, a produção aumentou 20%. Quantas peças a empresa passa a produzir por dia?",
+      options: ["a) 520", "b) 550", "c) 580", "d) 600", "e) 620"],
+      correctAnswer: 3,
+      explanation: "Aumento de 20% sobre 500: 500 × 1,20 = 600 peças por dia.",
+      topic: "mat",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "A equação 2x + 3 = 11 tem como solução:",
+      options: ["a) x = 2", "b) x = 3", "c) x = 4", "d) x = 5", "e) x = 7"],
+      correctAnswer: 2,
+      explanation: "2x + 3 = 11 → 2x = 8 → x = 4.",
+      topic: "mat",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "Qual é a área de um círculo com raio de 5 cm? (Use π ≈ 3,14)",
+      options: ["a) 15,70 cm²", "b) 31,40 cm²", "c) 62,80 cm²", "d) 78,50 cm²", "e) 157,00 cm²"],
+      correctAnswer: 3,
+      explanation: "Área = π·r² = 3,14 × 5² = 3,14 × 25 = 78,50 cm².",
+      topic: "mat",
+      institution: "UERJ",
+      year: 2020
+    },
+    {
+      text: "Em uma progressão geométrica, o primeiro termo é 2 e a razão é 3. Qual é o 5º termo?",
+      options: ["a) 54", "b) 81", "c) 162", "d) 243", "e) 486"],
+      correctAnswer: 2,
+      explanation: "O termo geral de uma PG é aₙ = a₁ · qⁿ⁻¹. Para n=5: a₅ = 2 · 3⁴ = 2 · 81 = 162.",
+      topic: "mat",
+      institution: "UERJ",
+      year: 2021
+    },
+    {
+      text: "Qual é o valor de sen(30°)?",
+      options: ["a) 0", "b) √2/2", "c) √3/2", "d) 1/2", "e) 1"],
+      correctAnswer: 3,
+      explanation: "sen(30°) = 1/2. Este é um valor trigonométrico fundamental.",
+      topic: "mat",
+      institution: "UERJ",
+      year: 2022
+    },
+    {
+      text: "O conjunto solução da inequação 3x - 7 > 2 é:",
+      options: ["a) x < 3", "b) x > 3", "c) x < -3", "d) x > -3", "e) x = 3"],
+      correctAnswer: 1,
+      explanation: "3x - 7 > 2 → 3x > 9 → x > 3.",
+      topic: "mat",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "A derivada da função f(x) = x³ - 2x² + 5x - 1 é:",
+      options: ["a) f'(x) = 3x² - 4x + 5", "b) f'(x) = 3x² + 4x - 5", "c) f'(x) = x² - 4x + 5", "d) f'(x) = 3x² - 2x + 5", "e) f'(x) = 3x³ - 4x + 5"],
+      correctAnswer: 0,
+      explanation: "Derivando termo a termo: d/dx(x³) = 3x², d/dx(-2x²) = -4x, d/dx(5x) = 5, d/dx(-1) = 0. Logo f'(x) = 3x² - 4x + 5.",
+      topic: "mat",
+      institution: "UFPR",
+      year: 2020
+    },
+    {
+      text: "Uma função exponencial f(x) = 2ˣ. Qual é o valor de f(4)?",
+      options: ["a) 8", "b) 12", "c) 16", "d) 24", "e) 32"],
+      correctAnswer: 2,
+      explanation: "f(4) = 2⁴ = 16.",
+      topic: "mat",
+      institution: "UFPR",
+      year: 2021
+    },
+    {
+      text: "O determinante da matriz A = [[2, 3], [1, 4]] é:",
+      options: ["a) 2", "b) 3", "c) 5", "d) 8", "e) 11"],
+      correctAnswer: 2,
+      explanation: "det(A) = 2×4 - 3×1 = 8 - 3 = 5.",
+      topic: "mat",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "Qual é a integral de f(x) = 2x + 3?",
+      options: ["a) x² + 3x + C", "b) x² + 3 + C", "c) 2x² + 3x + C", "d) x + 3x + C", "e) 2 + C"],
+      correctAnswer: 0,
+      explanation: "∫(2x + 3)dx = x² + 3x + C, integrando cada termo: ∫2x dx = x² e ∫3 dx = 3x.",
+      topic: "mat",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "Em um conjunto de dados {2, 4, 6, 8, 10}, qual é a média aritmética?",
+      options: ["a) 4", "b) 5", "c) 6", "d) 7", "e) 8"],
+      correctAnswer: 2,
+      explanation: "Média = (2 + 4 + 6 + 8 + 10) / 5 = 30 / 5 = 6.",
+      topic: "mat",
+      institution: "UFRGS",
+      year: 2020
+    },
+    {
+      text: "Qual é o valor de cos(60°)?",
+      options: ["a) 0", "b) 1/2", "c) √2/2", "d) √3/2", "e) 1"],
+      correctAnswer: 1,
+      explanation: "cos(60°) = 1/2. Este é um valor trigonométrico fundamental.",
+      topic: "mat",
+      institution: "UFRGS",
+      year: 2021
+    },
+    {
+      text: "Uma sequência aritmética tem os termos 5, 9, 13, 17, ... Qual é a razão dessa PA?",
+      options: ["a) 2", "b) 3", "c) 4", "d) 5", "e) 6"],
+      correctAnswer: 2,
+      explanation: "A razão é a diferença entre termos consecutivos: 9 - 5 = 4.",
+      topic: "mat",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "Qual é o valor de 5! (fatorial de 5)?",
+      options: ["a) 25", "b) 60", "c) 100", "d) 120", "e) 150"],
+      correctAnswer: 3,
+      explanation: "5! = 5 × 4 × 3 × 2 × 1 = 120.",
+      topic: "mat",
+      institution: "UFSC",
+      year: 2019
+    },
+    {
+      text: "O volume de um cubo com aresta de 3 cm é:",
+      options: ["a) 9 cm³", "b) 18 cm³", "c) 27 cm³", "d) 36 cm³", "e) 54 cm³"],
+      correctAnswer: 2,
+      explanation: "Volume do cubo = a³ = 3³ = 27 cm³.",
+      topic: "mat",
+      institution: "UFSC",
+      year: 2020
+    },
+    {
+      text: "Se f(x) = 3x - 2, qual é o valor de f(5)?",
+      options: ["a) 11", "b) 12", "c) 13", "d) 14", "e) 15"],
+      correctAnswer: 2,
+      explanation: "f(5) = 3(5) - 2 = 15 - 2 = 13.",
+      topic: "mat",
+      institution: "UECE",
+      year: 2018
+    },
+    {
+      text: "Qual é a solução do sistema: x + y = 10 e x - y = 4?",
+      options: ["a) x=5, y=5", "b) x=6, y=4", "c) x=7, y=3", "d) x=8, y=2", "e) x=9, y=1"],
+      correctAnswer: 2,
+      explanation: "Somando as equações: 2x = 14, x = 7. Substituindo: 7 + y = 10, y = 3.",
+      topic: "mat",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "Qual é a área de um retângulo com base 8 cm e altura 5 cm?",
+      options: ["a) 13 cm²", "b) 26 cm²", "c) 40 cm²", "d) 45 cm²", "e) 80 cm²"],
+      correctAnswer: 2,
+      explanation: "Área do retângulo = base × altura = 8 × 5 = 40 cm².",
+      topic: "mat",
+      institution: "UECE",
+      year: 2020
+    },
+    {
+      text: "Um capital de R$ 2.000,00 é aplicado a uma taxa de juros simples de 5% ao mês. Qual será o montante após 3 meses?",
+      options: ["a) R$ 2.100,00", "b) R$ 2.200,00", "c) R$ 2.300,00", "d) R$ 2.400,00", "e) R$ 2.500,00"],
+      correctAnswer: 2,
+      explanation: "Juros simples: J = C × i × t = 2000 × 0,05 × 3 = 300. Montante = 2000 + 300 = R$ 2.300,00.",
+      topic: "mat",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "Qual é o valor de √144?",
+      options: ["a) 10", "b) 11", "c) 12", "d) 13", "e) 14"],
+      correctAnswer: 2,
+      explanation: "√144 = 12, pois 12² = 144.",
+      topic: "mat",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "Em uma sala com 30 alunos, 18 são meninas. Qual é a porcentagem de meninos?",
+      options: ["a) 30%", "b) 35%", "c) 40%", "d) 45%", "e) 50%"],
+      correctAnswer: 2,
+      explanation: "Meninos = 30 - 18 = 12. Porcentagem = (12/30) × 100 = 40%.",
+      topic: "mat",
+      institution: "UEA",
+      year: 2020
+    },
+    {
+      text: "Qual é o mínimo múltiplo comum (MMC) de 4 e 6?",
+      options: ["a) 2", "b) 8", "c) 12", "d) 18", "e) 24"],
+      correctAnswer: 2,
+      explanation: "MMC(4, 6): 4 = 2², 6 = 2 × 3. MMC = 2² × 3 = 12.",
+      topic: "mat",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "Uma torneira enche um tanque em 4 horas. Outra torneira enche o mesmo tanque em 6 horas. Trabalhando juntas, em quanto tempo encherão o tanque?",
+      options: ["a) 1h 12min", "b) 1h 30min", "c) 2h", "d) 2h 24min", "e) 3h"],
+      correctAnswer: 3,
+      explanation: "Taxa combinada = 1/4 + 1/6 = 3/12 + 2/12 = 5/12 do tanque por hora. Tempo = 12/5 = 2,4 horas = 2h 24min.",
+      topic: "mat",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "Qual é o valor de 2³ + 3²?",
+      options: ["a) 13", "b) 15", "c) 17", "d) 19", "e) 21"],
+      correctAnswer: 2,
+      explanation: "2³ = 8 e 3² = 9. Portanto, 2³ + 3² = 8 + 9 = 17.",
+      topic: "mat",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "Um triângulo tem ângulos de 60°, 70° e x°. Qual é o valor de x?",
+      options: ["a) 40°", "b) 45°", "c) 50°", "d) 55°", "e) 60°"],
+      correctAnswer: 2,
+      explanation: "A soma dos ângulos internos de um triângulo é 180°. x = 180 - 60 - 70 = 50°.",
+      topic: "mat",
+      institution: "UEMA",
+      year: 2019
+    },
+    {
+      text: "Qual é o valor de tg(45°)?",
+      options: ["a) 0", "b) 1/2", "c) √2/2", "d) 1", "e) √3"],
+      correctAnswer: 3,
+      explanation: "tg(45°) = sen(45°)/cos(45°) = (√2/2)/(√2/2) = 1.",
+      topic: "mat",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "Qual é o número de diagonais de um hexágono?",
+      options: ["a) 6", "b) 7", "c) 8", "d) 9", "e) 10"],
+      correctAnswer: 3,
+      explanation: "Número de diagonais = n(n-3)/2 = 6(6-3)/2 = 6×3/2 = 9.",
+      topic: "mat",
+      institution: "UEM",
+      year: 2019
+    },
+    {
+      text: "Qual é o valor de log₂(32)?",
+      options: ["a) 3", "b) 4", "c) 5", "d) 6", "e) 7"],
+      correctAnswer: 2,
+      explanation: "log₂(32) = log₂(2⁵) = 5.",
+      topic: "mat",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "Uma função afim f(x) = 2x + 1 tem como zero (raiz) o valor:",
+      options: ["a) x = -1", "b) x = -1/2", "c) x = 0", "d) x = 1/2", "e) x = 1"],
+      correctAnswer: 1,
+      explanation: "Para encontrar a raiz, fazemos f(x) = 0: 2x + 1 = 0 → 2x = -1 → x = -1/2.",
+      topic: "mat",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "Qual é o valor de C(5,2) (combinação de 5 elementos tomados 2 a 2)?",
+      options: ["a) 5", "b) 8", "c) 10", "d) 15", "e) 20"],
+      correctAnswer: 2,
+      explanation: "C(5,2) = 5!/(2!×3!) = (5×4)/(2×1) = 10.",
+      topic: "mat",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "Qual é a distância entre os pontos A(1, 2) e B(4, 6) no plano cartesiano?",
+      options: ["a) 3", "b) 4", "c) 5", "d) 6", "e) 7"],
+      correctAnswer: 2,
+      explanation: "d = √[(4-1)² + (6-2)²] = √[9 + 16] = √25 = 5.",
+      topic: "mat",
+      institution: "UFU",
+      year: 2019
+    },
+    {
+      text: "Qual é o valor de P(4,2) (permutação de 4 elementos tomados 2 a 2)?",
+      options: ["a) 6", "b) 8", "c) 10", "d) 12", "e) 16"],
+      correctAnswer: 3,
+      explanation: "P(4,2) = 4!/(4-2)! = 4!/2! = (4×3×2×1)/(2×1) = 12.",
+      topic: "mat",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "Qual é a equação da reta que passa pelos pontos (0, 3) e (2, 7)?",
+      options: ["a) y = x + 3", "b) y = 2x + 3", "c) y = 3x + 1", "d) y = 2x + 1", "e) y = x + 7"],
+      correctAnswer: 1,
+      explanation: "Coeficiente angular: m = (7-3)/(2-0) = 4/2 = 2. Equação: y = 2x + 3 (usando o ponto (0,3)).",
+      topic: "mat",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "Qual é o limite de f(x) = (x² - 4)/(x - 2) quando x tende a 2?",
+      options: ["a) 0", "b) 2", "c) 4", "d) 6", "e) Não existe"],
+      correctAnswer: 2,
+      explanation: "Fatorando: (x² - 4)/(x - 2) = (x+2)(x-2)/(x-2) = x+2. Quando x→2: lim = 2+2 = 4.",
+      topic: "mat",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "Qual é o valor de ∫₀¹ x² dx?",
+      options: ["a) 1/4", "b) 1/3", "c) 1/2", "d) 2/3", "e) 1"],
+      correctAnswer: 1,
+      explanation: "∫₀¹ x² dx = [x³/3]₀¹ = 1/3 - 0 = 1/3.",
+      topic: "mat",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "Qual é o valor de sen²(x) + cos²(x)?",
+      options: ["a) 0", "b) 1/2", "c) 1", "d) 2", "e) Depende de x"],
+      correctAnswer: 2,
+      explanation: "Esta é a identidade trigonométrica fundamental: sen²(x) + cos²(x) = 1 para qualquer valor de x.",
+      topic: "mat",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "Qual é o número de subconjuntos de um conjunto com 4 elementos?",
+      options: ["a) 4", "b) 8", "c) 12", "d) 16", "e) 32"],
+      correctAnswer: 3,
+      explanation: "O número de subconjuntos de um conjunto com n elementos é 2ⁿ = 2⁴ = 16.",
+      topic: "mat",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "Um trabalhador recebe R$ 1.800,00 por mês. Se ele gastar 40% do salário com aluguel, quanto sobra para outras despesas?",
+      options: ["a) R$ 720,00", "b) R$ 900,00", "c) R$ 1.080,00", "d) R$ 1.200,00", "e) R$ 1.440,00"],
+      correctAnswer: 2,
+      explanation: "Gasto com aluguel: 40% de 1800 = 0,40 × 1800 = 720. Sobra: 1800 - 720 = R$ 1.080,00.",
+      topic: "mat",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "Uma escada de 5 metros está apoiada em uma parede vertical. A base da escada está a 3 metros da parede. A que altura da parede a escada toca?",
+      options: ["a) 2 m", "b) 3 m", "c) 4 m", "d) 5 m", "e) 6 m"],
+      correctAnswer: 2,
+      explanation: "Pelo Teorema de Pitágoras: h² + 3² = 5² → h² = 25 - 9 = 16 → h = 4 metros.",
+      topic: "mat",
+      institution: "ENEM PPL",
+      year: 2019
+    },
+    {
+      text: "Em uma eleição, o candidato A recebeu 3.600 votos, representando 60% dos votos válidos. Quantos votos válidos foram computados?",
+      options: ["a) 4.800", "b) 5.400", "c) 6.000", "d) 6.600", "e) 7.200"],
+      correctAnswer: 2,
+      explanation: "Se 3.600 = 60% do total, então total = 3.600/0,60 = 6.000 votos.",
+      topic: "mat",
+      institution: "ENEM PPL",
+      year: 2020
+    },
+    {
+      text: "Qual é o valor de (2 + 3i)(2 - 3i), onde i é a unidade imaginária?",
+      options: ["a) 4", "b) 7", "c) 13", "d) 4 - 9i²", "e) 4 + 9"],
+      correctAnswer: 2,
+      explanation: "(2 + 3i)(2 - 3i) = 4 - 9i² = 4 - 9(-1) = 4 + 9 = 13.",
+      topic: "mat",
+      institution: "ENEM PPL",
+      year: 2021
+    }
   ],
   "por": [
 {
@@ -1626,6 +2041,340 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       institution: "UNICAMP",
       year: 2025
     },
+  ,
+    {
+      text: "Assinale a alternativa em que todas as palavras estão grafadas corretamente de acordo com a norma culta da língua portuguesa:",
+      options: ["a) excessão, beneficiente, paralisia", "b) exceção, beneficente, paralisia", "c) excessão, beneficente, paralisia", "d) exceção, beneficiente, paralisia", "e) excessão, beneficente, paralissia"],
+      correctAnswer: 1,
+      explanation: "As formas corretas são: 'exceção' (não 'excessão'), 'beneficente' (não 'beneficiente') e 'paralisia' (não 'paralissia').",
+      topic: "por",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "Em qual das alternativas a vírgula está empregada corretamente?",
+      options: ["a) O aluno, estudou muito para a prova.", "b) Maria, João e Pedro, foram ao cinema.", "c) Quando chegar em casa, ligue para mim.", "d) Ele comprou, pão leite e manteiga.", "e) A professora, explicou a matéria."],
+      correctAnswer: 2,
+      explanation: "A vírgula é usada corretamente após a oração adverbial temporal 'Quando chegar em casa'. Não se usa vírgula entre sujeito e predicado.",
+      topic: "por",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "Identifique a figura de linguagem presente no verso: 'O sol é uma laranja madura no céu.'",
+      options: ["a) Metonímia", "b) Hipérbole", "c) Metáfora", "d) Antítese", "e) Eufemismo"],
+      correctAnswer: 2,
+      explanation: "A metáfora é uma comparação implícita (sem 'como' ou 'tal qual'). No verso, o sol é comparado a uma laranja madura sem o uso de conectivo comparativo.",
+      topic: "por",
+      institution: "UNESP",
+      year: 2020
+    },
+    {
+      text: "Qual é o sujeito da oração: 'Chegaram os resultados do exame.'?",
+      options: ["a) Chegaram", "b) os resultados", "c) do exame", "d) os resultados do exame", "e) A oração não tem sujeito"],
+      correctAnswer: 3,
+      explanation: "O sujeito é 'os resultados do exame'. O verbo 'chegaram' está no plural concordando com esse sujeito posposto.",
+      topic: "por",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "Em qual alternativa há um exemplo de discurso indireto?",
+      options: ["a) Ele disse: 'Vou chegar tarde.'", "b) Ela perguntou: 'Você está bem?'", "c) O professor afirmou que a prova seria difícil.", "d) 'Preciso de ajuda', pediu o aluno.", "e) João exclamou: 'Que belo dia!'"],
+      correctAnswer: 2,
+      explanation: "No discurso indireto, as falas são reproduzidas sem aspas, integradas à narração. 'O professor afirmou que a prova seria difícil' é um exemplo de discurso indireto.",
+      topic: "por",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "Qual é o significado da palavra 'efêmero'?",
+      options: ["a) Eterno, duradouro", "b) Passageiro, de curta duração", "c) Intenso, vigoroso", "d) Antigo, arcaico", "e) Moderno, atual"],
+      correctAnswer: 1,
+      explanation: "'Efêmero' significa algo que dura pouco tempo, passageiro, transitório. Vem do grego 'ephemeros' (que dura um dia).",
+      topic: "por",
+      institution: "UERJ",
+      year: 2020
+    },
+    {
+      text: "Assinale a alternativa em que o pronome relativo está empregado corretamente:",
+      options: ["a) O livro que eu gostei muito foi emprestado.", "b) O livro do qual eu gostei muito foi emprestado.", "c) O livro que eu gostei foi emprestado.", "d) O livro qual eu gostei foi emprestado.", "e) O livro em que eu gostei foi emprestado."],
+      correctAnswer: 1,
+      explanation: "O verbo 'gostar' exige a preposição 'de'. Portanto, o pronome relativo deve ser 'do qual' (de + o qual), formando 'do qual eu gostei'.",
+      topic: "por",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "Qual é a função sintática do termo sublinhado: 'Ele comprou um livro INTERESSANTE.'?",
+      options: ["a) Sujeito", "b) Objeto direto", "c) Adjunto adnominal", "d) Predicativo do objeto", "e) Complemento nominal"],
+      correctAnswer: 2,
+      explanation: "'Interessante' é um adjetivo que modifica o substantivo 'livro', exercendo a função de adjunto adnominal.",
+      topic: "por",
+      institution: "UFPR",
+      year: 2019
+    },
+    {
+      text: "Qual é o antônimo de 'prolixo'?",
+      options: ["a) Extenso", "b) Verboso", "c) Conciso", "d) Detalhado", "e) Redundante"],
+      correctAnswer: 2,
+      explanation: "'Prolixo' significa excessivamente longo, verboso. Seu antônimo é 'conciso', que significa breve, sucinto.",
+      topic: "por",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "Em qual alternativa há um exemplo de coesão referencial?",
+      options: ["a) 'Primeiro, leia o texto. Depois, responda as questões.'", "b) 'Maria chegou. Ela estava cansada.'", "c) 'Estudou muito, portanto passou no vestibular.'", "d) 'Além disso, o projeto foi aprovado.'", "e) 'No entanto, a situação melhorou.'"],
+      correctAnswer: 1,
+      explanation: "A coesão referencial ocorre quando um elemento retoma outro já mencionado. Em 'Maria chegou. Ela estava cansada.', o pronome 'ela' retoma 'Maria'.",
+      topic: "por",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "Qual é o tempo verbal da forma 'tivesse estudado'?",
+      options: ["a) Pretérito imperfeito do indicativo", "b) Pretérito mais-que-perfeito do indicativo", "c) Pretérito imperfeito do subjuntivo", "d) Pretérito mais-que-perfeito do subjuntivo", "e) Futuro do pretérito"],
+      correctAnswer: 3,
+      explanation: "'Tivesse estudado' é o pretérito mais-que-perfeito do subjuntivo, formado pelo imperfeito do subjuntivo do verbo ter + particípio do verbo principal.",
+      topic: "por",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "Qual é a classe gramatical da palavra 'embora' na frase: 'Embora estivesse cansado, ele continuou trabalhando.'?",
+      options: ["a) Advérbio", "b) Preposição", "c) Conjunção subordinativa concessiva", "d) Conjunção coordenativa adversativa", "e) Interjeição"],
+      correctAnswer: 2,
+      explanation: "'Embora' é uma conjunção subordinativa concessiva, pois introduz uma oração que expressa uma concessão (obstáculo que não impede a realização do fato principal).",
+      topic: "por",
+      institution: "UFSC",
+      year: 2019
+    },
+    {
+      text: "Qual é o recurso estilístico presente em: 'A vida é uma viagem sem destino certo.'?",
+      options: ["a) Comparação", "b) Metáfora", "c) Metonímia", "d) Hipérbole", "e) Ironia"],
+      correctAnswer: 1,
+      explanation: "A metáfora é uma comparação implícita, sem o uso de conectivos comparativos. 'A vida é uma viagem' estabelece uma identidade entre dois elementos distintos.",
+      topic: "por",
+      institution: "UECE",
+      year: 2018
+    },
+    {
+      text: "Em qual alternativa a concordância verbal está correta?",
+      options: ["a) Fazem dois anos que não o vejo.", "b) Faz dois anos que não o vejo.", "c) Fazem dois anos que não te vejo.", "d) Faz dois anos que não te vejo.", "e) As alternativas b e d estão corretas."],
+      correctAnswer: 4,
+      explanation: "O verbo 'fazer' indicando tempo decorrido é impessoal, ficando sempre no singular: 'Faz dois anos'. Tanto b quanto d estão corretas.",
+      topic: "por",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "Qual é o gênero literário de 'Dom Casmurro', de Machado de Assis?",
+      options: ["a) Poesia lírica", "b) Teatro", "c) Conto", "d) Romance", "e) Crônica"],
+      correctAnswer: 3,
+      explanation: "'Dom Casmurro' (1899) é um romance de Machado de Assis, considerado uma das obras mais importantes do Realismo brasileiro.",
+      topic: "por",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "Qual é o movimento literário ao qual pertence Fernando Pessoa?",
+      options: ["a) Romantismo", "b) Realismo", "c) Parnasianismo", "d) Modernismo", "e) Simbolismo"],
+      correctAnswer: 3,
+      explanation: "Fernando Pessoa é o maior representante do Modernismo português, com sua obra marcada pela criação de heterônimos (Alberto Caeiro, Ricardo Reis, Álvaro de Campos).",
+      topic: "por",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "Qual é a função do travessão no diálogo literário?",
+      options: ["a) Indicar pausa longa", "b) Introduzir a fala dos personagens", "c) Separar orações coordenadas", "d) Indicar enumeração", "e) Substituir parênteses"],
+      correctAnswer: 1,
+      explanation: "O travessão é usado para introduzir a fala dos personagens em diálogos literários, substituindo as aspas nesse contexto.",
+      topic: "por",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "Qual é o sinônimo de 'ávido'?",
+      options: ["a) Saciado", "b) Indiferente", "c) Ansioso, desejoso", "d) Tranquilo", "e) Satisfeito"],
+      correctAnswer: 2,
+      explanation: "'Ávido' significa que tem grande desejo, ansioso, voraz. Seu sinônimo é 'ansioso, desejoso'.",
+      topic: "por",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "Qual é o período literário em que se insere a obra 'Iracema', de José de Alencar?",
+      options: ["a) Barroco", "b) Arcadismo", "c) Romantismo", "d) Realismo", "e) Modernismo"],
+      correctAnswer: 2,
+      explanation: "'Iracema' (1865) é uma obra do Romantismo brasileiro, de José de Alencar, considerada um dos maiores romances indianistas da literatura brasileira.",
+      topic: "por",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "Qual é a figura de linguagem presente em: 'Mil vezes te disse que não!'?",
+      options: ["a) Metáfora", "b) Metonímia", "c) Hipérbole", "d) Eufemismo", "e) Antítese"],
+      correctAnswer: 2,
+      explanation: "A hipérbole é um exagero intencional para dar ênfase. 'Mil vezes' é um exagero para enfatizar a repetição.",
+      topic: "por",
+      institution: "UEMA",
+      year: 2019
+    },
+    {
+      text: "Qual é a função sintática do termo em destaque: 'Ele chegou CANSADO.'?",
+      options: ["a) Adjunto adnominal", "b) Adjunto adverbial", "c) Predicativo do sujeito", "d) Objeto direto", "e) Complemento nominal"],
+      correctAnswer: 2,
+      explanation: "'Cansado' é um predicativo do sujeito, pois é um adjetivo que se refere ao sujeito 'ele' por meio do verbo de ligação implícito.",
+      topic: "por",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "Qual é o tipo de narrador em 'Memórias Póstumas de Brás Cubas', de Machado de Assis?",
+      options: ["a) Narrador onisciente em terceira pessoa", "b) Narrador observador", "c) Narrador-personagem em primeira pessoa", "d) Narrador onisciente neutro", "e) Narrador em segunda pessoa"],
+      correctAnswer: 2,
+      explanation: "Em 'Memórias Póstumas de Brás Cubas', o narrador é o próprio personagem Brás Cubas, que conta sua história em primeira pessoa após a morte.",
+      topic: "por",
+      institution: "UEM",
+      year: 2019
+    },
+    {
+      text: "Qual é a diferença entre 'mal' e 'mau'?",
+      options: ["a) São palavras sinônimas", "b) 'Mal' é advérbio/substantivo; 'mau' é adjetivo", "c) 'Mal' é adjetivo; 'mau' é advérbio", "d) Ambas são adjetivos com o mesmo significado", "e) 'Mal' é preposição; 'mau' é conjunção"],
+      correctAnswer: 1,
+      explanation: "'Mal' é advérbio (oposto de 'bem') ou substantivo (o mal e o bem). 'Mau' é adjetivo (oposto de 'bom'), referindo-se a pessoas ou coisas.",
+      topic: "por",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "Qual é o recurso de coesão textual presente em: 'O Brasil é um país tropical. Esse país tem grande biodiversidade.'?",
+      options: ["a) Coesão sequencial", "b) Coesão referencial por substituição", "c) Coesão por elipse", "d) Coesão por conjunção", "e) Coesão lexical por reiteração"],
+      correctAnswer: 1,
+      explanation: "A coesão referencial por substituição ocorre quando um elemento substitui outro já mencionado. 'Esse país' substitui 'O Brasil'.",
+      topic: "por",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "Qual é o movimento literário caracterizado pelo uso de linguagem coloquial, valorização da cultura nacional e ruptura com as formas tradicionais?",
+      options: ["a) Romantismo", "b) Parnasianismo", "c) Simbolismo", "d) Modernismo", "e) Realismo"],
+      correctAnswer: 3,
+      explanation: "O Modernismo brasileiro (iniciado com a Semana de Arte Moderna de 1922) caracteriza-se pela linguagem coloquial, valorização da cultura nacional e ruptura com as formas tradicionais.",
+      topic: "por",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "Qual é a função do ponto e vírgula?",
+      options: ["a) Indicar pausa maior que a vírgula e menor que o ponto final", "b) Substituir o ponto final", "c) Introduzir uma enumeração", "d) Indicar supressão de palavras", "e) Separar o vocativo"],
+      correctAnswer: 0,
+      explanation: "O ponto e vírgula indica uma pausa maior que a vírgula e menor que o ponto final, sendo usado para separar orações coordenadas mais longas ou itens de uma enumeração complexa.",
+      topic: "por",
+      institution: "UFU",
+      year: 2019
+    },
+    {
+      text: "Qual é o autor de 'Grande Sertão: Veredas'?",
+      options: ["a) Jorge Amado", "b) Graciliano Ramos", "c) João Guimarães Rosa", "d) Érico Veríssimo", "e) Clarice Lispector"],
+      correctAnswer: 2,
+      explanation: "'Grande Sertão: Veredas' (1956) é a obra-prima de João Guimarães Rosa, considerada um dos maiores romances da literatura brasileira.",
+      topic: "por",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "Qual é a diferença entre crase e acento grave?",
+      options: ["a) São a mesma coisa", "b) A crase é a fusão de 'a + a'; o acento grave indica abertura vocálica", "c) A crase é um acento; o acento grave é uma fusão", "d) Ambos indicam fusão de vogais", "e) A crase ocorre com qualquer vogal"],
+      correctAnswer: 1,
+      explanation: "A crase é a fusão da preposição 'a' com o artigo 'a' (ou pronomes demonstrativos iniciados por 'a'), indicada pelo acento grave (à). O acento grave, por si só, indica abertura vocálica.",
+      topic: "por",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "Qual é a característica principal do Barroco literário?",
+      options: ["a) Simplicidade e clareza", "b) Valorização da natureza e do campo", "c) Conflito entre razão e fé, uso de antíteses e paradoxos", "d) Exaltação do herói nacional", "e) Linguagem coloquial e popular"],
+      correctAnswer: 2,
+      explanation: "O Barroco literário (séc. XVII) caracteriza-se pelo conflito entre razão e fé (dualismo), uso intenso de antíteses, paradoxos, hipérboles e linguagem rebuscada.",
+      topic: "por",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "Qual é a função da conjunção 'portanto' na frase: 'Estudou muito, portanto passou.'?",
+      options: ["a) Adversativa", "b) Conclusiva", "c) Causal", "d) Concessiva", "e) Explicativa"],
+      correctAnswer: 1,
+      explanation: "'Portanto' é uma conjunção coordenativa conclusiva, pois introduz uma conclusão baseada no que foi dito anteriormente.",
+      topic: "por",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "Qual é o estilo de época de Gregório de Matos?",
+      options: ["a) Trovadorismo", "b) Humanismo", "c) Classicismo", "d) Barroco", "e) Arcadismo"],
+      correctAnswer: 3,
+      explanation: "Gregório de Matos (1636-1696) é o principal representante do Barroco no Brasil, conhecido por sua poesia satírica, lírica e religiosa.",
+      topic: "por",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "Qual é o tipo de linguagem predominante em textos científicos?",
+      options: ["a) Linguagem conotativa", "b) Linguagem figurada", "c) Linguagem denotativa", "d) Linguagem poética", "e) Linguagem informal"],
+      correctAnswer: 2,
+      explanation: "Textos científicos utilizam predominantemente a linguagem denotativa (sentido literal das palavras), visando precisão e objetividade na comunicação.",
+      topic: "por",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "Leia o trecho: 'A tecnologia avança a passos largos, transformando a sociedade de maneira irreversível.' Qual é a ideia central desse texto?",
+      options: ["a) A tecnologia é prejudicial à sociedade", "b) A tecnologia avança lentamente", "c) A tecnologia transforma a sociedade de forma permanente", "d) A sociedade rejeita a tecnologia", "e) A tecnologia não afeta a sociedade"],
+      correctAnswer: 2,
+      explanation: "O texto afirma que a tecnologia avança rapidamente ('a passos largos') e transforma a sociedade de forma permanente ('irreversível').",
+      topic: "por",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "Qual é a função social do gênero textual 'carta de reclamação'?",
+      options: ["a) Entreter o leitor", "b) Informar sobre eventos culturais", "c) Registrar fatos históricos", "d) Reivindicar direitos ou expressar insatisfação", "e) Narrar histórias fictícias"],
+      correctAnswer: 3,
+      explanation: "A carta de reclamação é um gênero textual com função social de reivindicar direitos, expressar insatisfação com produtos ou serviços e solicitar providências.",
+      topic: "por",
+      institution: "ENEM PPL",
+      year: 2019
+    },
+    {
+      text: "A inteligência artificial (IA) tem transformado o mercado de trabalho. Qual é o principal desafio social decorrente dessa transformação?",
+      options: ["a) Aumento do número de empregos em todos os setores", "b) Automação de funções e necessidade de requalificação profissional", "c) Redução da produtividade industrial", "d) Diminuição do uso de tecnologia", "e) Aumento da desigualdade apenas nos países desenvolvidos"],
+      correctAnswer: 1,
+      explanation: "A automação por IA pode substituir funções repetitivas, gerando desemprego estrutural e exigindo requalificação profissional dos trabalhadores para novas funções.",
+      topic: "por",
+      institution: "ENEM PPL",
+      year: 2022
+    },
+    {
+      text: "A fake news (desinformação) representa um desafio para a democracia porque:",
+      options: ["a) Aumenta o engajamento político", "b) Manipula a opinião pública e dificulta decisões informadas pelos cidadãos", "c) Fortalece a liberdade de imprensa", "d) Reduz o uso das redes sociais", "e) Melhora a qualidade do debate público"],
+      correctAnswer: 1,
+      explanation: "A desinformação manipula a opinião pública, polariza a sociedade e dificulta que os cidadãos tomem decisões informadas, ameaçando a qualidade da democracia.",
+      topic: "por",
+      institution: "ENEM PPL",
+      year: 2023
+    },
+    {
+      text: "A inteligência artificial generativa, como os modelos de linguagem (LLMs), representa um avanço tecnológico que levanta questões éticas sobre:",
+      options: ["a) O aumento do consumo de energia elétrica", "b) Direitos autorais, desinformação e substituição de empregos criativos", "c) A velocidade de processamento dos computadores", "d) O custo de desenvolvimento de software", "e) A segurança física dos servidores"],
+      correctAnswer: 1,
+      explanation: "A IA generativa levanta questões éticas sobre direitos autorais (uso de dados de treinamento), geração de desinformação (deepfakes, textos falsos) e impacto no mercado de trabalho criativo.",
+      topic: "por",
+      institution: "ENEM PPL",
+      year: 2025
+    }
   ],
   "his": [
 {
@@ -2177,6 +2926,304 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       institution: "UNICAMP",
       year: 2025
     },
+  ,
+    {
+      text: "A Revolução Francesa (1789) foi marcada pelo lema 'Liberdade, Igualdade e Fraternidade'. Qual classe social liderou esse movimento?",
+      options: ["a) Nobreza", "b) Clero", "c) Burguesia", "d) Camponeses", "e) Proletariado"],
+      correctAnswer: 2,
+      explanation: "A Revolução Francesa foi liderada pela burguesia, que buscava eliminar os privilégios da nobreza e do clero e estabelecer uma sociedade baseada nos princípios iluministas.",
+      topic: "his",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "O Tratado de Tordesilhas (1494) dividiu as terras 'descobertas' entre:",
+      options: ["a) França e Espanha", "b) Portugal e Espanha", "c) Inglaterra e Portugal", "d) Holanda e Espanha", "e) Portugal e França"],
+      correctAnswer: 1,
+      explanation: "O Tratado de Tordesilhas foi assinado entre Portugal e Espanha, dividindo as terras descobertas e a descobrir por uma linha imaginária a 370 léguas a oeste das ilhas de Cabo Verde.",
+      topic: "his",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "A Proclamação da República no Brasil ocorreu em:",
+      options: ["a) 7 de setembro de 1822", "b) 13 de maio de 1888", "c) 15 de novembro de 1889", "d) 22 de abril de 1500", "e) 1 de janeiro de 1808"],
+      correctAnswer: 2,
+      explanation: "A Proclamação da República no Brasil ocorreu em 15 de novembro de 1889, liderada pelo Marechal Deodoro da Fonseca, encerrando o período imperial.",
+      topic: "his",
+      institution: "UNESP",
+      year: 2020
+    },
+    {
+      text: "O nazismo alemão foi uma ideologia política que combinava:",
+      options: ["a) Socialismo e democracia", "b) Liberalismo e internacionalismo", "c) Nacionalismo extremo, racismo e totalitarismo", "d) Comunismo e ateísmo", "e) Anarquismo e pacifismo"],
+      correctAnswer: 2,
+      explanation: "O nazismo combinava nacionalismo extremo, racismo (especialmente antissemitismo), totalitarismo e expansionismo territorial, sob a liderança de Adolf Hitler.",
+      topic: "his",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "A Guerra Fria foi um conflito geopolítico entre:",
+      options: ["a) EUA e China", "b) URSS e China", "c) EUA e URSS", "d) Europa e Ásia", "e) NATO e Japão"],
+      correctAnswer: 2,
+      explanation: "A Guerra Fria (1947-1991) foi um conflito ideológico, político e econômico entre os EUA (capitalismo) e a URSS (socialismo), sem confronto militar direto.",
+      topic: "his",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "A Abolição da Escravidão no Brasil foi oficializada pela:",
+      options: ["a) Constituição de 1824", "b) Lei Eusébio de Queirós (1850)", "c) Lei do Ventre Livre (1871)", "d) Lei Áurea (1888)", "e) Proclamação da República (1889)"],
+      correctAnswer: 3,
+      explanation: "A Lei Áurea, assinada pela Princesa Isabel em 13 de maio de 1888, aboliu definitivamente a escravidão no Brasil.",
+      topic: "his",
+      institution: "UERJ",
+      year: 2020
+    },
+    {
+      text: "A Revolução Industrial teve início no século XVIII em qual país?",
+      options: ["a) França", "b) Alemanha", "c) Estados Unidos", "d) Inglaterra", "e) Itália"],
+      correctAnswer: 3,
+      explanation: "A Revolução Industrial iniciou-se na Inglaterra na segunda metade do século XVIII, com a mecanização da produção têxtil e o uso do vapor como fonte de energia.",
+      topic: "his",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "A Revolução Russa de 1917 resultou na criação de:",
+      options: ["a) Uma monarquia constitucional", "b) Uma república democrática liberal", "c) O primeiro Estado socialista do mundo", "d) Uma ditadura militar", "e) Uma teocracia"],
+      correctAnswer: 2,
+      explanation: "A Revolução Russa de 1917, liderada pelos bolcheviques sob Lenin, resultou na criação da URSS, o primeiro Estado socialista do mundo.",
+      topic: "his",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "O Renascimento Cultural (séculos XIV-XVI) caracterizou-se por:",
+      options: ["a) Valorização do teocentrismo medieval", "b) Retorno aos valores greco-romanos e humanismo", "c) Rejeição da arte e da ciência", "d) Expansão do feudalismo", "e) Isolamento cultural da Europa"],
+      correctAnswer: 1,
+      explanation: "O Renascimento caracterizou-se pelo retorno aos valores da Antiguidade greco-romana, pelo humanismo (valorização do ser humano), pelo desenvolvimento das artes e das ciências.",
+      topic: "his",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "A Era Vargas (1930-1945) no Brasil foi marcada por:",
+      options: ["a) Democracia plena e eleições livres", "b) Centralização do poder e industrialização", "c) Descentralização política e federalismo", "d) Liberalismo econômico e privatizações", "e) Expansão do latifúndio e agricultura"],
+      correctAnswer: 1,
+      explanation: "A Era Vargas foi marcada pela centralização do poder político, industrialização (substituição de importações), criação da CLT e do Estado Novo (1937-1945).",
+      topic: "his",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "A Segunda Guerra Mundial (1939-1945) terminou com a derrota de:",
+      options: ["a) Aliados (EUA, URSS, Reino Unido)", "b) Eixo (Alemanha, Itália, Japão)", "c) Potências coloniais europeias", "d) Países neutros", "e) Liga das Nações"],
+      correctAnswer: 1,
+      explanation: "A Segunda Guerra Mundial terminou com a derrota das potências do Eixo: Alemanha (maio de 1945) e Japão (setembro de 1945), após as bombas atômicas em Hiroshima e Nagasaki.",
+      topic: "his",
+      institution: "UFSC",
+      year: 2019
+    },
+    {
+      text: "O Movimento dos Direitos Civis nos EUA (décadas de 1950-60) foi liderado principalmente por:",
+      options: ["a) Malcolm X e o Black Power", "b) Martin Luther King Jr. e a resistência não violenta", "c) John F. Kennedy e o Partido Democrata", "d) Rosa Parks e o Partido Republicano", "e) Abraham Lincoln e os abolicionistas"],
+      correctAnswer: 1,
+      explanation: "O Movimento dos Direitos Civis foi liderado principalmente por Martin Luther King Jr., que defendia a resistência não violenta contra a segregação racial nos EUA.",
+      topic: "his",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "A Cabanagem (1835-1840) foi uma revolta popular que ocorreu na região:",
+      options: ["a) Nordeste (Pernambuco)", "b) Sul (Rio Grande do Sul)", "c) Norte (Grão-Pará)", "d) Sudeste (São Paulo)", "e) Centro-Oeste (Mato Grosso)"],
+      correctAnswer: 2,
+      explanation: "A Cabanagem foi uma revolta popular que ocorreu na região do Grão-Pará (atual Pará e Amazonas), entre 1835 e 1840, envolvendo índios, mestiços e negros.",
+      topic: "his",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "A Zona Franca de Manaus foi criada em 1967 com o objetivo de:",
+      options: ["a) Explorar recursos naturais da Amazônia", "b) Desenvolver economicamente a região amazônica através de incentivos fiscais", "c) Criar uma base militar na fronteira", "d) Promover o turismo na Amazônia", "e) Controlar o desmatamento"],
+      correctAnswer: 1,
+      explanation: "A Zona Franca de Manaus foi criada em 1967 para desenvolver economicamente a região amazônica, oferecendo incentivos fiscais para atrair indústrias e comércio.",
+      topic: "his",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "A Balaiada (1838-1841) foi uma revolta que ocorreu no estado do:",
+      options: ["a) Pará", "b) Bahia", "c) Maranhão", "d) Pernambuco", "e) Ceará"],
+      correctAnswer: 2,
+      explanation: "A Balaiada foi uma revolta popular que ocorreu no Maranhão entre 1838 e 1841, envolvendo escravos, índios e camponeses contra a elite local.",
+      topic: "his",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "O Período Regencial no Brasil (1831-1840) foi marcado por:",
+      options: ["a) Estabilidade política e prosperidade econômica", "b) Diversas revoltas regionais e instabilidade política", "c) Expansão territorial e guerras externas", "d) Industrialização acelerada", "e) Abolição da escravidão"],
+      correctAnswer: 1,
+      explanation: "O Período Regencial foi marcado por grande instabilidade política e diversas revoltas regionais, como Cabanagem, Balaiada, Farroupilha e Sabinada.",
+      topic: "his",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "A Revolta dos Malês (1835) ocorreu em qual cidade brasileira?",
+      options: ["a) Rio de Janeiro", "b) Recife", "c) São Paulo", "d) Salvador", "e) Fortaleza"],
+      correctAnswer: 3,
+      explanation: "A Revolta dos Malês ocorreu em Salvador (Bahia) em janeiro de 1835, sendo uma das maiores revoltas de escravos muçulmanos (malês) do Brasil.",
+      topic: "his",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "O Maranhão foi colonizado inicialmente por qual potência europeia?",
+      options: ["a) Portugal", "b) Espanha", "c) França", "d) Holanda", "e) Inglaterra"],
+      correctAnswer: 2,
+      explanation: "O Maranhão foi colonizado inicialmente pela França, que fundou a colônia de França Equinocial em 1612. Os portugueses expulsaram os franceses em 1615.",
+      topic: "his",
+      institution: "UEMA",
+      year: 2019
+    },
+    {
+      text: "A Ditadura Militar no Brasil durou de:",
+      options: ["a) 1930 a 1945", "b) 1945 a 1964", "c) 1964 a 1985", "d) 1985 a 2002", "e) 1950 a 1970"],
+      correctAnswer: 2,
+      explanation: "A Ditadura Militar no Brasil durou de 1964 (golpe que depôs João Goulart) a 1985 (eleição indireta de Tancredo Neves, início da redemocratização).",
+      topic: "his",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "A Revolução Constitucionalista de 1932 ocorreu em qual estado brasileiro?",
+      options: ["a) Rio de Janeiro", "b) Minas Gerais", "c) São Paulo", "d) Rio Grande do Sul", "e) Bahia"],
+      correctAnswer: 2,
+      explanation: "A Revolução Constitucionalista de 1932 ocorreu em São Paulo, quando o estado se rebelou contra o governo de Getúlio Vargas, exigindo uma nova constituição.",
+      topic: "his",
+      institution: "UEM",
+      year: 2019
+    },
+    {
+      text: "A Guerra do Paraguai (1864-1870) foi o maior conflito armado da América do Sul. O Brasil lutou ao lado de:",
+      options: ["a) Paraguai e Bolívia", "b) Argentina e Uruguai", "c) Chile e Peru", "d) Venezuela e Colômbia", "e) Equador e Peru"],
+      correctAnswer: 1,
+      explanation: "O Brasil lutou na Tríplice Aliança, ao lado da Argentina e do Uruguai, contra o Paraguai de Francisco Solano López.",
+      topic: "his",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "O Contestado (1912-1916) foi um conflito que ocorreu na região disputada entre os estados de:",
+      options: ["a) São Paulo e Minas Gerais", "b) Bahia e Sergipe", "c) Santa Catarina e Paraná", "d) Rio Grande do Sul e Santa Catarina", "e) Paraná e São Paulo"],
+      correctAnswer: 2,
+      explanation: "A Guerra do Contestado ocorreu na região disputada entre Santa Catarina e Paraná, envolvendo sertanejos liderados por líderes messiânicos contra o governo federal.",
+      topic: "his",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "A Inconfidência Mineira (1789) foi um movimento que visava:",
+      options: ["a) A abolição da escravidão", "b) A independência de Minas Gerais de Portugal", "c) A proclamação da república no Brasil", "d) A expulsão dos jesuítas", "e) A reforma agrária"],
+      correctAnswer: 1,
+      explanation: "A Inconfidência Mineira foi um movimento separatista que visava a independência de Minas Gerais (e possivelmente do Brasil) de Portugal, inspirado nos ideais iluministas.",
+      topic: "his",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "O Plano Real (1994) foi implementado durante o governo de:",
+      options: ["a) José Sarney", "b) Fernando Collor", "c) Itamar Franco", "d) Fernando Henrique Cardoso", "e) Lula"],
+      correctAnswer: 2,
+      explanation: "O Plano Real foi implementado em 1994 durante o governo de Itamar Franco, com Fernando Henrique Cardoso como Ministro da Fazenda, controlando a hiperinflação.",
+      topic: "his",
+      institution: "UFU",
+      year: 2019
+    },
+    {
+      text: "A Semana de Arte Moderna de 1922 ocorreu em qual cidade brasileira?",
+      options: ["a) Rio de Janeiro", "b) Salvador", "c) São Paulo", "d) Belo Horizonte", "e) Porto Alegre"],
+      correctAnswer: 2,
+      explanation: "A Semana de Arte Moderna de 1922 ocorreu em São Paulo, no Teatro Municipal, sendo um marco do Modernismo brasileiro.",
+      topic: "his",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "A Constituição Federal de 1988 é conhecida como:",
+      options: ["a) Constituição do Império", "b) Constituição Republicana", "c) Constituição Cidadã", "d) Constituição Democrática", "e) Constituição Social"],
+      correctAnswer: 2,
+      explanation: "A Constituição Federal de 1988 é conhecida como 'Constituição Cidadã', denominação dada pelo deputado Ulysses Guimarães, por seu amplo rol de direitos e garantias fundamentais.",
+      topic: "his",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "Brasília foi inaugurada como capital federal do Brasil em:",
+      options: ["a) 1950", "b) 1955", "c) 1960", "d) 1965", "e) 1970"],
+      correctAnswer: 2,
+      explanation: "Brasília foi inaugurada em 21 de abril de 1960, durante o governo de Juscelino Kubitschek, substituindo o Rio de Janeiro como capital federal.",
+      topic: "his",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "O Ato Institucional nº 5 (AI-5), de 1968, foi o mais duro instrumento da Ditadura Militar brasileira porque:",
+      options: ["a) Criou a censura à imprensa", "b) Suspendeu direitos políticos e permitiu cassações e prisões arbitrárias", "c) Estabeleceu eleições diretas", "d) Criou o bipartidarismo", "e) Decretou a anistia política"],
+      correctAnswer: 1,
+      explanation: "O AI-5 suspendeu direitos políticos, permitiu cassações de mandatos, fechou o Congresso, suspendeu o habeas corpus e intensificou a repressão política.",
+      topic: "his",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "A Marcha para o Oeste, promovida por Getúlio Vargas, visava:",
+      options: ["a) Colonizar o Nordeste brasileiro", "b) Ocupar e desenvolver o interior do Brasil, especialmente o Centro-Oeste", "c) Expandir o Brasil para a Argentina", "d) Criar colônias no litoral", "e) Desenvolver a Amazônia"],
+      correctAnswer: 1,
+      explanation: "A Marcha para o Oeste (1937) foi uma política de Vargas para ocupar e desenvolver o interior do Brasil, especialmente o Centro-Oeste, criando cidades como Goiânia.",
+      topic: "his",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "A Revolução de 1930 no Brasil foi liderada por:",
+      options: ["a) Washington Luís", "b) Júlio Prestes", "c) Getúlio Vargas", "d) Artur Bernardes", "e) Epitácio Pessoa"],
+      correctAnswer: 2,
+      explanation: "A Revolução de 1930 foi liderada por Getúlio Vargas, que chegou ao poder após um golpe que depôs Washington Luís e impediu a posse de Júlio Prestes.",
+      topic: "his",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "A queda do Muro de Berlim (1989) simbolizou:",
+      options: ["a) O início da Guerra Fria", "b) A unificação da Alemanha e o fim da divisão ideológica da Europa", "c) A criação da União Europeia", "d) O início da Segunda Guerra Mundial", "e) A expansão do comunismo"],
+      correctAnswer: 1,
+      explanation: "A queda do Muro de Berlim em 9 de novembro de 1989 simbolizou o fim da divisão da Alemanha e da Europa, marcando o colapso do bloco soviético e o fim da Guerra Fria.",
+      topic: "his",
+      institution: "ENEM PPL",
+      year: 2019
+    },
+    {
+      text: "A pandemia de COVID-19 evidenciou desigualdades sociais no Brasil. Qual é o principal fator que dificultou o acesso à saúde pelas populações mais vulneráveis durante a pandemia?",
+      options: ["a) Excesso de hospitais públicos", "b) Desigualdade no acesso a serviços de saúde e condições precárias de moradia", "c) Recusa da população em se vacinar", "d) Falta de interesse do governo federal", "e) Excesso de profissionais de saúde"],
+      correctAnswer: 1,
+      explanation: "A pandemia evidenciou que populações vulneráveis enfrentam maior dificuldade de acesso à saúde devido à desigualdade socioeconômica, condições precárias de moradia e falta de saneamento básico.",
+      topic: "his",
+      institution: "ENEM PPL",
+      year: 2021
+    },
+    {
+      text: "O movimento Black Lives Matter surgiu nos Estados Unidos como resposta a:",
+      options: ["a) Discriminação econômica contra imigrantes", "b) Violência policial e racismo sistêmico contra pessoas negras", "c) Desigualdade de gênero no mercado de trabalho", "d) Discriminação religiosa", "e) Violência contra indígenas"],
+      correctAnswer: 1,
+      explanation: "O movimento Black Lives Matter surgiu em 2013 como resposta à violência policial e ao racismo sistêmico contra pessoas negras nos EUA, ganhando força global após a morte de George Floyd em 2020.",
+      topic: "his",
+      institution: "ENEM PPL",
+      year: 2021
+    }
   ],
   "geo": [
 {
@@ -2451,7 +3498,332 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "geo",
       institution: "ENEM",
       year: 2010
-    },  ],
+    },  ,
+    {
+      text: "O fenômeno El Niño é caracterizado pelo aquecimento anormal das águas do Oceano Pacífico e provoca, no Brasil:",
+      options: ["a) Chuvas excessivas no Nordeste e seca no Sul", "b) Seca no Nordeste e chuvas excessivas no Sul", "c) Temperaturas uniformes em todo o país", "d) Aumento do nível do mar no litoral", "e) Diminuição das temperaturas no Sudeste"],
+      correctAnswer: 1,
+      explanation: "O El Niño provoca seca no Nordeste brasileiro e chuvas excessivas no Sul do país, alterando os padrões climáticos normais.",
+      topic: "geo",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "O processo de desertificação no Nordeste brasileiro é causado principalmente por:",
+      options: ["a) Excesso de chuvas", "b) Ação dos ventos alísios", "c) Uso inadequado do solo e desmatamento", "d) Elevação do nível do mar", "e) Atividade vulcânica"],
+      correctAnswer: 2,
+      explanation: "A desertificação no Nordeste é causada principalmente pelo uso inadequado do solo (agricultura extensiva, pastoreio excessivo) e pelo desmatamento da caatinga.",
+      topic: "geo",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "A Região Metropolitana do Rio de Janeiro é caracterizada por:",
+      options: ["a) Baixa densidade demográfica", "b) Predominância de atividades agrícolas", "c) Alta concentração urbana e industrial", "d) Ausência de favelas", "e) Clima semiárido"],
+      correctAnswer: 2,
+      explanation: "A Região Metropolitana do Rio de Janeiro é caracterizada por alta concentração urbana, atividades industriais e de serviços, e problemas sociais como favelas e desigualdade.",
+      topic: "geo",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "O fenômeno da inversão térmica nas grandes cidades causa principalmente:",
+      options: ["a) Chuvas torrenciais", "b) Concentração de poluentes na atmosfera", "c) Diminuição da temperatura", "d) Aumento da umidade", "e) Ventos fortes"],
+      correctAnswer: 1,
+      explanation: "A inversão térmica impede a dispersão vertical dos poluentes, concentrando-os nas camadas baixas da atmosfera, agravando a poluição do ar nas cidades.",
+      topic: "geo",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "O Paraná é o maior produtor brasileiro de:",
+      options: ["a) Cana-de-açúcar", "b) Soja e milho", "c) Café e laranja", "d) Algodão e arroz", "e) Cacau e borracha"],
+      correctAnswer: 1,
+      explanation: "O Paraná é um dos maiores produtores de soja e milho do Brasil, sendo a agricultura mecanizada uma das principais atividades econômicas do estado.",
+      topic: "geo",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "A Usina Hidrelétrica de Itaipu, localizada no Rio Paraná, é uma obra binacional entre Brasil e:",
+      options: ["a) Argentina", "b) Bolívia", "c) Paraguai", "d) Uruguai", "e) Chile"],
+      correctAnswer: 2,
+      explanation: "A Usina de Itaipu é uma obra binacional entre Brasil e Paraguai, localizada no Rio Paraná, na fronteira entre os dois países.",
+      topic: "geo",
+      institution: "UFPR",
+      year: 2019
+    },
+    {
+      text: "O Rio Grande do Sul possui o maior rebanho bovino do Brasil para qual finalidade?",
+      options: ["a) Corte", "b) Leite", "c) Trabalho", "d) Exportação de couro", "e) Produção de queijo"],
+      correctAnswer: 0,
+      explanation: "O Rio Grande do Sul possui tradição na pecuária de corte, com grandes rebanhos bovinos na região da Campanha Gaúcha.",
+      topic: "geo",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "O Pampa Gaúcho é um bioma caracterizado por:",
+      options: ["a) Floresta densa e úmida", "b) Campos abertos e vegetação rasteira", "c) Cerrado e savana", "d) Caatinga e semiárido", "e) Mangues e restingas"],
+      correctAnswer: 1,
+      explanation: "O Pampa (ou Campos Sulinos) é um bioma caracterizado por campos abertos, vegetação rasteira e gramíneas, presente no Rio Grande do Sul.",
+      topic: "geo",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "Santa Catarina é conhecida pela colonização europeia, especialmente de imigrantes:",
+      options: ["a) Italianos e espanhóis", "b) Alemães e italianos", "c) Portugueses e africanos", "d) Japoneses e chineses", "e) Poloneses e russos"],
+      correctAnswer: 1,
+      explanation: "Santa Catarina foi colonizada principalmente por imigrantes alemães (Vale do Itajaí) e italianos (Serra Gaúcha e Sul do estado), que influenciaram a cultura local.",
+      topic: "geo",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "O Aquífero Guarani é uma das maiores reservas de água doce subterrânea do mundo, localizado principalmente em:",
+      options: ["a) Amazônia", "b) Nordeste brasileiro", "c) América do Sul (Brasil, Argentina, Paraguai e Uruguai)", "d) América Central", "e) Andes"],
+      correctAnswer: 2,
+      explanation: "O Aquífero Guarani está localizado principalmente sob os territórios do Brasil, Argentina, Paraguai e Uruguai, sendo uma das maiores reservas de água doce subterrânea do mundo.",
+      topic: "geo",
+      institution: "UFSC",
+      year: 2019
+    },
+    {
+      text: "O semiárido nordestino é caracterizado pelo fenômeno da seca, que é agravado pela:",
+      options: ["a) Presença de grandes rios perenes", "b) Irregularidade das chuvas e altas temperaturas", "c) Cobertura vegetal densa", "d) Proximidade com o oceano", "e) Altitude elevada"],
+      correctAnswer: 1,
+      explanation: "O semiárido nordestino é caracterizado pela irregularidade das chuvas (concentradas em poucos meses) e altas temperaturas, que causam alta evapotranspiração.",
+      topic: "geo",
+      institution: "UECE",
+      year: 2018
+    },
+    {
+      text: "O Ceará possui uma das maiores produções mundiais de:",
+      options: ["a) Petróleo", "b) Energia eólica", "c) Minério de ferro", "d) Carvão mineral", "e) Gás natural"],
+      correctAnswer: 1,
+      explanation: "O Ceará é um dos maiores produtores de energia eólica do Brasil, aproveitando os ventos constantes do litoral nordestino.",
+      topic: "geo",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "A Amazônia brasileira representa aproximadamente qual percentual do território nacional?",
+      options: ["a) 20%", "b) 30%", "c) 40%", "d) 50%", "e) 60%"],
+      correctAnswer: 3,
+      explanation: "A Amazônia Legal representa aproximadamente 59% do território brasileiro, abrangendo 9 estados da região Norte e parte do Centro-Oeste.",
+      topic: "geo",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "O Rio Amazonas é o maior rio do mundo em:",
+      options: ["a) Extensão", "b) Volume de água", "c) Número de afluentes", "d) Profundidade", "e) Velocidade da corrente"],
+      correctAnswer: 1,
+      explanation: "O Rio Amazonas é o maior do mundo em volume de água (vazão), respondendo por cerca de 20% de toda a água doce que flui para os oceanos.",
+      topic: "geo",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "O estado do Pará possui a maior reserva mineral do mundo, conhecida como:",
+      options: ["a) Serra Pelada", "b) Carajás", "c) Trombetas", "d) Tucuruí", "e) Marajó"],
+      correctAnswer: 1,
+      explanation: "A Serra dos Carajás, no Pará, possui a maior reserva de minério de ferro do mundo, além de outros minerais como manganês, cobre e ouro.",
+      topic: "geo",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "A Ilha de Marajó, localizada no Pará, é conhecida por:",
+      options: ["a) Ser a maior ilha fluvial do mundo", "b) Possuir grandes reservas de petróleo", "c) Ser o maior produtor de açaí", "d) Ter a maior população indígena do Brasil", "e) Ser o maior porto fluvial da Amazônia"],
+      correctAnswer: 0,
+      explanation: "A Ilha de Marajó é considerada a maior ilha fluviomarítima do mundo, localizada na foz do Rio Amazonas, no estado do Pará.",
+      topic: "geo",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "Os Lençóis Maranhenses são um parque nacional caracterizado por:",
+      options: ["a) Floresta amazônica densa", "b) Dunas de areia branca com lagoas de água doce", "c) Recifes de coral", "d) Campos de cerrado", "e) Manguezais extensos"],
+      correctAnswer: 1,
+      explanation: "Os Lençóis Maranhenses são caracterizados por extensas dunas de areia branca intercaladas com lagoas de água doce, formadas pelas chuvas sazonais.",
+      topic: "geo",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "O Maranhão está localizado em uma zona de transição entre quais biomas?",
+      options: ["a) Amazônia e Cerrado", "b) Amazônia, Cerrado e Caatinga", "c) Cerrado e Caatinga", "d) Mata Atlântica e Cerrado", "e) Pampa e Caatinga"],
+      correctAnswer: 1,
+      explanation: "O Maranhão está localizado em uma zona de transição entre três biomas: Amazônia (oeste), Cerrado (sul) e Caatinga (leste), o que lhe confere grande biodiversidade.",
+      topic: "geo",
+      institution: "UEMA",
+      year: 2019
+    },
+    {
+      text: "A região de Maringá (PR) é conhecida pela produção de:",
+      options: ["a) Cana-de-açúcar e etanol", "b) Soja, milho e café", "c) Minério de ferro", "d) Petróleo e gás", "e) Pesca e aquicultura"],
+      correctAnswer: 1,
+      explanation: "A região de Maringá e norte do Paraná é conhecida pela produção de soja, milho e café, sendo uma das regiões agrícolas mais produtivas do Brasil.",
+      topic: "geo",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "O processo de urbanização no Brasil foi mais intenso em qual período?",
+      options: ["a) 1900-1930", "b) 1930-1960", "c) 1950-1980", "d) 1980-2000", "e) 2000-2020"],
+      correctAnswer: 2,
+      explanation: "O processo de urbanização no Brasil foi mais intenso entre 1950 e 1980, período de industrialização acelerada que atraiu milhões de migrantes do campo para as cidades.",
+      topic: "geo",
+      institution: "UEM",
+      year: 2019
+    },
+    {
+      text: "Os Campos Gerais do Paraná são caracterizados por:",
+      options: ["a) Floresta tropical densa", "b) Campos naturais sobre planalto basáltico", "c) Vegetação de caatinga", "d) Manguezais e restingas", "e) Cerrado e savana"],
+      correctAnswer: 1,
+      explanation: "Os Campos Gerais do Paraná são caracterizados por campos naturais (vegetação campestre) sobre o Segundo Planalto Paranaense, com solos de origem basáltica.",
+      topic: "geo",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "A cidade de Ponta Grossa (PR) é conhecida como 'Princesa dos Campos' por estar localizada:",
+      options: ["a) No litoral paranaense", "b) Na região dos Campos Gerais", "c) Na fronteira com o Paraguai", "d) Na Serra do Mar", "e) No Vale do Ribeira"],
+      correctAnswer: 1,
+      explanation: "Ponta Grossa é conhecida como 'Princesa dos Campos' por estar localizada na região dos Campos Gerais do Paraná, no Segundo Planalto.",
+      topic: "geo",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "O Triângulo Mineiro é uma região de Minas Gerais que faz fronteira com os estados de:",
+      options: ["a) São Paulo e Goiás", "b) Bahia e Espírito Santo", "c) Rio de Janeiro e São Paulo", "d) Goiás e Mato Grosso do Sul", "e) São Paulo e Mato Grosso do Sul"],
+      correctAnswer: 0,
+      explanation: "O Triângulo Mineiro faz fronteira com São Paulo (ao sul) e Goiás (ao norte e oeste), sendo uma região de grande importância agroindustrial.",
+      topic: "geo",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "O Cerrado brasileiro é considerado um hotspot de biodiversidade porque:",
+      options: ["a) Possui poucas espécies endêmicas", "b) Tem grande biodiversidade e está ameaçado pelo desmatamento", "c) É o bioma mais preservado do Brasil", "d) Possui clima úmido e chuvoso", "e) Tem baixa diversidade de espécies"],
+      correctAnswer: 1,
+      explanation: "O Cerrado é considerado um hotspot de biodiversidade por possuir grande diversidade de espécies (muitas endêmicas) e estar ameaçado pelo desmatamento para agricultura.",
+      topic: "geo",
+      institution: "UFU",
+      year: 2019
+    },
+    {
+      text: "A Zona da Mata Mineira é conhecida pela produção de:",
+      options: ["a) Soja e milho", "b) Café e leite", "c) Cana-de-açúcar e etanol", "d) Minério de ferro", "e) Algodão e têxteis"],
+      correctAnswer: 1,
+      explanation: "A Zona da Mata Mineira é conhecida pela produção de café (historicamente) e leite, sendo uma das principais regiões produtoras de laticínios do Brasil.",
+      topic: "geo",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "O Rio Paraíba do Sul nasce em São Paulo e deságua no oceano em qual estado?",
+      options: ["a) São Paulo", "b) Minas Gerais", "c) Rio de Janeiro", "d) Espírito Santo", "e) Bahia"],
+      correctAnswer: 2,
+      explanation: "O Rio Paraíba do Sul nasce na Serra da Bocaina (SP), atravessa Minas Gerais e deságua no Oceano Atlântico em São João da Barra (RJ).",
+      topic: "geo",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "Brasília foi construída no Planalto Central brasileiro, em uma região de:",
+      options: ["a) Floresta Amazônica", "b) Caatinga", "c) Cerrado", "d) Mata Atlântica", "e) Pampa"],
+      correctAnswer: 2,
+      explanation: "Brasília foi construída no Planalto Central, em uma região de Cerrado, bioma que ocupa grande parte do Brasil Central.",
+      topic: "geo",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "O Distrito Federal faz fronteira apenas com o estado de:",
+      options: ["a) Minas Gerais", "b) Mato Grosso", "c) Goiás", "d) Tocantins", "e) Mato Grosso do Sul"],
+      correctAnswer: 2,
+      explanation: "O Distrito Federal é completamente circundado pelo estado de Goiás, sendo o único estado brasileiro que faz fronteira com o DF.",
+      topic: "geo",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "Goiás é um dos maiores produtores brasileiros de:",
+      options: ["a) Petróleo e gás natural", "b) Soja, milho e cana-de-açúcar", "c) Minério de ferro e aço", "d) Pesca e aquicultura", "e) Madeira e celulose"],
+      correctAnswer: 1,
+      explanation: "Goiás é um dos maiores produtores de soja, milho e cana-de-açúcar do Brasil, sendo o agronegócio a principal atividade econômica do estado.",
+      topic: "geo",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "A Chapada dos Veadeiros, localizada em Goiás, é um Patrimônio Natural da Humanidade reconhecido pela UNESCO por:",
+      options: ["a) Suas reservas de minério", "b) Sua biodiversidade e belezas naturais do Cerrado", "c) Sua importância histórica", "d) Sua produção agrícola", "e) Sua população indígena"],
+      correctAnswer: 1,
+      explanation: "A Chapada dos Veadeiros é Patrimônio Natural da Humanidade pela UNESCO por sua excepcional biodiversidade, belezas naturais e por representar um dos últimos remanescentes do Cerrado.",
+      topic: "geo",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "O aquecimento global é causado principalmente pelo aumento da concentração de gases de efeito estufa na atmosfera, especialmente o:",
+      options: ["a) Oxigênio (O₂)", "b) Nitrogênio (N₂)", "c) Dióxido de carbono (CO₂)", "d) Argônio (Ar)", "e) Hidrogênio (H₂)"],
+      correctAnswer: 2,
+      explanation: "O dióxido de carbono (CO₂) é o principal gás de efeito estufa responsável pelo aquecimento global, emitido principalmente pela queima de combustíveis fósseis.",
+      topic: "geo",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "A globalização econômica é caracterizada por:",
+      options: ["a) Isolamento dos mercados nacionais", "b) Integração dos mercados mundiais e fluxo de capitais, bens e serviços", "c) Protecionismo e barreiras comerciais", "d) Redução do comércio internacional", "e) Fortalecimento das economias locais"],
+      correctAnswer: 1,
+      explanation: "A globalização econômica é caracterizada pela integração dos mercados mundiais, com livre fluxo de capitais, bens, serviços e informações entre os países.",
+      topic: "geo",
+      institution: "ENEM PPL",
+      year: 2019
+    },
+    {
+      text: "O desmatamento da Amazônia tem consequências globais porque a floresta amazônica:",
+      options: ["a) Produz a maior parte do oxigênio do planeta", "b) Regula o ciclo hidrológico e armazena grandes quantidades de carbono", "c) É a principal fonte de alimentos do mundo", "d) Contém a maior reserva de petróleo do planeta", "e) É o único habitat de espécies migratórias"],
+      correctAnswer: 1,
+      explanation: "A Amazônia regula o ciclo hidrológico (rios voadores), armazena bilhões de toneladas de carbono e influencia o clima regional e global, sendo fundamental para o equilíbrio climático.",
+      topic: "geo",
+      institution: "ENEM PPL",
+      year: 2022
+    },
+    {
+      text: "O conceito de desenvolvimento sustentável, definido pelo Relatório Brundtland (1987), é:",
+      options: ["a) Crescimento econômico sem limites", "b) Desenvolvimento que atende às necessidades do presente sem comprometer as gerações futuras", "c) Preservação total da natureza sem desenvolvimento", "d) Industrialização acelerada com controle de poluição", "e) Crescimento econômico exclusivo dos países desenvolvidos"],
+      correctAnswer: 1,
+      explanation: "O desenvolvimento sustentável é definido como aquele que atende às necessidades do presente sem comprometer a capacidade das gerações futuras de atenderem às suas próprias necessidades.",
+      topic: "geo",
+      institution: "ENEM PPL",
+      year: 2024
+    },
+    {
+      text: "A Agenda 2030 da ONU estabelece 17 Objetivos de Desenvolvimento Sustentável (ODS). Qual é o primeiro objetivo?",
+      options: ["a) Ação contra a mudança global do clima", "b) Erradicação da pobreza", "c) Fome zero", "d) Saúde e bem-estar", "e) Educação de qualidade"],
+      correctAnswer: 1,
+      explanation: "O primeiro ODS da Agenda 2030 é a erradicação da pobreza em todas as suas formas, em todos os lugares.",
+      topic: "geo",
+      institution: "ENEM PPL",
+      year: 2024
+    },
+    {
+      text: "O Acordo de Paris (2015) tem como objetivo principal:",
+      options: ["a) Regular o comércio internacional de carbono", "b) Limitar o aquecimento global a 1,5°C acima dos níveis pré-industriais", "c) Criar um fundo para países em desenvolvimento", "d) Proibir o uso de combustíveis fósseis até 2030", "e) Estabelecer cotas de emissão para cada país"],
+      correctAnswer: 1,
+      explanation: "O Acordo de Paris tem como objetivo principal limitar o aumento da temperatura global a 1,5°C (e no máximo 2°C) acima dos níveis pré-industriais, para evitar os piores impactos das mudanças climáticas.",
+      topic: "geo",
+      institution: "ENEM PPL",
+      year: 2025
+    }
+  ],
   "bio": [
 {
       text: "À medida que a demanda por água aumenta,\nas reservas desse recurso vão se tornando imprevisíveis.\nModelos matemáticos que analisam os efeitos das mudanças climáticas sobre a disponibilidade de água no futuro\nindicam que haverá escassez em muitas regiões do planeta.\nSão esperadas mudanças nos padrões de precipitação, pois",
@@ -2964,6 +4336,277 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       institution: "UNICAMP",
       year: 2025
     },
+  ,
+    {
+      text: "A fotossíntese é um processo realizado por plantas, algas e cianobactérias que converte:",
+      options: ["a) O₂ e H₂O em CO₂ e glicose", "b) CO₂ e H₂O em glicose e O₂", "c) Glicose e O₂ em CO₂ e H₂O", "d) CO₂ e O₂ em glicose e H₂O", "e) H₂O e glicose em CO₂ e O₂"],
+      correctAnswer: 1,
+      explanation: "A fotossíntese converte CO₂ (dióxido de carbono) e H₂O (água) em glicose (matéria orgânica) e O₂ (oxigênio), usando energia luminosa.",
+      topic: "bio",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "O DNA é composto por nucleotídeos que contêm as bases nitrogenadas:",
+      options: ["a) Adenina, Guanina, Citosina e Uracila", "b) Adenina, Guanina, Citosina e Timina", "c) Adenina, Guanina, Uracila e Timina", "d) Adenina, Citosina, Uracila e Timina", "e) Guanina, Citosina, Uracila e Timina"],
+      correctAnswer: 1,
+      explanation: "O DNA contém as bases nitrogenadas: Adenina (A), Guanina (G), Citosina (C) e Timina (T). O RNA contém Uracila (U) no lugar da Timina.",
+      topic: "bio",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "A mitose é um tipo de divisão celular que resulta em:",
+      options: ["a) 4 células haploides", "b) 2 células haploides", "c) 4 células diploides", "d) 2 células diploides geneticamente idênticas", "e) 1 célula diploide"],
+      correctAnswer: 3,
+      explanation: "A mitose resulta em 2 células-filhas diploides (2n) geneticamente idênticas à célula-mãe, sendo responsável pelo crescimento e regeneração dos tecidos.",
+      topic: "bio",
+      institution: "UNESP",
+      year: 2020
+    },
+    {
+      text: "O sistema imunológico humano é composto por células especializadas chamadas:",
+      options: ["a) Eritrócitos e plaquetas", "b) Leucócitos (glóbulos brancos)", "c) Hemácias e plasma", "d) Neurônios e células gliais", "e) Hepatócitos e adipócitos"],
+      correctAnswer: 1,
+      explanation: "Os leucócitos (glóbulos brancos) são as células do sistema imunológico, responsáveis pela defesa do organismo contra patógenos.",
+      topic: "bio",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "A teoria da evolução por seleção natural foi proposta por:",
+      options: ["a) Gregor Mendel", "b) Louis Pasteur", "c) Charles Darwin", "d) Jean-Baptiste Lamarck", "e) Carl Linnaeus"],
+      correctAnswer: 2,
+      explanation: "Charles Darwin propôs a teoria da evolução por seleção natural em 'A Origem das Espécies' (1859), explicando como as espécies se adaptam ao ambiente ao longo do tempo.",
+      topic: "bio",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "A respiração celular aeróbica ocorre principalmente na:",
+      options: ["a) Membrana plasmática", "b) Mitocôndria", "c) Cloroplasto", "d) Núcleo", "e) Ribossomo"],
+      correctAnswer: 1,
+      explanation: "A respiração celular aeróbica ocorre principalmente na mitocôndria, onde a glicose é oxidada para produzir ATP, CO₂ e H₂O.",
+      topic: "bio",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "A meiose é um tipo de divisão celular que ocorre na formação de:",
+      options: ["a) Células somáticas", "b) Células nervosas", "c) Gametas (células sexuais)", "d) Células musculares", "e) Células epiteliais"],
+      correctAnswer: 2,
+      explanation: "A meiose ocorre na formação de gametas (espermatozoides e óvulos), resultando em 4 células haploides (n) com metade do número de cromossomos da célula-mãe.",
+      topic: "bio",
+      institution: "UFPR",
+      year: 2019
+    },
+    {
+      text: "O processo de osmose é definido como o movimento de:",
+      options: ["a) Solutos de menor para maior concentração", "b) Água de menor para maior concentração de solutos", "c) Água de maior para menor concentração de solutos", "d) Solutos de maior para menor concentração", "e) Íons contra o gradiente eletroquímico"],
+      correctAnswer: 1,
+      explanation: "A osmose é o movimento de água através de uma membrana semipermeável, de uma região de menor concentração de solutos (maior concentração de água) para uma de maior concentração de solutos.",
+      topic: "bio",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "As leis de Mendel foram estabelecidas com base em experimentos com:",
+      options: ["a) Moscas-da-fruta (Drosophila)", "b) Ervilhas (Pisum sativum)", "c) Ratos de laboratório", "d) Bactérias (E. coli)", "e) Leveduras (Saccharomyces)"],
+      correctAnswer: 1,
+      explanation: "Gregor Mendel estabeleceu as leis da hereditariedade com base em experimentos com ervilhas (Pisum sativum), estudando características como cor e forma das sementes.",
+      topic: "bio",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "O vírus HIV causa a AIDS ao destruir principalmente quais células do sistema imunológico?",
+      options: ["a) Linfócitos B", "b) Linfócitos T CD4+", "c) Neutrófilos", "d) Macrófagos", "e) Células NK"],
+      correctAnswer: 1,
+      explanation: "O HIV destrói principalmente os linfócitos T CD4+ (células T auxiliares), comprometendo a resposta imunológica e tornando o organismo vulnerável a infecções oportunistas.",
+      topic: "bio",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "A cadeia alimentar começa sempre com os:",
+      options: ["a) Consumidores primários", "b) Decompositores", "c) Produtores (organismos autótrofos)", "d) Consumidores secundários", "e) Predadores de topo"],
+      correctAnswer: 2,
+      explanation: "A cadeia alimentar começa com os produtores (organismos autótrofos, como plantas), que convertem energia solar em matéria orgânica, sendo a base de todas as cadeias alimentares.",
+      topic: "bio",
+      institution: "UFSC",
+      year: 2019
+    },
+    {
+      text: "A dengue é transmitida pelo mosquito:",
+      options: ["a) Anopheles gambiae", "b) Culex quinquefasciatus", "c) Aedes aegypti", "d) Simulium damnosum", "e) Lutzomyia longipalpis"],
+      correctAnswer: 2,
+      explanation: "A dengue é transmitida pelo mosquito Aedes aegypti, que também transmite zika, chikungunya e febre amarela urbana.",
+      topic: "bio",
+      institution: "UECE",
+      year: 2018
+    },
+    {
+      text: "O processo de fermentação alcoólica é realizado por:",
+      options: ["a) Bactérias aeróbicas", "b) Leveduras (fungos)", "c) Plantas C4", "d) Algas marinhas", "e) Protozoários"],
+      correctAnswer: 1,
+      explanation: "A fermentação alcoólica é realizada principalmente por leveduras (fungos do gênero Saccharomyces), que convertem glicose em etanol e CO₂ na ausência de oxigênio.",
+      topic: "bio",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "A Amazônia possui a maior biodiversidade do planeta. Qual é o principal fator que explica essa riqueza biológica?",
+      options: ["a) Clima frio e seco", "b) Clima quente e úmido com alta pluviosidade", "c) Solos ricos em nutrientes", "d) Ausência de predadores", "e) Baixa competição entre espécies"],
+      correctAnswer: 1,
+      explanation: "O clima quente e úmido da Amazônia, com alta pluviosidade ao longo do ano, favorece a grande diversidade de espécies vegetais e animais.",
+      topic: "bio",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "A malária é causada por um protozoário do gênero:",
+      options: ["a) Trypanosoma", "b) Leishmania", "c) Plasmodium", "d) Giardia", "e) Entamoeba"],
+      correctAnswer: 2,
+      explanation: "A malária é causada por protozoários do gênero Plasmodium (P. falciparum, P. vivax, P. malariae), transmitidos pelo mosquito Anopheles.",
+      topic: "bio",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "O açaí (Euterpe oleracea) é uma palmeira nativa da Amazônia. Qual parte da planta é consumida como alimento?",
+      options: ["a) Raiz", "b) Folha", "c) Fruto", "d) Caule", "e) Flor"],
+      correctAnswer: 2,
+      explanation: "O açaí consumido como alimento é o fruto da palmeira Euterpe oleracea, rico em antocianinas, gorduras saudáveis e fibras.",
+      topic: "bio",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "A pirarucu (Arapaima gigas) é um peixe amazônico que respira:",
+      options: ["a) Apenas por brânquias", "b) Apenas por pulmões", "c) Por brânquias e por um órgão acessório que permite respiração aérea", "d) Pela pele", "e) Por difusão direta"],
+      correctAnswer: 2,
+      explanation: "O pirarucu possui brânquias e também uma bexiga natatória modificada que funciona como pulmão, permitindo respiração aérea. Por isso, precisa subir à superfície periodicamente.",
+      topic: "bio",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "A babaçu (Attalea speciosa) é uma palmeira típica do Maranhão. Qual é a principal utilidade econômica dessa planta?",
+      options: ["a) Produção de madeira", "b) Extração de óleo das amêndoas", "c) Produção de borracha", "d) Fabricação de papel", "e) Produção de fibras têxteis"],
+      correctAnswer: 1,
+      explanation: "A babaçu é economicamente importante pela extração de óleo das amêndoas, usado na alimentação, cosméticos e indústria. O coco também fornece carvão e outros subprodutos.",
+      topic: "bio",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "A biotecnologia moderna utiliza organismos geneticamente modificados (OGMs). Qual é a principal técnica usada para inserir genes em organismos?",
+      options: ["a) Clonagem celular", "b) Engenharia genética com uso de plasmídeos e enzimas de restrição", "c) Hibridização celular", "d) Mutagênese por radiação", "e) Seleção artificial"],
+      correctAnswer: 1,
+      explanation: "A engenharia genética usa plasmídeos (vetores) e enzimas de restrição para inserir genes de interesse em organismos hospedeiros, criando OGMs.",
+      topic: "bio",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "A Araucária (Araucaria angustifolia) é uma árvore símbolo do Paraná. Ela pertence ao grupo das:",
+      options: ["a) Angiospermas", "b) Briófitas", "c) Pteridófitas", "d) Gimnospermas", "e) Algas"],
+      correctAnswer: 3,
+      explanation: "A Araucária é uma gimnosperma (planta com sementes nuas, não envoltas por fruto), pertencente à família Araucariaceae.",
+      topic: "bio",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "O pinhão, semente da Araucária, é rico em:",
+      options: ["a) Proteínas e gorduras", "b) Amido (carboidratos)", "c) Vitaminas e minerais", "d) Fibras e celulose", "e) Ácidos graxos insaturados"],
+      correctAnswer: 1,
+      explanation: "O pinhão é rico em amido (carboidratos), sendo uma importante fonte de energia. Também contém proteínas, fibras e minerais.",
+      topic: "bio",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "O Cerrado brasileiro possui uma flora adaptada ao fogo. Qual é a principal adaptação das plantas do Cerrado?",
+      options: ["a) Folhas pequenas e espessas com cutícula grossa", "b) Raízes profundas e cascas grossas resistentes ao fogo", "c) Caules suculentos para armazenar água", "d) Folhas caducas na estação seca", "e) Espinhos para reduzir a transpiração"],
+      correctAnswer: 1,
+      explanation: "As plantas do Cerrado possuem raízes profundas (para acessar água no lençol freático) e cascas grossas e corticosas resistentes ao fogo, adaptações ao clima sazonal e às queimadas.",
+      topic: "bio",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "A doença de Chagas é causada pelo protozoário Trypanosoma cruzi, transmitido pelo:",
+      options: ["a) Mosquito Aedes aegypti", "b) Barbeiro (Triatoma infestans)", "c) Carrapato Ixodes", "d) Mosquito Anopheles", "e) Pulga Xenopsylla"],
+      correctAnswer: 1,
+      explanation: "A doença de Chagas é transmitida pelo barbeiro (Triatoma infestans), um inseto hematófago que defeca após sugar sangue, contaminando o local da picada com o protozoário.",
+      topic: "bio",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "O processo de transpiração nas plantas ocorre principalmente através dos:",
+      options: ["a) Lenticelas", "b) Estômatos", "c) Raízes", "d) Flores", "e) Frutos"],
+      correctAnswer: 1,
+      explanation: "A transpiração nas plantas ocorre principalmente através dos estômatos (poros nas folhas), que regulam a troca de gases e a perda de água.",
+      topic: "bio",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "O Projeto Genoma Humano mapeou todos os genes do DNA humano. Quantos pares de bases aproximadamente compõem o genoma humano?",
+      options: ["a) 3 milhões", "b) 30 milhões", "c) 3 bilhões", "d) 30 bilhões", "e) 300 bilhões"],
+      correctAnswer: 2,
+      explanation: "O genoma humano é composto por aproximadamente 3 bilhões de pares de bases de DNA, distribuídos em 23 pares de cromossomos.",
+      topic: "bio",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "A teoria endossimbiótica explica a origem das mitocôndrias e cloroplastos como:",
+      options: ["a) Invaginações da membrana plasmática", "b) Bactérias ancestrais que foram englobadas por células eucarióticas", "c) Fragmentos do núcleo celular", "d) Organelas criadas por mutação genética", "e) Estruturas formadas por condensação de proteínas"],
+      correctAnswer: 1,
+      explanation: "A teoria endossimbiótica (Lynn Margulis) propõe que mitocôndrias e cloroplastos originaram-se de bactérias ancestrais que foram englobadas por células eucarióticas em uma relação simbiótica.",
+      topic: "bio",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "O lobo-guará (Chrysocyon brachyurus) é o maior canídeo da América do Sul e habita principalmente o:",
+      options: ["a) Pantanal", "b) Cerrado", "c) Amazônia", "d) Caatinga", "e) Mata Atlântica"],
+      correctAnswer: 1,
+      explanation: "O lobo-guará é o maior canídeo da América do Sul e habita principalmente o Cerrado brasileiro, sendo uma espécie ameaçada de extinção.",
+      topic: "bio",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "A biodiversidade do Cerrado está ameaçada principalmente pela:",
+      options: ["a) Caça predatória", "b) Expansão da fronteira agrícola e desmatamento", "c) Poluição dos rios", "d) Introdução de espécies exóticas", "e) Mudanças climáticas"],
+      correctAnswer: 1,
+      explanation: "A principal ameaça à biodiversidade do Cerrado é a expansão da fronteira agrícola (soja, milho, cana) e o desmatamento, que já destruíram mais de 50% do bioma.",
+      topic: "bio",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "As vacinas funcionam estimulando o sistema imunológico a produzir:",
+      options: ["a) Antibióticos", "b) Anticorpos e memória imunológica", "c) Hormônios", "d) Enzimas digestivas", "e) Vitaminas"],
+      correctAnswer: 1,
+      explanation: "As vacinas estimulam o sistema imunológico a produzir anticorpos e células de memória imunológica, preparando o organismo para combater o patógeno real sem causar a doença.",
+      topic: "bio",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "O tabagismo é um fator de risco para diversas doenças. Qual é a principal substância cancerígena do cigarro?",
+      options: ["a) Nicotina", "b) Monóxido de carbono", "c) Alcatrão (hidrocarbonetos policíclicos aromáticos)", "d) Amônia", "e) Formaldeído"],
+      correctAnswer: 2,
+      explanation: "O alcatrão (mistura de hidrocarbonetos policíclicos aromáticos) é a principal substância cancerígena do cigarro, responsável pelo câncer de pulmão e outras neoplasias.",
+      topic: "bio",
+      institution: "ENEM PPL",
+      year: 2019
+    }
   ],
   "fis": [
 {
@@ -3134,7 +4777,305 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "fis",
       institution: "ENEM",
       year: 2012
-    },  ],
+    },  ,
+    {
+      text: "Um objeto em repouso permanece em repouso e um objeto em movimento permanece em movimento uniforme, a menos que uma força resultante atue sobre ele. Essa é a:",
+      options: ["a) Segunda Lei de Newton", "b) Terceira Lei de Newton", "c) Primeira Lei de Newton (Lei da Inércia)", "d) Lei da Gravitação Universal", "e) Lei de Hooke"],
+      correctAnswer: 2,
+      explanation: "A Primeira Lei de Newton, também chamada de Lei da Inércia, afirma que um corpo em repouso ou em movimento retilíneo uniforme permanece nesse estado a menos que uma força resultante atue sobre ele.",
+      topic: "fis",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "A velocidade da luz no vácuo é aproximadamente:",
+      options: ["a) 3 × 10⁶ m/s", "b) 3 × 10⁷ m/s", "c) 3 × 10⁸ m/s", "d) 3 × 10⁹ m/s", "e) 3 × 10¹⁰ m/s"],
+      correctAnswer: 2,
+      explanation: "A velocidade da luz no vácuo é aproximadamente 3 × 10⁸ m/s (300.000 km/s), sendo a velocidade máxima no universo.",
+      topic: "fis",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "A Lei de Ohm estabelece que a tensão (V) em um resistor é igual a:",
+      options: ["a) V = R/I", "b) V = I/R", "c) V = R × I", "d) V = R + I", "e) V = R² × I"],
+      correctAnswer: 2,
+      explanation: "A Lei de Ohm estabelece que V = R × I, onde V é a tensão (volts), R é a resistência (ohms) e I é a corrente elétrica (amperes).",
+      topic: "fis",
+      institution: "UNESP",
+      year: 2020
+    },
+    {
+      text: "A energia cinética de um objeto de massa m com velocidade v é dada por:",
+      options: ["a) Ec = mv", "b) Ec = mv²", "c) Ec = mv²/2", "d) Ec = m²v/2", "e) Ec = 2mv²"],
+      correctAnswer: 2,
+      explanation: "A energia cinética é dada por Ec = mv²/2, onde m é a massa (kg) e v é a velocidade (m/s). A unidade é o Joule (J).",
+      topic: "fis",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "A aceleração da gravidade na superfície da Terra é aproximadamente:",
+      options: ["a) 5 m/s²", "b) 8 m/s²", "c) 9,8 m/s²", "d) 12 m/s²", "e) 15 m/s²"],
+      correctAnswer: 2,
+      explanation: "A aceleração da gravidade na superfície da Terra é aproximadamente g = 9,8 m/s² (frequentemente aproximada para 10 m/s² em cálculos).",
+      topic: "fis",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "O efeito fotoelétrico foi explicado por Einstein, que propôs que a luz é composta de pacotes de energia chamados:",
+      options: ["a) Elétrons", "b) Prótons", "c) Fótons", "d) Nêutrons", "e) Quarks"],
+      correctAnswer: 2,
+      explanation: "Einstein explicou o efeito fotoelétrico propondo que a luz é composta de fótons (quanta de energia), com energia E = hf, onde h é a constante de Planck e f é a frequência.",
+      topic: "fis",
+      institution: "UFPR",
+      year: 2019
+    },
+    {
+      text: "A Segunda Lei da Termodinâmica afirma que:",
+      options: ["a) A energia total do universo é constante", "b) A entropia de um sistema isolado tende a aumentar", "c) O calor flui do corpo mais frio para o mais quente", "d) A energia pode ser criada mas não destruída", "e) Todo processo é reversível"],
+      correctAnswer: 1,
+      explanation: "A Segunda Lei da Termodinâmica afirma que a entropia (desordem) de um sistema isolado tende a aumentar, e que o calor flui espontaneamente do corpo mais quente para o mais frio.",
+      topic: "fis",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "A frequência de uma onda sonora determina o seu:",
+      options: ["a) Timbre", "b) Intensidade", "c) Tom (altura)", "d) Velocidade", "e) Comprimento de onda"],
+      correctAnswer: 2,
+      explanation: "A frequência de uma onda sonora determina o tom (altura) do som: frequências altas produzem sons agudos e frequências baixas produzem sons graves.",
+      topic: "fis",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "A força gravitacional entre dois corpos é diretamente proporcional ao produto de suas massas e inversamente proporcional ao quadrado da distância entre eles. Essa é a:",
+      options: ["a) Lei de Coulomb", "b) Lei de Hooke", "c) Lei da Gravitação Universal de Newton", "d) Segunda Lei de Newton", "e) Lei de Faraday"],
+      correctAnswer: 2,
+      explanation: "A Lei da Gravitação Universal de Newton estabelece que F = G × m₁ × m₂ / r², onde G é a constante gravitacional, m₁ e m₂ são as massas e r é a distância entre elas.",
+      topic: "fis",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "O fenômeno de refração da luz ocorre quando a luz passa de um meio para outro com diferente:",
+      options: ["a) Temperatura", "b) Pressão", "c) Índice de refração", "d) Cor", "e) Intensidade"],
+      correctAnswer: 2,
+      explanation: "A refração ocorre quando a luz passa de um meio para outro com diferente índice de refração, mudando sua velocidade e direção de propagação.",
+      topic: "fis",
+      institution: "UFSC",
+      year: 2019
+    },
+    {
+      text: "A energia potencial gravitacional de um objeto de massa m a uma altura h é:",
+      options: ["a) Ep = mh", "b) Ep = gh", "c) Ep = mgh", "d) Ep = mg/h", "e) Ep = m²gh"],
+      correctAnswer: 2,
+      explanation: "A energia potencial gravitacional é Ep = mgh, onde m é a massa (kg), g é a aceleração da gravidade (m/s²) e h é a altura (m).",
+      topic: "fis",
+      institution: "UECE",
+      year: 2018
+    },
+    {
+      text: "O efeito Doppler é observado quando há movimento relativo entre a fonte sonora e o observador. Quando a fonte se aproxima, o observador percebe o som com:",
+      options: ["a) Menor frequência (som mais grave)", "b) Maior frequência (som mais agudo)", "c) Mesma frequência", "d) Menor amplitude", "e) Maior comprimento de onda"],
+      correctAnswer: 1,
+      explanation: "Quando a fonte sonora se aproxima do observador, as ondas são comprimidas, aumentando a frequência percebida (som mais agudo). Quando se afasta, a frequência diminui (som mais grave).",
+      topic: "fis",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "A potência elétrica de um aparelho é calculada por:",
+      options: ["a) P = V/I", "b) P = V × I", "c) P = I/V", "d) P = V + I", "e) P = V² × I"],
+      correctAnswer: 1,
+      explanation: "A potência elétrica é P = V × I, onde V é a tensão (volts) e I é a corrente (amperes). A unidade é o Watt (W).",
+      topic: "fis",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "A radioatividade é um fenômeno em que núcleos atômicos instáveis emitem radiação. Qual tipo de radiação tem maior poder de penetração?",
+      options: ["a) Radiação alfa (α)", "b) Radiação beta (β)", "c) Radiação gama (γ)", "d) Radiação ultravioleta", "e) Radiação infravermelha"],
+      correctAnswer: 2,
+      explanation: "A radiação gama (γ) tem o maior poder de penetração, podendo atravessar vários centímetros de chumbo. A radiação alfa tem o menor poder de penetração.",
+      topic: "fis",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "A pressão exercida por um fluido em repouso aumenta com a profundidade. Essa relação é expressa por:",
+      options: ["a) P = ρ/h", "b) P = ρ × g × h", "c) P = g/h", "d) P = ρ × h", "e) P = g × h"],
+      correctAnswer: 1,
+      explanation: "A pressão hidrostática é P = ρ × g × h, onde ρ é a densidade do fluido, g é a aceleração da gravidade e h é a profundidade.",
+      topic: "fis",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "O movimento harmônico simples (MHS) é caracterizado por uma força restauradora proporcional ao deslocamento. Um exemplo é:",
+      options: ["a) Queda livre", "b) Movimento circular uniforme", "c) Pêndulo simples (para pequenas amplitudes)", "d) Movimento retilíneo uniforme", "e) Lançamento oblíquo"],
+      correctAnswer: 2,
+      explanation: "O pêndulo simples (para pequenas amplitudes) é um exemplo de MHS, onde a força restauradora é proporcional ao deslocamento angular.",
+      topic: "fis",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "A Lei de Faraday estabelece que a força eletromotriz (fem) induzida em um circuito é proporcional à:",
+      options: ["a) Resistência do circuito", "b) Taxa de variação do fluxo magnético", "c) Corrente elétrica no circuito", "d) Tensão aplicada", "e) Temperatura do condutor"],
+      correctAnswer: 1,
+      explanation: "A Lei de Faraday estabelece que a fem induzida é proporcional à taxa de variação do fluxo magnético: fem = -dΦ/dt.",
+      topic: "fis",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "A velocidade do som no ar a 20°C é aproximadamente:",
+      options: ["a) 100 m/s", "b) 200 m/s", "c) 340 m/s", "d) 500 m/s", "e) 1000 m/s"],
+      correctAnswer: 2,
+      explanation: "A velocidade do som no ar a 20°C é aproximadamente 340 m/s (1224 km/h). A velocidade do som varia com a temperatura e o meio de propagação.",
+      topic: "fis",
+      institution: "UEMA",
+      year: 2019
+    },
+    {
+      text: "A Terceira Lei de Newton (Lei da Ação e Reação) afirma que:",
+      options: ["a) F = ma", "b) Para toda ação há uma reação igual e contrária", "c) A energia total é conservada", "d) O momento linear é conservado", "e) A força é proporcional à deformação"],
+      correctAnswer: 1,
+      explanation: "A Terceira Lei de Newton afirma que para toda ação há uma reação igual em módulo e direção, mas de sentido contrário.",
+      topic: "fis",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "O espectro eletromagnético, em ordem crescente de frequência, é:",
+      options: ["a) Rádio, micro-ondas, infravermelho, visível, ultravioleta, raios X, raios gama", "b) Raios gama, raios X, ultravioleta, visível, infravermelho, micro-ondas, rádio", "c) Visível, infravermelho, ultravioleta, rádio, micro-ondas, raios X, raios gama", "d) Rádio, visível, ultravioleta, infravermelho, micro-ondas, raios X, raios gama", "e) Micro-ondas, rádio, infravermelho, visível, ultravioleta, raios gama, raios X"],
+      correctAnswer: 0,
+      explanation: "O espectro eletromagnético em ordem crescente de frequência (e decrescente de comprimento de onda): rádio, micro-ondas, infravermelho, visível, ultravioleta, raios X, raios gama.",
+      topic: "fis",
+      institution: "UEM",
+      year: 2019
+    },
+    {
+      text: "A conservação de energia mecânica afirma que, na ausência de forças dissipativas:",
+      options: ["a) A energia cinética é sempre constante", "b) A energia potencial é sempre constante", "c) A soma da energia cinética e potencial é constante", "d) A energia mecânica aumenta com o tempo", "e) A energia mecânica diminui com o tempo"],
+      correctAnswer: 2,
+      explanation: "A conservação de energia mecânica afirma que, na ausência de forças dissipativas (atrito), a soma da energia cinética e potencial permanece constante: Ec + Ep = constante.",
+      topic: "fis",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "A capacitância de um capacitor é medida em:",
+      options: ["a) Ohm (Ω)", "b) Henry (H)", "c) Farad (F)", "d) Tesla (T)", "e) Weber (Wb)"],
+      correctAnswer: 2,
+      explanation: "A capacitância é medida em Farad (F), em homenagem a Michael Faraday. Na prática, usam-se microfarads (μF) e picofarads (pF).",
+      topic: "fis",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "O trabalho realizado por uma força F que desloca um objeto uma distância d, formando um ângulo θ com a direção do deslocamento, é:",
+      options: ["a) W = F × d", "b) W = F × d × sen(θ)", "c) W = F × d × cos(θ)", "d) W = F × d × tg(θ)", "e) W = F/d × cos(θ)"],
+      correctAnswer: 2,
+      explanation: "O trabalho é W = F × d × cos(θ), onde θ é o ângulo entre a força e o deslocamento. Quando θ = 0°, W = F × d (máximo).",
+      topic: "fis",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "A indutância de uma bobina é medida em:",
+      options: ["a) Farad (F)", "b) Ohm (Ω)", "c) Henry (H)", "d) Tesla (T)", "e) Ampere (A)"],
+      correctAnswer: 2,
+      explanation: "A indutância é medida em Henry (H), em homenagem a Joseph Henry. A indutância mede a capacidade de uma bobina de armazenar energia em campo magnético.",
+      topic: "fis",
+      institution: "UFU",
+      year: 2019
+    },
+    {
+      text: "A equação de Einstein E = mc² relaciona:",
+      options: ["a) Energia e velocidade", "b) Massa e velocidade da luz", "c) Energia e massa (com c = velocidade da luz)", "d) Força e aceleração", "e) Pressão e volume"],
+      correctAnswer: 2,
+      explanation: "A equação E = mc² de Einstein relaciona energia (E) e massa (m), onde c é a velocidade da luz. Ela mostra que massa e energia são equivalentes e intercambiáveis.",
+      topic: "fis",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "O princípio da superposição de ondas afirma que quando duas ondas se encontram:",
+      options: ["a) Elas se destroem mutuamente", "b) A onda resultante é a soma algébrica das ondas individuais", "c) Apenas a onda de maior amplitude persiste", "d) As ondas mudam de frequência", "e) As ondas mudam de velocidade"],
+      correctAnswer: 1,
+      explanation: "O princípio da superposição afirma que a perturbação resultante é a soma algébrica das perturbações individuais, podendo ocorrer interferência construtiva ou destrutiva.",
+      topic: "fis",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "A fusão nuclear é o processo que ocorre no interior das estrelas, onde:",
+      options: ["a) Núcleos pesados se dividem liberando energia", "b) Núcleos leves se unem formando núcleos mais pesados e liberando energia", "c) Elétrons são emitidos pelos núcleos", "d) Prótons se transformam em nêutrons", "e) Átomos perdem elétrons"],
+      correctAnswer: 1,
+      explanation: "A fusão nuclear é o processo em que núcleos leves (como hidrogênio) se unem para formar núcleos mais pesados (como hélio), liberando enorme quantidade de energia.",
+      topic: "fis",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "O campo elétrico criado por uma carga puntiforme Q a uma distância r é dado por:",
+      options: ["a) E = kQ/r", "b) E = kQ/r²", "c) E = kQ²/r", "d) E = kQ × r", "e) E = k/Qr²"],
+      correctAnswer: 1,
+      explanation: "O campo elétrico de uma carga puntiforme é E = kQ/r², onde k é a constante eletrostática (9×10⁹ N·m²/C²), Q é a carga e r é a distância.",
+      topic: "fis",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "A usina hidrelétrica converte energia potencial da água em energia elétrica. Qual é a sequência correta de transformações de energia?",
+      options: ["a) Elétrica → Mecânica → Potencial", "b) Potencial → Cinética → Mecânica → Elétrica", "c) Cinética → Potencial → Elétrica", "d) Química → Mecânica → Elétrica", "e) Nuclear → Térmica → Elétrica"],
+      correctAnswer: 1,
+      explanation: "Na usina hidrelétrica: a água armazenada tem energia potencial → ao cair, converte-se em energia cinética → move as turbinas (energia mecânica) → os geradores convertem em energia elétrica.",
+      topic: "fis",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "O fenômeno de polarização da luz demonstra que a luz é uma onda:",
+      options: ["a) Longitudinal", "b) Transversal", "c) Mecânica", "d) Sonora", "e) Estacionária"],
+      correctAnswer: 1,
+      explanation: "A polarização da luz demonstra que ela é uma onda transversal (as oscilações são perpendiculares à direção de propagação), ao contrário das ondas sonoras, que são longitudinais.",
+      topic: "fis",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "Um carro percorre 120 km em 2 horas. Qual é a sua velocidade média?",
+      options: ["a) 40 km/h", "b) 50 km/h", "c) 60 km/h", "d) 70 km/h", "e) 80 km/h"],
+      correctAnswer: 2,
+      explanation: "Velocidade média = distância/tempo = 120 km / 2 h = 60 km/h.",
+      topic: "fis",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "Um objeto de 2 kg é acelerado por uma força de 10 N. Qual é a aceleração do objeto? (F = ma)",
+      options: ["a) 2 m/s²", "b) 4 m/s²", "c) 5 m/s²", "d) 8 m/s²", "e) 20 m/s²"],
+      correctAnswer: 2,
+      explanation: "Pela Segunda Lei de Newton: F = ma → a = F/m = 10/2 = 5 m/s².",
+      topic: "fis",
+      institution: "ENEM PPL",
+      year: 2019
+    },
+    {
+      text: "A energia solar fotovoltaica converte energia solar em energia elétrica através do:",
+      options: ["a) Efeito Joule", "b) Efeito fotoelétrico", "c) Efeito Doppler", "d) Efeito Compton", "e) Efeito Hall"],
+      correctAnswer: 1,
+      explanation: "Os painéis solares fotovoltaicos convertem energia solar em energia elétrica através do efeito fotoelétrico, onde fótons de luz excitam elétrons nos semicondutores (silício).",
+      topic: "fis",
+      institution: "ENEM PPL",
+      year: 2022
+    }
+  ],
   "qui": [
 {
       text: "Os lixões são o pior tipo de disposição final dos resíduos\nsólidos de uma cidade, representando um grave problema\nambiental e de saúde pública. Nesses locais, o lixo é\njogado diretamente no solo e a céu aberto, sem nenhuma\nnorma de controle, o que causa, entre outros problemas, a\ncontaminação do solo e das águas pelo chorume (líquido\nescuro com alta carga poluidora, proveniente da decomposição da matéria orgânica presente no lixo).\nRICARDO, B.; CANPANILLI, M. Almanaque Brasil\nSocioambiental 2008. São Paulo,\nInstituto Socioambiental, 2007.\n\nO texto exemplifica uma importante alteração socioambiental,\ncomum aos centros urbanos. A maximização desse fenômeno\nocorre\n\nConsidere um município que deposita os resíduos sólidos produzidos por sua população em um lixão. Esse procedimento é\nconsiderado um problema de saúde pública porque os lixões",
@@ -3224,7 +5165,296 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "qui",
       institution: "ENEM",
       year: 2015
-    },  ],
+    },  ,
+    {
+      text: "A reação de neutralização ocorre entre:",
+      options: ["a) Dois ácidos", "b) Duas bases", "c) Um ácido e uma base", "d) Um metal e um não-metal", "e) Dois sais"],
+      correctAnswer: 2,
+      explanation: "A reação de neutralização ocorre entre um ácido e uma base, produzindo sal e água: ácido + base → sal + água.",
+      topic: "qui",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "O pH de uma solução neutra a 25°C é:",
+      options: ["a) 0", "b) 5", "c) 7", "d) 10", "e) 14"],
+      correctAnswer: 2,
+      explanation: "Uma solução neutra a 25°C tem pH = 7. Soluções ácidas têm pH < 7 e soluções básicas têm pH > 7.",
+      topic: "qui",
+      institution: "UNESP",
+      year: 2020
+    },
+    {
+      text: "A fórmula molecular da glicose é:",
+      options: ["a) C₆H₁₂O₆", "b) C₁₂H₂₂O₁₁", "c) CH₄", "d) C₂H₅OH", "e) C₃H₈"],
+      correctAnswer: 0,
+      explanation: "A glicose tem fórmula molecular C₆H₁₂O₆. É um monossacarídeo (açúcar simples) fundamental para o metabolismo celular.",
+      topic: "qui",
+      institution: "UERJ",
+      year: 2018
+    },
+    {
+      text: "A ligação covalente é formada pelo compartilhamento de:",
+      options: ["a) Prótons", "b) Nêutrons", "c) Elétrons", "d) Íons", "e) Átomos"],
+      correctAnswer: 2,
+      explanation: "A ligação covalente é formada pelo compartilhamento de pares de elétrons entre dois átomos não-metálicos.",
+      topic: "qui",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "A destilação fracionada do petróleo separa seus componentes com base na diferença de:",
+      options: ["a) Densidade", "b) Solubilidade", "c) Ponto de ebulição", "d) Cor", "e) Viscosidade"],
+      correctAnswer: 2,
+      explanation: "A destilação fracionada separa os componentes do petróleo com base nas diferenças de ponto de ebulição, obtendo frações como GLP, gasolina, querosene e diesel.",
+      topic: "qui",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "O número de Avogadro (6,02 × 10²³) representa o número de partículas em:",
+      options: ["a) 1 grama de qualquer substância", "b) 1 mol de qualquer substância", "c) 1 litro de qualquer gás", "d) 1 átomo de qualquer elemento", "e) 1 molécula de qualquer composto"],
+      correctAnswer: 1,
+      explanation: "O número de Avogadro (6,02 × 10²³) é o número de partículas (átomos, moléculas, íons) contidas em 1 mol de qualquer substância.",
+      topic: "qui",
+      institution: "UFPR",
+      year: 2019
+    },
+    {
+      text: "A eletrólise é um processo que utiliza energia elétrica para:",
+      options: ["a) Produzir corrente elétrica a partir de reações químicas", "b) Promover reações químicas não espontâneas", "c) Separar misturas por diferença de densidade", "d) Neutralizar ácidos e bases", "e) Oxidar metais"],
+      correctAnswer: 1,
+      explanation: "A eletrólise usa energia elétrica para promover reações químicas não espontâneas, como a eletrólise da água (produção de H₂ e O₂) e a galvanoplastia.",
+      topic: "qui",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "Os isômeros são compostos que possuem:",
+      options: ["a) Mesma fórmula molecular e mesma estrutura", "b) Mesma fórmula molecular, mas estruturas diferentes", "c) Fórmulas moleculares diferentes e mesma estrutura", "d) Mesma massa molar e mesma estrutura", "e) Diferentes fórmulas moleculares e diferentes estruturas"],
+      correctAnswer: 1,
+      explanation: "Isômeros são compostos com a mesma fórmula molecular, mas com estruturas (arranjos dos átomos) diferentes, resultando em propriedades físicas e/ou químicas distintas.",
+      topic: "qui",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "A camada de ozônio (O₃) na estratosfera é importante porque:",
+      options: ["a) Produz oxigênio para respiração", "b) Absorve a radiação ultravioleta prejudicial", "c) Regula a temperatura da Terra", "d) Filtra partículas de poeira", "e) Produz chuva ácida"],
+      correctAnswer: 1,
+      explanation: "A camada de ozônio absorve a maior parte da radiação ultravioleta (UV-B e UV-C) emitida pelo Sol, protegendo os seres vivos de seus efeitos nocivos.",
+      topic: "qui",
+      institution: "UFSC",
+      year: 2018
+    },
+    {
+      text: "O etanol (C₂H₅OH) é classificado como:",
+      options: ["a) Ácido carboxílico", "b) Éster", "c) Álcool", "d) Aldeído", "e) Cetona"],
+      correctAnswer: 2,
+      explanation: "O etanol (C₂H₅OH) é um álcool, caracterizado pelo grupo funcional -OH (hidroxila) ligado a um carbono saturado.",
+      topic: "qui",
+      institution: "UECE",
+      year: 2018
+    },
+    {
+      text: "A chuva ácida é causada principalmente pela reação de:",
+      options: ["a) CO₂ com a água da chuva", "b) SO₂ e NOₓ com a água da chuva", "c) O₃ com a água da chuva", "d) CH₄ com a água da chuva", "e) N₂ com a água da chuva"],
+      correctAnswer: 1,
+      explanation: "A chuva ácida é causada pela reação de SO₂ (dióxido de enxofre) e NOₓ (óxidos de nitrogênio) com a água da chuva, formando ácido sulfúrico e ácido nítrico.",
+      topic: "qui",
+      institution: "UECE",
+      year: 2019
+    },
+    {
+      text: "O látex extraído da seringueira (Hevea brasiliensis) é composto principalmente por:",
+      options: ["a) Celulose", "b) Amido", "c) Borracha natural (poliisopreno)", "d) Proteínas", "e) Lipídios"],
+      correctAnswer: 2,
+      explanation: "O látex da seringueira é composto principalmente por borracha natural (poliisopreno), um polímero natural usado na fabricação de pneus, luvas e outros produtos.",
+      topic: "qui",
+      institution: "UEA",
+      year: 2018
+    },
+    {
+      text: "A fórmula química da água é H₂O. Isso significa que cada molécula de água contém:",
+      options: ["a) 1 átomo de hidrogênio e 2 de oxigênio", "b) 2 átomos de hidrogênio e 1 de oxigênio", "c) 2 átomos de hidrogênio e 2 de oxigênio", "d) 1 átomo de hidrogênio e 1 de oxigênio", "e) 3 átomos de hidrogênio e 1 de oxigênio"],
+      correctAnswer: 1,
+      explanation: "A fórmula H₂O indica que cada molécula de água contém 2 átomos de hidrogênio (H₂) e 1 átomo de oxigênio (O).",
+      topic: "qui",
+      institution: "UEA",
+      year: 2019
+    },
+    {
+      text: "O processo de saponificação produz sabão a partir de:",
+      options: ["a) Ácidos e álcoois", "b) Gorduras (triglicerídeos) e base forte (NaOH ou KOH)", "c) Ácidos e bases", "d) Sais e água", "e) Proteínas e lipídios"],
+      correctAnswer: 1,
+      explanation: "A saponificação é a reação de gorduras (triglicerídeos) com uma base forte (NaOH para sabão sólido ou KOH para sabão líquido), produzindo sabão (sal de ácido graxo) e glicerol.",
+      topic: "qui",
+      institution: "UEPA",
+      year: 2018
+    },
+    {
+      text: "O açaí é rico em antocianinas, que são pigmentos responsáveis pela sua cor roxa. As antocianinas pertencem à classe dos:",
+      options: ["a) Lipídios", "b) Proteínas", "c) Carboidratos", "d) Flavonoides (polifenóis)", "e) Vitaminas"],
+      correctAnswer: 3,
+      explanation: "As antocianinas são flavonoides (polifenóis), compostos bioativos com propriedades antioxidantes, responsáveis pelas cores vermelha, roxa e azul de muitos frutos.",
+      topic: "qui",
+      institution: "UEPA",
+      year: 2019
+    },
+    {
+      text: "O babaçu é usado para produzir óleo vegetal. Quimicamente, os óleos vegetais são:",
+      options: ["a) Proteínas", "b) Carboidratos", "c) Triglicerídeos (ésteres de glicerol com ácidos graxos insaturados)", "d) Vitaminas", "e) Minerais"],
+      correctAnswer: 2,
+      explanation: "Os óleos vegetais são triglicerídeos (ésteres formados por glicerol e ácidos graxos), predominantemente insaturados, o que os torna líquidos à temperatura ambiente.",
+      topic: "qui",
+      institution: "UEMA",
+      year: 2018
+    },
+    {
+      text: "A fermentação do caldo de cana produz etanol. Qual é o agente responsável por essa fermentação?",
+      options: ["a) Bactérias lácticas", "b) Leveduras (Saccharomyces cerevisiae)", "c) Fungos filamentosos", "d) Algas", "e) Vírus"],
+      correctAnswer: 1,
+      explanation: "A fermentação alcoólica do caldo de cana é realizada por leveduras (principalmente Saccharomyces cerevisiae), que convertem sacarose em etanol e CO₂.",
+      topic: "qui",
+      institution: "UEMA",
+      year: 2019
+    },
+    {
+      text: "A reação de adição é característica de compostos orgânicos com:",
+      options: ["a) Apenas ligações simples", "b) Ligações duplas ou triplas (insaturações)", "c) Grupos funcionais oxigenados", "d) Anéis aromáticos", "e) Grupos amino"],
+      correctAnswer: 1,
+      explanation: "As reações de adição ocorrem em compostos com insaturações (ligações duplas C=C ou triplas C≡C), onde moléculas se adicionam à dupla ou tripla ligação.",
+      topic: "qui",
+      institution: "UEM",
+      year: 2018
+    },
+    {
+      text: "O polietileno (PE) é um polímero obtido pela polimerização do:",
+      options: ["a) Propeno", "b) Eteno (etileno)", "c) Butadieno", "d) Estireno", "e) Cloreto de vinila"],
+      correctAnswer: 1,
+      explanation: "O polietileno é obtido pela polimerização do eteno (CH₂=CH₂), sendo um dos plásticos mais produzidos no mundo, usado em embalagens, sacolas e tubulações.",
+      topic: "qui",
+      institution: "UEM",
+      year: 2019
+    },
+    {
+      text: "A corrosão do ferro (ferrugem) é um processo de:",
+      options: ["a) Redução do ferro", "b) Oxidação do ferro", "c) Neutralização", "d) Precipitação", "e) Sublimação"],
+      correctAnswer: 1,
+      explanation: "A ferrugem é a oxidação do ferro (Fe → Fe²⁺ ou Fe³⁺) na presença de oxigênio e água, formando óxidos e hidróxidos de ferro.",
+      topic: "qui",
+      institution: "UEPG",
+      year: 2018
+    },
+    {
+      text: "A fórmula do ácido sulfúrico é:",
+      options: ["a) HCl", "b) HNO₃", "c) H₂SO₄", "d) H₃PO₄", "e) H₂CO₃"],
+      correctAnswer: 2,
+      explanation: "O ácido sulfúrico tem fórmula H₂SO₄. É um ácido forte e diprotônico, amplamente usado na indústria.",
+      topic: "qui",
+      institution: "UEPG",
+      year: 2019
+    },
+    {
+      text: "A reação de esterificação produz ésteres a partir de:",
+      options: ["a) Dois álcoois", "b) Ácido carboxílico e álcool", "c) Dois ácidos", "d) Ácido e base", "e) Aldeído e cetona"],
+      correctAnswer: 1,
+      explanation: "A esterificação é a reação entre um ácido carboxílico e um álcool, produzindo um éster e água: R-COOH + R'-OH → R-COO-R' + H₂O.",
+      topic: "qui",
+      institution: "UFU",
+      year: 2018
+    },
+    {
+      text: "O benzeno (C₆H₆) é o composto aromático mais simples. Sua estrutura é caracterizada por:",
+      options: ["a) Cadeia linear com ligações simples", "b) Anel hexagonal com ligações alternadas (ressonância)", "c) Cadeia ramificada com ligações duplas", "d) Estrutura tridimensional tetraédrica", "e) Cadeia cíclica com apenas ligações simples"],
+      correctAnswer: 1,
+      explanation: "O benzeno possui um anel hexagonal com ligações alternadas (ressonância), onde os elétrons π são deslocalizados por todo o anel, conferindo estabilidade especial.",
+      topic: "qui",
+      institution: "UFU",
+      year: 2019
+    },
+    {
+      text: "A constante de equilíbrio (Kc) de uma reação química indica:",
+      options: ["a) A velocidade da reação", "b) A relação entre concentrações de produtos e reagentes no equilíbrio", "c) A energia de ativação", "d) O calor liberado ou absorvido", "e) O número de moles reagentes"],
+      correctAnswer: 1,
+      explanation: "A constante de equilíbrio (Kc) é a relação entre as concentrações dos produtos e dos reagentes elevadas às suas estequiometrias, quando a reação atinge o equilíbrio.",
+      topic: "qui",
+      institution: "UFJF",
+      year: 2018
+    },
+    {
+      text: "O princípio de Le Chatelier afirma que quando um sistema em equilíbrio sofre uma perturbação:",
+      options: ["a) O equilíbrio é destruído permanentemente", "b) O sistema se desloca para minimizar o efeito da perturbação", "c) A reação para completamente", "d) A temperatura sempre aumenta", "e) A concentração dos reagentes aumenta"],
+      correctAnswer: 1,
+      explanation: "O princípio de Le Chatelier afirma que quando um sistema em equilíbrio é perturbado, ele se desloca no sentido de minimizar o efeito da perturbação.",
+      topic: "qui",
+      institution: "UFJF",
+      year: 2019
+    },
+    {
+      text: "A entalpia de formação padrão (ΔHf°) de um elemento em seu estado padrão é:",
+      options: ["a) Positiva", "b) Negativa", "c) Zero", "d) Igual à energia de ligação", "e) Igual à energia de ionização"],
+      correctAnswer: 2,
+      explanation: "Por definição, a entalpia de formação padrão de um elemento em seu estado padrão (mais estável) é zero.",
+      topic: "qui",
+      institution: "UNB",
+      year: 2018
+    },
+    {
+      text: "A lei de Hess afirma que a variação de entalpia de uma reação:",
+      options: ["a) Depende do caminho percorrido", "b) É independente do caminho, dependendo apenas dos estados inicial e final", "c) É sempre positiva", "d) É sempre negativa", "e) Depende da temperatura"],
+      correctAnswer: 1,
+      explanation: "A lei de Hess afirma que a variação de entalpia de uma reação é independente do caminho percorrido, dependendo apenas dos estados inicial e final (função de estado).",
+      topic: "qui",
+      institution: "UNB",
+      year: 2019
+    },
+    {
+      text: "O etanol usado como combustível no Brasil é produzido principalmente a partir de:",
+      options: ["a) Milho", "b) Cana-de-açúcar", "c) Soja", "d) Mandioca", "e) Beterraba"],
+      correctAnswer: 1,
+      explanation: "O etanol combustível no Brasil é produzido principalmente a partir da cana-de-açúcar, por fermentação da sacarose seguida de destilação.",
+      topic: "qui",
+      institution: "UFG",
+      year: 2018
+    },
+    {
+      text: "A reação de polimerização por condensação é diferente da adição porque:",
+      options: ["a) Não forma polímeros", "b) Libera uma molécula pequena (como água) a cada ligação formada", "c) Ocorre apenas com compostos inorgânicos", "d) Não requer catalisador", "e) Produz apenas polímeros lineares"],
+      correctAnswer: 1,
+      explanation: "Na polimerização por condensação, a cada ligação formada entre monômeros é liberada uma molécula pequena (geralmente água), ao contrário da adição, onde não há subproduto.",
+      topic: "qui",
+      institution: "UFG",
+      year: 2019
+    },
+    {
+      text: "O cloro é adicionado à água de abastecimento para:",
+      options: ["a) Melhorar o sabor", "b) Eliminar microrganismos patogênicos (desinfecção)", "c) Aumentar o pH", "d) Remover metais pesados", "e) Clarificar a água"],
+      correctAnswer: 1,
+      explanation: "O cloro é adicionado à água de abastecimento para desinfecção, eliminando microrganismos patogênicos (bactérias, vírus) e prevenindo doenças de veiculação hídrica.",
+      topic: "qui",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "O plástico PET (politereftalato de etileno) é amplamente usado em garrafas. Ele pode ser reciclado e transformado em:",
+      options: ["a) Combustível", "b) Fibras têxteis, embalagens e outros produtos plásticos", "c) Fertilizantes", "d) Medicamentos", "e) Alimentos"],
+      correctAnswer: 1,
+      explanation: "O PET reciclado pode ser transformado em fibras têxteis (para roupas e tapetes), novas embalagens, peças automotivas e outros produtos plásticos.",
+      topic: "qui",
+      institution: "ENEM PPL",
+      year: 2019
+    },
+    {
+      text: "O bioplástico é uma alternativa sustentável ao plástico convencional porque:",
+      options: ["a) É mais resistente e durável", "b) É produzido a partir de fontes renováveis e é biodegradável", "c) É mais barato de produzir", "d) Não pode ser reciclado", "e) É produzido a partir de petróleo"],
+      correctAnswer: 1,
+      explanation: "O bioplástico é produzido a partir de fontes renováveis (como amido de milho, cana-de-açúcar) e é biodegradável, reduzindo a dependência do petróleo e o impacto ambiental.",
+      topic: "qui",
+      institution: "ENEM PPL",
+      year: 2023
+    }
+  ],
   "red": [
   
 {
@@ -3299,5 +5529,87 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       institution: "ENEM",
       year: 2025
     },
+  ,
+    {
+      text: "Em uma redação dissertativo-argumentativa, a tese é:",
+      options: ["a) O conjunto de argumentos que sustentam a ideia central", "b) A posição do autor sobre o tema, apresentada na introdução", "c) A conclusão do texto", "d) Os dados e exemplos usados para argumentar", "e) O parágrafo de desenvolvimento"],
+      correctAnswer: 1,
+      explanation: "A tese é a posição do autor sobre o tema, geralmente apresentada na introdução. É a ideia central que será defendida ao longo do texto com argumentos.",
+      topic: "red",
+      institution: "UNESP",
+      year: 2018
+    },
+    {
+      text: "Qual é a estrutura básica de uma redação dissertativo-argumentativa?",
+      options: ["a) Narração, descrição e dissertação", "b) Introdução, desenvolvimento e conclusão", "c) Tese, antítese e síntese", "d) Problema, causa e solução", "e) Início, meio e fim"],
+      correctAnswer: 1,
+      explanation: "A estrutura básica da redação dissertativo-argumentativa é: introdução (apresentação do tema e tese), desenvolvimento (argumentação) e conclusão (retomada da tese e proposta de intervenção).",
+      topic: "red",
+      institution: "UNESP",
+      year: 2019
+    },
+    {
+      text: "O uso de operadores argumentativos como 'portanto', 'logo' e 'assim' indica:",
+      options: ["a) Adição de ideias", "b) Oposição de ideias", "c) Conclusão ou consequência", "d) Exemplificação", "e) Concessão"],
+      correctAnswer: 2,
+      explanation: "'Portanto', 'logo' e 'assim' são operadores argumentativos conclusivos, que introduzem uma conclusão ou consequência baseada no que foi dito anteriormente.",
+      topic: "red",
+      institution: "UERJ",
+      year: 2019
+    },
+    {
+      text: "A coerência textual refere-se à:",
+      options: ["a) Correção gramatical do texto", "b) Unidade de sentido e lógica interna do texto", "c) Uso correto da pontuação", "d) Variedade de vocabulário", "e) Extensão adequada do texto"],
+      correctAnswer: 1,
+      explanation: "A coerência textual refere-se à unidade de sentido e à lógica interna do texto, garantindo que as ideias se articulem de forma consistente e não contraditória.",
+      topic: "red",
+      institution: "UFPR",
+      year: 2018
+    },
+    {
+      text: "Qual é a diferença entre dissertação e narração?",
+      options: ["a) A dissertação conta fatos; a narração defende ideias", "b) A dissertação defende ideias e argumenta; a narração conta fatos e eventos", "c) Ambas têm a mesma estrutura", "d) A dissertação usa linguagem poética; a narração usa linguagem técnica", "e) Não há diferença significativa"],
+      correctAnswer: 1,
+      explanation: "A dissertação defende ideias, argumenta e analisa temas; a narração conta fatos, eventos e histórias com personagens, tempo, espaço e enredo.",
+      topic: "red",
+      institution: "UFPR",
+      year: 2019
+    },
+    {
+      text: "O parágrafo de desenvolvimento em uma redação dissertativa deve conter:",
+      options: ["a) Apenas a tese", "b) Argumento + desenvolvimento/exemplificação", "c) Apenas a conclusão", "d) Apenas dados estatísticos", "e) Apenas citações de autores"],
+      correctAnswer: 1,
+      explanation: "O parágrafo de desenvolvimento deve conter um argumento (ideia principal do parágrafo) seguido de seu desenvolvimento, exemplificação, dados ou citações que o sustentem.",
+      topic: "red",
+      institution: "UFRGS",
+      year: 2018
+    },
+    {
+      text: "A intertextualidade em uma redação consiste em:",
+      options: ["a) Copiar trechos de outros textos sem citar a fonte", "b) Fazer referência a outros textos, obras ou autores para enriquecer a argumentação", "c) Usar apenas linguagem formal", "d) Evitar referências externas", "e) Repetir as mesmas ideias com palavras diferentes"],
+      correctAnswer: 1,
+      explanation: "A intertextualidade é o diálogo entre textos, quando um texto faz referência a outros textos, obras, autores ou discursos, enriquecendo a argumentação.",
+      topic: "red",
+      institution: "UFRGS",
+      year: 2019
+    },
+    {
+      text: "Na redação do ENEM, a nota máxima em cada competência é:",
+      options: ["a) 100 pontos", "b) 150 pontos", "c) 200 pontos", "d) 250 pontos", "e) 300 pontos"],
+      correctAnswer: 2,
+      explanation: "A redação do ENEM é avaliada em 5 competências, cada uma valendo até 200 pontos, totalizando 1000 pontos.",
+      topic: "red",
+      institution: "ENEM PPL",
+      year: 2018
+    },
+    {
+      text: "A Competência 5 da redação do ENEM avalia:",
+      options: ["a) O domínio da norma culta", "b) A compreensão do tema", "c) A organização do texto", "d) A proposta de intervenção social", "e) O uso de repertório sociocultural"],
+      correctAnswer: 3,
+      explanation: "A Competência 5 avalia a elaboração de uma proposta de intervenção para o problema abordado, respeitando os direitos humanos.",
+      topic: "red",
+      institution: "ENEM PPL",
+      year: 2019
+    }
   ],
 };
