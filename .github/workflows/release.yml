@@ -1,0 +1,53 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Dispara quando uma tag começando com 'v' é enviada (ex: v1.0.0)
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Zip build artifacts
+        run: zip -r build.zip dist/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build.zip
+          name: Release ${{ github.ref_name }}
+          body: |
+            Nova versão do Organizador e Banco de Questões para ENEM.
+            
+            Alterações nesta versão:
+            - Reformulação completa da gamificação.
+            - Lógica de XP progressiva.
+            - Melhorias de UX/UI para dispositivos móveis.
+            - Correção da barra de progresso.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
