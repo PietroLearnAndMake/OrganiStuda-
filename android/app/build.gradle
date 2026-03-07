@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     namespace = "com.pietro.organizador.enem"
     compileSdk = rootProject.ext.compileSdkVersion
-    buildToolsVersion = "36.0.0"
+    buildToolsVersion = "35.0.0"
 
     defaultConfig {
         applicationId "com.pietro.organizador.enem"
