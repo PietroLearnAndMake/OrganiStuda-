@@ -5,9 +5,22 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ── Variáveis de Safe Area ─────────────────────────────────────────────── */
+:root {
+  /* Fallbacks para quando env() não estiver disponível */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+
+  /* Alturas mínimas garantidas */
+  --header-safe-top: max(var(--sat), 44px);
+  --nav-safe-bottom: max(var(--sab), 8px);
+}
+
 @layer base {
-  /* Reset e configuração base */
-  * {
+  /* ── Reset base ──────────────────────────────────────────────────────── */
+  *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -17,6 +30,8 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    /* Garante que o viewport cobre toda a tela incluindo notch */
+    height: 100dvh;
   }
 
   body {
@@ -25,132 +40,94 @@
     width: 100%;
     overflow: hidden;
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
     -webkit-user-select: none;
     user-select: none;
+    /* Sem padding no body — o #root cuida das safe areas */
   }
 
-  /* Melhorias de acessibilidade e tema */
+  /* ── Temas ───────────────────────────────────────────────────────────── */
   @media (prefers-color-scheme: dark) {
-    body {
-      @apply bg-stone-950 text-stone-100;
-    }
+    body { @apply bg-stone-950 text-stone-100; }
   }
-
   @media (prefers-color-scheme: light) {
-    body {
-      @apply bg-white text-stone-900;
-    }
+    body { @apply bg-white text-stone-900; }
   }
 
-  /* Container raiz com safe areas */
+  /* ── Container raiz ──────────────────────────────────────────────────── */
   #root {
     height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    
-    /* Respeitar áreas seguras do sistema */
-    padding-top: max(env(safe-area-inset-top), 0px);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
+    /* Safe areas aplicadas aqui — o conteúdo nunca fica atrás das barras */
+    padding-top: 0;    /* O header cuida do topo */
+    padding-bottom: 0; /* O nav cuida do fundo */
+    padding-left: var(--sal);
+    padding-right: var(--sar);
   }
 
-  /* Ocultar barras de rolagem nativas */
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Firefox */
-  * {
-    scrollbar-width: none;
-  }
-
-  /* Remover barras de rolagem mas manter funcionalidade de scroll */
-  html, body, div, section, main, article, aside {
-    -ms-overflow-style: none;
-  }
+  /* ── Ocultar scrollbars ──────────────────────────────────────────────── */
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
 }
 
-/* Window Controls Overlay Support para PWA */
-@supports (padding: max(0px)) {
-  body {
-    padding-left: max(env(titlebar-area-x, 0), env(safe-area-inset-left));
-    padding-top: max(env(titlebar-area-height, 0), env(safe-area-inset-top));
-  }
-
-  #root {
-    padding-left: max(env(titlebar-area-x, 0), env(safe-area-inset-left));
-  }
-}
-
+/* ── Utilitários de Safe Area ───────────────────────────────────────────── */
 @layer utilities {
-  /* Smooth transitions para melhor UX */
-  * {
-    @apply transition-colors duration-200;
+
+  /* Header: padding-top = safe-area-inset-top (status bar / notch) */
+  .safe-top {
+    padding-top: max(var(--sat), 0px);
   }
 
-  /* Suporte para prefers-reduced-motion */
+  /* Nav bottom: padding-bottom = safe-area-inset-bottom (home indicator) */
+  .safe-bottom {
+    padding-bottom: max(var(--sab), 0px);
+  }
+
+  /* Conteúdo principal: margem para não ficar atrás do nav */
+  .safe-scroll-bottom {
+    padding-bottom: max(calc(var(--sab) + 4rem), 5rem);
+  }
+
+  /* Smooth transitions */
+  * { @apply transition-colors duration-200; }
+
+  /* Sem animação para quem prefere */
   @media (prefers-reduced-motion: reduce) {
-    * {
-      @apply !transition-none !duration-0;
-    }
+    * { @apply !transition-none !duration-0; }
   }
 
-  /* Evitar zoom acidental em inputs */
-  input, select, textarea {
-    font-size: 16px !important;
-  }
+  /* Evitar zoom em inputs */
+  input, select, textarea { font-size: 16px !important; }
 
-  /* Melhorar resposta ao toque */
+  /* Toque sem highlight */
   button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
     tap-highlight-color: transparent;
   }
 
-  /* Garantir que elementos scrolláveis não vazem */
+  /* Scrolláveis sem barra */
   .overflow-y-auto, .overflow-auto, [class*="overflow"] {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-
   .overflow-y-auto::-webkit-scrollbar,
   .overflow-auto::-webkit-scrollbar,
-  [class*="overflow"]::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Suporte para notch/Dynamic Island */
-  @supports (padding: max(0px)) {
-    body {
-      padding-top: max(env(safe-area-inset-top), env(notch-height, 0px));
-    }
-  }
+  [class*="overflow"]::-webkit-scrollbar { display: none; }
 }
 
-/* Garantir que o app respeita a viewport corretamente */
-@media (max-height: 500px) {
-  body {
-    font-size: 14px;
-  }
-}
-
-/* Otimização para diferentes orientações */
+/* ── Ajustes de orientação ──────────────────────────────────────────────── */
 @media (orientation: landscape) {
-  body {
-    padding-top: max(env(safe-area-inset-top), 0px);
+  :root {
+    --header-safe-top: max(var(--sat), 0px);
   }
 }
 
-@media (orientation: portrait) {
-  body {
-    padding-top: max(env(safe-area-inset-top), 0px);
-  }
+/* ── Telas muito pequenas ───────────────────────────────────────────────── */
+@media (max-height: 500px) {
+  body { font-size: 14px; }
 }

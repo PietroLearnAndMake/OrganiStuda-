@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ── Tema base ─────────────────────────────────────────────────────── -->
+    <!-- API 29+: navegação por gestos com fundo transparente -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">#6c2cff</item>
         <item name="colorPrimaryDark">#5a1fe0</item>
         <item name="colorAccent">#6c2cff</item>
 
-        <!-- Edge-to-edge: sem action bar, sem title bar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <!-- Barras do sistema transparentes -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-
-        <!-- Conteúdo vai atrás das barras do sistema -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:fitsSystemWindows">false</item>
-
-        <!-- Suporte a notch/cutout -->
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-
-        <!-- Sem fundo extra -->
         <item name="android:background">@null</item>
         <item name="android:windowBackground">@android:color/black</item>
+
+        <item name="android:windowLightNavigationBar">false</item>
+
+        <!-- API 29: sem contraste forçado na nav bar (para gestos) -->
+        <item name="android:navigationBarContrastEnforced">false</item>
+        <item name="android:statusBarContrastEnforced">false</item>
     </style>
 
-    <!-- ── Tema de lançamento (splash) ───────────────────────────────────── -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
     </style>

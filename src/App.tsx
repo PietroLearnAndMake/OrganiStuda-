@@ -338,7 +338,7 @@ export default function App() {
         }
         // Notificação de streak
         const notification = document.createElement('div');
-        notification.className = 'fixed top-10 right-4 left-4 sm:left-auto sm:w-72 bg-orange-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-4';
+        notification.className = 'fixed right-4 left-4 sm:left-auto sm:w-72 bg-orange-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-4'; notification.style.top = 'max(env(safe-area-inset-top, 0px), 2.5rem)';
         notification.innerHTML = `
           <div class="text-3xl">🔥</div>
           <div>
@@ -441,7 +441,7 @@ export default function App() {
         setPomodoroTime(5 * 60);
         // Notificação de sessão concluída
         const toast = document.createElement('div');
-        toast.className = 'fixed top-10 right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3';
+        toast.className = 'fixed right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3'; toast.style.top = 'max(env(safe-area-inset-top, 0px), 2.5rem)';
         toast.innerHTML = `<div class="text-2xl">⏰</div><div><div class="font-black">Sessão concluída!</div><div class="text-sm text-emerald-100">+50 XP • Hora de descansar 5 min</div></div>`;
         document.body.appendChild(toast);
         setTimeout(() => {
@@ -667,7 +667,7 @@ export default function App() {
       
       // Toast de XP
       const xpToast = document.createElement('div');
-      xpToast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2';
+      xpToast.className = 'fixed left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2'; xpToast.style.bottom = 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)';
       xpToast.innerHTML = `<span>+${amount} XP</span> <span class="text-xs">✨</span>`;
       document.body.appendChild(xpToast);
       setTimeout(() => {
@@ -862,7 +862,7 @@ export default function App() {
     <div className={`h-full w-full flex flex-col overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans`}>
       
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className={`border-b px-6 pt-4 pb-4 sticky top-0 z-10 transition-colors flex-shrink-0 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+      <header className={`border-b px-6 pb-4 sticky top-0 z-10 transition-colors flex-shrink-0 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)' }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
@@ -968,7 +968,7 @@ export default function App() {
       </header>
 
       {/* ── Main Content ────────────────────────────────────────────────────── */}
-      <main className="flex-1 overflow-y-auto px-6 py-6 pb-24">
+      <main className="flex-1 overflow-y-auto px-6 py-6" style={{ paddingBottom: 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)' }}>
         <AnimatePresence mode="wait">
 
           {/* ── HOME TAB ──────────────────────────────────────────────────── */}
@@ -2038,11 +2038,11 @@ export default function App() {
 
       {/* ── Bottom Navigation ───────────────────────────────────────────────── */}
       <nav 
-        className={`flex-shrink-0 border-t px-6 py-3 flex justify-around items-center gap-2 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} 
+        className={`flex-shrink-0 border-t px-6 pt-3 flex justify-around items-center gap-2 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}
         style={{
-          paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))', 
-          paddingLeft: 'max(1rem, env(safe-area-inset-left))', 
-          paddingRight: 'max(1rem, env(safe-area-inset-right))'
+          paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)',
+          paddingLeft: 'max(env(safe-area-inset-left, 0px), 1rem)',
+          paddingRight: 'max(env(safe-area-inset-right, 0px), 1rem)'
         }}
       >
         <button 
