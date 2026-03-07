@@ -1,8 +1,8 @@
 ext {
     // ── SDK versions ──────────────────────────────────────────────────
     minSdkVersion = 24
-    compileSdkVersion = 35
-    targetSdkVersion = 35
+    compileSdkVersion = 36
+    targetSdkVersion = 36
 
     // ── AndroidX — versões compatíveis com Capacitor Android 8.2.0 ───
     androidxActivityVersion = '1.11.0'
