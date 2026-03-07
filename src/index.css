@@ -6,11 +6,36 @@
 }
 
 @layer base {
-  body {
-    @apply antialiased selection:bg-indigo-100 selection:text-indigo-900;
+  /* Reset e configuração base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  /* Melhorias de acessibilidade */
+  html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    @apply antialiased selection:bg-indigo-100 selection:text-indigo-900;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Melhorias de acessibilidade e tema */
   @media (prefers-color-scheme: dark) {
     body {
       @apply bg-stone-950 text-stone-100;
@@ -22,52 +47,51 @@
       @apply bg-white text-stone-900;
     }
   }
-}
 
-@layer base {
-  html, body {
-    @apply overflow-x-hidden;
-    touch-action: manipulation;
-    -webkit-text-size-adjust: 100%;
-    height: 100%;
-    width: 100%;
-    position: fixed;
-  }
-
+  /* Container raiz com safe areas */
   #root {
     height: 100%;
     width: 100%;
-    padding-top: env(safe-area-inset-top);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    
+    /* Respeitar áreas seguras do sistema */
+    padding-top: max(env(safe-area-inset-top), 0px);
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
-    /* Suporte para Window Controls Overlay */
-    padding-top: max(env(safe-area-inset-top), env(titlebar-area-height, 0px));
+  }
+
+  /* Ocultar barras de rolagem nativas */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: none;
+  }
+
+  /* Remover barras de rolagem mas manter funcionalidade de scroll */
+  html, body, div, section, main, article, aside {
+    -ms-overflow-style: none;
   }
 }
 
-/* Window Controls Overlay Support */
+/* Window Controls Overlay Support para PWA */
 @supports (padding: max(0px)) {
   body {
-    padding-left: env(titlebar-area-x, 0);
-    padding-top: env(titlebar-area-height, 0);
+    padding-left: max(env(titlebar-area-x, 0), env(safe-area-inset-left));
+    padding-top: max(env(titlebar-area-height, 0), env(safe-area-inset-top));
+  }
+
+  #root {
+    padding-left: max(env(titlebar-area-x, 0), env(safe-area-inset-left));
   }
 }
 
-/* Customização de scrollbar para melhor UX */
 @layer utilities {
-  ::-webkit-scrollbar {
-    @apply w-2 h-2;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-stone-100 dark:bg-stone-900;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-stone-300 dark:bg-stone-700 rounded-full hover:bg-stone-400 dark:hover:bg-stone-600;
-  }
-
   /* Smooth transitions para melhor UX */
   * {
     @apply transition-colors duration-200;
@@ -78,5 +102,55 @@
     * {
       @apply !transition-none !duration-0;
     }
+  }
+
+  /* Evitar zoom acidental em inputs */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  /* Melhorar resposta ao toque */
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+  }
+
+  /* Garantir que elementos scrolláveis não vazem */
+  .overflow-y-auto, .overflow-auto, [class*="overflow"] {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar,
+  .overflow-auto::-webkit-scrollbar,
+  [class*="overflow"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Suporte para notch/Dynamic Island */
+  @supports (padding: max(0px)) {
+    body {
+      padding-top: max(env(safe-area-inset-top), env(notch-height, 0px));
+    }
+  }
+}
+
+/* Garantir que o app respeita a viewport corretamente */
+@media (max-height: 500px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+/* Otimização para diferentes orientações */
+@media (orientation: landscape) {
+  body {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+}
+
+@media (orientation: portrait) {
+  body {
+    padding-top: max(env(safe-area-inset-top), 0px);
   }
 }

@@ -653,9 +653,9 @@ export default function App() {
   if (!isInitialized) return null;
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans pb-20`}>
+    <div className={`h-full w-full flex flex-col overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans`}>
       {/* Header / Profile Section */}
-      <header className={`border-b px-6 pt-12 pb-6 sticky top-0 z-10 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+      <header className={`border-b px-6 pt-4 pb-4 sticky top-0 z-10 transition-colors flex-shrink-0 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
@@ -766,7 +766,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="px-6 mt-8 pb-32">
+      <main className="flex-1 overflow-y-auto px-6 py-6 pb-24">
         <AnimatePresence mode="wait">
           {currentTab === 'home' ? (
             !selectedSubjectId ? (
@@ -1719,8 +1719,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Bottom Navigation (Mobile Feel) */}
-      <nav className={`fixed bottom-0 left-0 right-0 border-t px-4 py-4 pb-8 flex justify-around items-center z-20 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{paddingBottom: 'max(1rem, env(safe-area-inset-bottom))', paddingLeft: 'max(1rem, env(safe-area-inset-left))', paddingRight: 'max(1rem, env(safe-area-inset-right))'}}>
+      {/* Bottom Navigation */}
+      <nav className={`flex-shrink-0 border-t px-6 py-3 flex justify-around items-center gap-2 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{paddingBottom: 'max(1rem, env(safe-area-inset-bottom))', paddingLeft: 'max(1rem, env(safe-area-inset-left))', paddingRight: 'max(1rem, env(safe-area-inset-right))'}}>
         <button 
           onClick={() => {
             setCurrentTab('home');
