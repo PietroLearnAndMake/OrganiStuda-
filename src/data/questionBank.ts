@@ -42,7 +42,539 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "mat",
       institution: "ENEM",
       year: 1998
-    },  ],
+    },  
+{
+      text: "Uma empresa de transporte cobra uma tarifa fixa de R$ 5,00 mais R$ 2,50 por quilômetro rodado. Um cliente percorreu uma distância e pagou R$ 30,00. Quantos quilômetros foram percorridos?",
+      options: ["8 km", "10 km", "12 km", "14 km", "16 km"],
+      correctAnswer: 1,
+      explanation: "Equação: 5 + 2,5x = 30 → 2,5x = 25 → x = 10 km.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "Uma urna contém 4 bolas vermelhas, 3 bolas azuis e 3 bolas verdes. Retira-se uma bola ao acaso. Qual é a probabilidade de a bola retirada ser azul?",
+      options: ["1/10", "3/10", "4/10", "3/7", "1/3"],
+      correctAnswer: 1,
+      explanation: "Total de bolas: 4+3+3=10. P(azul) = 3/10.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "O gráfico de uma função quadrática f(x) = ax² + bx + c tem vértice no ponto (2, -1) e passa pelo ponto (0, 3). O valor de 'a' é:",
+      options: ["a = 1", "a = 2", "a = -1", "a = -2", "a = 3"],
+      correctAnswer: 0,
+      explanation: "Forma vértice: f(x) = a(x-2)² - 1. Usando f(0)=3: a(4)-1=3 → 4a=4 → a=1.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "Um triângulo retângulo tem catetos medindo 6 cm e 8 cm. Qual é o comprimento da hipotenusa?",
+      options: ["10 cm", "12 cm", "14 cm", "9 cm", "11 cm"],
+      correctAnswer: 0,
+      explanation: "Pelo Teorema de Pitágoras: h² = 6² + 8² = 36 + 64 = 100 → h = 10 cm.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "Uma loja oferece um desconto de 20% sobre o preço original de um produto. Se o preço com desconto é R$ 160,00, qual é o preço original?",
+      options: ["R$ 180,00", "R$ 192,00", "R$ 200,00", "R$ 210,00", "R$ 220,00"],
+      correctAnswer: 2,
+      explanation: "Preço original × 0,8 = 160 → Preço original = 160/0,8 = R$ 200,00.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "A progressão aritmética (2, 5, 8, 11, ...) tem razão r = 3. Qual é o 20º termo desta progressão?",
+      options: ["56", "57", "58", "59", "60"],
+      correctAnswer: 3,
+      explanation: "a₂₀ = a₁ + (n-1)r = 2 + 19×3 = 2 + 57 = 59.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "Um cilindro tem raio da base igual a 3 cm e altura igual a 10 cm. Qual é o volume desse cilindro? (Use π ≈ 3,14)",
+      options: ["282,6 cm³", "283,6 cm³", "284,6 cm³", "285,6 cm³", "286,6 cm³"],
+      correctAnswer: 0,
+      explanation: "V = π × r² × h = 3,14 × 9 × 10 = 282,6 cm³.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "Se log₂(x) = 5, então x é igual a:",
+      options: ["10", "16", "25", "32", "64"],
+      correctAnswer: 3,
+      explanation: "log₂(x) = 5 significa 2⁵ = x → x = 32.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "Uma pesquisa mostrou que 60% dos estudantes de uma escola preferem matemática. Se a escola tem 500 alunos, quantos preferem matemática?",
+      options: ["250", "280", "300", "320", "350"],
+      correctAnswer: 2,
+      explanation: "60% de 500 = 0,6 × 500 = 300 alunos.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "A função f(x) = 2x - 4 tem zero (raiz) em:",
+      options: ["x = -2", "x = 0", "x = 1", "x = 2", "x = 4"],
+      correctAnswer: 3,
+      explanation: "f(x) = 0 → 2x - 4 = 0 → 2x = 4 → x = 2.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "Em um triângulo, dois ângulos medem 45° e 75°. Qual é a medida do terceiro ângulo?",
+      options: ["50°", "55°", "60°", "65°", "70°"],
+      correctAnswer: 2,
+      explanation: "A soma dos ângulos internos de um triângulo é 180°. Terceiro ângulo = 180° - 45° - 75° = 60°.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "Qual é o valor de sen(30°) + cos(60°)?",
+      options: ["0,5", "1,0", "1,5", "√2", "√3/2"],
+      correctAnswer: 1,
+      explanation: "sen(30°) = 1/2 e cos(60°) = 1/2. Portanto, sen(30°) + cos(60°) = 1/2 + 1/2 = 1,0.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "Uma capital tem população de 2.000.000 de habitantes e cresce a uma taxa de 2% ao ano. Usando a fórmula de juros compostos, qual será a população após 1 ano?",
+      options: ["2.020.000", "2.040.000", "2.060.000", "2.080.000", "2.100.000"],
+      correctAnswer: 1,
+      explanation: "P = 2.000.000 × (1 + 0,02)¹ = 2.000.000 × 1,02 = 2.040.000 habitantes.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "A equação x² - 5x + 6 = 0 tem como soluções:",
+      options: ["x = 1 e x = 6", "x = 2 e x = 3", "x = -2 e x = -3", "x = 1 e x = 5", "x = -1 e x = 6"],
+      correctAnswer: 1,
+      explanation: "Fatorando: (x-2)(x-3) = 0 → x = 2 ou x = 3.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "Um retângulo tem perímetro de 36 cm e largura de 8 cm. Qual é a área desse retângulo?",
+      options: ["80 cm²", "90 cm²", "100 cm²", "110 cm²", "120 cm²"],
+      correctAnswer: 0,
+      explanation: "Perímetro = 2(l+w) → 36 = 2(l+8) → l = 10 cm. Área = 10 × 8 = 80 cm².",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "Uma sequência geométrica tem primeiro termo a₁ = 3 e razão q = 2. Qual é o 5º termo?",
+      options: ["24", "36", "48", "60", "72"],
+      correctAnswer: 2,
+      explanation: "a₅ = a₁ × q⁴ = 3 × 2⁴ = 3 × 16 = 48.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "O gráfico de f(x) = x² - 4 intercepta o eixo x nos pontos:",
+      options: ["x = 0 e x = 4", "x = -2 e x = 2", "x = -4 e x = 4", "x = 1 e x = -4", "x = 2 e x = 4"],
+      correctAnswer: 1,
+      explanation: "f(x) = 0 → x² = 4 → x = ±2. Os pontos são (-2, 0) e (2, 0).",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "Um capital de R$ 1.000,00 é aplicado a juros simples de 5% ao mês. Após 6 meses, o montante será:",
+      options: ["R$ 1.250,00", "R$ 1.300,00", "R$ 1.350,00", "R$ 1.400,00", "R$ 1.500,00"],
+      correctAnswer: 1,
+      explanation: "M = C(1 + it) = 1000(1 + 0,05×6) = 1000 × 1,30 = R$ 1.300,00.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "Uma caixa d'água cilíndrica tem raio de 1 m e altura de 2 m. Quantos litros de água ela comporta? (π ≈ 3,14; 1 m³ = 1000 L)",
+      options: ["5.280 L", "6.280 L", "7.280 L", "8.280 L", "9.280 L"],
+      correctAnswer: 1,
+      explanation: "V = π × r² × h = 3,14 × 1² × 2 = 6,28 m³ = 6.280 L.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "Se a média aritmética de 5 números é 12, e quatro deles são 8, 10, 14 e 16, qual é o quinto número?",
+      options: ["10", "11", "12", "13", "14"],
+      correctAnswer: 2,
+      explanation: "Soma total = 5 × 12 = 60. Soma dos 4 conhecidos = 8+10+14+16 = 48. Quinto = 60 - 48 = 12.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "Numa eleição com 3 candidatos, o candidato A recebeu 45% dos votos, o B recebeu 35% e o C recebeu o restante. Se o total de votos foi 20.000, quantos votos o candidato C recebeu?",
+      options: ["3.000", "4.000", "5.000", "6.000", "7.000"],
+      correctAnswer: 1,
+      explanation: "C recebeu 100% - 45% - 35% = 20% dos votos. 20% de 20.000 = 4.000 votos.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "Uma função afim f(x) = 3x + b passa pelo ponto (2, 11). Qual é o valor de b?",
+      options: ["b = 3", "b = 4", "b = 5", "b = 6", "b = 7"],
+      correctAnswer: 2,
+      explanation: "f(2) = 11 → 3(2) + b = 11 → 6 + b = 11 → b = 5.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "Quantos anagramas distintos podem ser formados com as letras da palavra AMOR?",
+      options: ["12", "18", "24", "36", "48"],
+      correctAnswer: 2,
+      explanation: "A palavra AMOR tem 4 letras distintas. Número de anagramas = 4! = 4×3×2×1 = 24.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "O valor de tg(45°) é:",
+      options: ["0", "1/2", "√2/2", "1", "√3"],
+      correctAnswer: 3,
+      explanation: "tg(45°) = sen(45°)/cos(45°) = (√2/2)/(√2/2) = 1.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "Um investidor aplica R$ 5.000,00 a juros compostos de 10% ao ano. Após 2 anos, o montante será:",
+      options: ["R$ 5.900,00", "R$ 6.000,00", "R$ 6.050,00", "R$ 6.100,00", "R$ 6.200,00"],
+      correctAnswer: 2,
+      explanation: "M = 5000 × (1,10)² = 5000 × 1,21 = R$ 6.050,00.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "A distância entre os pontos A(1, 2) e B(4, 6) no plano cartesiano é:",
+      options: ["3", "4", "5", "6", "7"],
+      correctAnswer: 2,
+      explanation: "d = √[(4-1)² + (6-2)²] = √[9 + 16] = √25 = 5.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "Uma urna tem 5 bolas numeradas de 1 a 5. Retirando-se duas bolas sem reposição, qual é a probabilidade de a soma ser igual a 6?",
+      options: ["1/5", "2/5", "3/10", "4/10", "1/2"],
+      correctAnswer: 0,
+      explanation: "Pares com soma 6: (1,5), (2,4). Total de pares possíveis: C(5,2)=10. P = 2/10 = 1/5.",
+      topic: "mat",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "Seja f(x) = x² - 4x + 3. Os zeros da função f são:",
+      options: ["x = 1 e x = 3", "x = -1 e x = -3", "x = 1 e x = -3", "x = -1 e x = 3", "x = 2 e x = 3"],
+      correctAnswer: 0,
+      explanation: "f(x) = 0 → x² - 4x + 3 = 0. Usando Bhaskara: Δ = 16 - 12 = 4. x = (4 ± 2)/2 → x = 3 ou x = 1.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "O número de diagonais de um polígono convexo de n lados é dado por n(n-3)/2. Quantas diagonais tem um octógono (8 lados)?",
+      options: ["16", "18", "20", "22", "24"],
+      correctAnswer: 2,
+      explanation: "Para n = 8: 8(8-3)/2 = 8×5/2 = 40/2 = 20 diagonais.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "Se log₁₀(2) ≈ 0,301, então log₁₀(8) é aproximadamente:",
+      options: ["0,602", "0,699", "0,903", "1,204", "2,408"],
+      correctAnswer: 2,
+      explanation: "log₁₀(8) = log₁₀(2³) = 3 × log₁₀(2) = 3 × 0,301 = 0,903.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "Uma circunferência tem equação x² + y² - 6x + 4y - 3 = 0. O raio dessa circunferência é:",
+      options: ["2", "3", "4", "5", "6"],
+      correctAnswer: 2,
+      explanation: "Completando quadrados: (x-3)² + (y+2)² = 9+4+3 = 16. Raio = √16 = 4.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "A soma dos termos de uma progressão geométrica infinita com primeiro termo a₁ = 4 e razão q = 1/2 é:",
+      options: ["6", "7", "8", "9", "10"],
+      correctAnswer: 2,
+      explanation: "S = a₁/(1-q) = 4/(1-1/2) = 4/(1/2) = 8.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "O número de soluções inteiras não negativas da equação x + y + z = 10 é:",
+      options: ["55", "66", "77", "88", "99"],
+      correctAnswer: 1,
+      explanation: "Usando combinações com repetição: C(10+3-1, 3-1) = C(12,2) = 12!/(2!×10!) = 66.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "Se sen(x) = 3/5 e x está no primeiro quadrante, então cos(x) é igual a:",
+      options: ["3/4", "4/5", "3/5", "5/4", "1/5"],
+      correctAnswer: 1,
+      explanation: "sen²(x) + cos²(x) = 1 → (3/5)² + cos²(x) = 1 → cos²(x) = 1 - 9/25 = 16/25 → cos(x) = 4/5 (1º quadrante).",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "A derivada de f(x) = x³ - 3x² + 2x - 1 é:",
+      options: ["f'(x) = 3x² - 6x + 2", "f'(x) = 3x² - 3x + 2", "f'(x) = x² - 6x + 2", "f'(x) = 3x² - 6x - 2", "f'(x) = 3x² + 6x + 2"],
+      correctAnswer: 0,
+      explanation: "Derivando termo a termo: f'(x) = 3x² - 6x + 2.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "O limite lim(x→2) (x² - 4)/(x - 2) é igual a:",
+      options: ["0", "2", "4", "8", "indefinido"],
+      correctAnswer: 2,
+      explanation: "Fatorando: (x²-4)/(x-2) = (x+2)(x-2)/(x-2) = x+2. Portanto, lim(x→2) = 2+2 = 4.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2022
+    },
+    {
+      text: "A integral ∫(0 a 2) 2x dx é igual a:",
+      options: ["2", "4", "6", "8", "10"],
+      correctAnswer: 1,
+      explanation: "∫2x dx = x². Avaliando de 0 a 2: [x²]₀² = 4 - 0 = 4.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2022
+    },
+    {
+      text: "Quantos números inteiros positivos de 3 algarismos distintos podem ser formados com os dígitos 1, 2, 3, 4 e 5?",
+      options: ["30", "40", "50", "60", "70"],
+      correctAnswer: 3,
+      explanation: "Arranjo de 5 elementos tomados 3 a 3: A(5,3) = 5!/(5-3)! = 5×4×3 = 60.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2023
+    },
+    {
+      text: "A equação da reta que passa pelos pontos A(1, 2) e B(3, 6) é:",
+      options: ["y = x + 1", "y = 2x", "y = 2x - 1", "y = 2x + 1", "y = x + 2"],
+      correctAnswer: 1,
+      explanation: "Coeficiente angular: m = (6-2)/(3-1) = 4/2 = 2. Equação: y - 2 = 2(x - 1) → y = 2x.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2023
+    },
+    {
+      text: "O valor de C(10, 3) (combinação de 10 elementos tomados 3 a 3) é:",
+      options: ["100", "110", "120", "130", "140"],
+      correctAnswer: 2,
+      explanation: "C(10,3) = 10!/(3!×7!) = (10×9×8)/(3×2×1) = 720/6 = 120.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2024
+    },
+    {
+      text: "Se f(x) = e^x, então f'(x) é igual a:",
+      options: ["xe^(x-1)", "e^x", "e^(x+1)", "ln(x)", "1/x"],
+      correctAnswer: 1,
+      explanation: "A derivada da função exponencial e^x é ela mesma: f'(x) = e^x.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2024
+    },
+    {
+      text: "A solução do sistema { 2x + y = 7 e x - y = 2 } é:",
+      options: ["x = 2, y = 3", "x = 3, y = 1", "x = 1, y = 5", "x = 4, y = -1", "x = 3, y = 2"],
+      correctAnswer: 1,
+      explanation: "Somando as equações: 3x = 9 → x = 3. Substituindo: 3 - y = 2 → y = 1.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2025
+    },
+    {
+      text: "O número complexo z = 3 + 4i tem módulo igual a:",
+      options: ["3", "4", "5", "7", "12"],
+      correctAnswer: 2,
+      explanation: "|z| = √(3² + 4²) = √(9 + 16) = √25 = 5.",
+      topic: "mat",
+      institution: "FUVEST",
+      year: 2025
+    },
+    {
+      text: "Uma função f: ℝ → ℝ é definida por f(x) = |x - 2| + |x + 1|. O valor mínimo de f(x) é:",
+      options: ["1", "2", "3", "4", "5"],
+      correctAnswer: 2,
+      explanation: "Para -1 ≤ x ≤ 2: f(x) = (2-x) + (x+1) = 3. Para x < -1: f(x) > 3. Para x > 2: f(x) > 3. O valor mínimo é 3.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "O número de divisores positivos de 360 é:",
+      options: ["18", "20", "24", "28", "32"],
+      correctAnswer: 2,
+      explanation: "360 = 2³ × 3² × 5¹. Número de divisores = (3+1)(2+1)(1+1) = 4×3×2 = 24.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "Se a soma dos n primeiros termos de uma PA é Sₙ = 3n² + 2n, então o décimo termo a₁₀ é:",
+      options: ["55", "57", "59", "61", "63"],
+      correctAnswer: 2,
+      explanation: "a₁₀ = S₁₀ - S₉ = (3×100 + 20) - (3×81 + 18) = 320 - 261 = 59.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "A probabilidade de se obter pelo menos um 6 ao lançar dois dados não viciados é:",
+      options: ["1/6", "11/36", "1/3", "5/12", "1/2"],
+      correctAnswer: 1,
+      explanation: "P(pelo menos um 6) = 1 - P(nenhum 6) = 1 - (5/6)² = 1 - 25/36 = 11/36.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "O conjunto solução da inequação |2x - 3| < 5 é:",
+      options: ["(-1, 4)", "(-4, 1)", "(1, 4)", "(-2, 4)", "(0, 4)"],
+      correctAnswer: 0,
+      explanation: "|2x-3| < 5 → -5 < 2x-3 < 5 → -2 < 2x < 8 → -1 < x < 4. Conjunto: (-1, 4).",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "A área do triângulo com vértices A(0,0), B(4,0) e C(2,3) é:",
+      options: ["4", "5", "6", "7", "8"],
+      correctAnswer: 2,
+      explanation: "Área = (1/2)|base × altura| = (1/2) × 4 × 3 = 6.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "Se f(x) = 2^x e g(x) = log₂(x), então f(g(8)) é igual a:",
+      options: ["2", "4", "6", "8", "16"],
+      correctAnswer: 3,
+      explanation: "g(8) = log₂(8) = 3. f(g(8)) = f(3) = 2³ = 8.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "O coeficiente binomial C(8,3) é igual a:",
+      options: ["40", "50", "56", "60", "70"],
+      correctAnswer: 2,
+      explanation: "C(8,3) = 8!/(3!×5!) = (8×7×6)/(3×2×1) = 336/6 = 56.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "A equação x² + y² - 4x - 6y + 9 = 0 representa uma circunferência com centro:",
+      options: ["(2, 3)", "(-2, -3)", "(4, 6)", "(-4, -6)", "(2, -3)"],
+      correctAnswer: 0,
+      explanation: "Completando quadrados: (x-2)² + (y-3)² = 4+9-9 = 4. Centro: (2, 3), raio = 2.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2022
+    },
+    {
+      text: "O valor de ∫(1 a e) (1/x) dx é:",
+      options: ["0", "1", "e", "ln(2)", "e-1"],
+      correctAnswer: 1,
+      explanation: "∫(1/x)dx = ln(x). Avaliando de 1 a e: ln(e) - ln(1) = 1 - 0 = 1.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2022
+    },
+    {
+      text: "Se z = 2 + 3i é um número complexo, então z̄ (conjugado de z) é:",
+      options: ["2 - 3i", "-2 + 3i", "-2 - 3i", "3 + 2i", "3 - 2i"],
+      correctAnswer: 0,
+      explanation: "O conjugado de z = a + bi é z̄ = a - bi. Portanto, o conjugado de 2 + 3i é 2 - 3i.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "A soma dos ângulos internos de um polígono convexo de 7 lados (heptágono) é:",
+      options: ["720°", "810°", "900°", "1080°", "1260°"],
+      correctAnswer: 2,
+      explanation: "Soma dos ângulos internos = (n-2) × 180° = (7-2) × 180° = 5 × 180° = 900°.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "O determinante da matriz A = [[2, 1], [3, 4]] é:",
+      options: ["5", "6", "7", "8", "11"],
+      correctAnswer: 0,
+      explanation: "det(A) = 2×4 - 1×3 = 8 - 3 = 5.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2024
+    },
+    {
+      text: "A solução da equação exponencial 3^(2x-1) = 27 é:",
+      options: ["x = 1", "x = 2", "x = 3", "x = 4", "x = 5"],
+      correctAnswer: 1,
+      explanation: "27 = 3³. Então 3^(2x-1) = 3³ → 2x-1 = 3 → 2x = 4 → x = 2.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2024
+    },
+    {
+      text: "O número de subconjuntos de um conjunto com 5 elementos é:",
+      options: ["10", "16", "25", "32", "64"],
+      correctAnswer: 3,
+      explanation: "O número de subconjuntos de um conjunto com n elementos é 2ⁿ = 2⁵ = 32.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2025
+    },
+    {
+      text: "Se f(x) = x² - 2x + 1, o valor mínimo de f(x) é:",
+      options: ["-1", "0", "1", "2", "4"],
+      correctAnswer: 1,
+      explanation: "f(x) = (x-1)². O valor mínimo ocorre em x = 1, onde f(1) = 0.",
+      topic: "mat",
+      institution: "UNICAMP",
+      year: 2025
+    },
+  ],
   "por": [
 {
       text: "“O continente africano em seu conjunto apresenta 44%\nde suas fronteiras apoiadas em meridianos e paralelos; 30% por linhas retas e arqueadas, e apenas 26%\nse referem a limites naturais que geralmente coincidem\ncom os de locais de habitação dos grupos étnicos.”\nMARTIN, A. R. Fronteiras e Nações. Contexto, São Paulo, 1998.\n\nDiferente do continente americano, onde quase que a totalidade das fronteiras obedecem a limites naturais, a África apresenta as características citadas em virtude, principalmente,",
@@ -796,7 +1328,305 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "por",
       institution: "ENEM",
       year: 2015
-    },  ],
+    },  
+{
+      text: "Leia o trecho a seguir:\n\"A língua é o instrumento mais poderoso de que dispõe o ser humano para se comunicar, expressar sentimentos e construir conhecimento. Ela não é apenas um código, mas um reflexo da cultura e da identidade de um povo.\"\n\nO texto acima defende principalmente que a língua:",
+      options: ["É apenas um sistema de regras gramaticais.", "Tem função exclusivamente comunicativa.", "Reflete a identidade cultural de um povo.", "É um instrumento de dominação social.", "Serve apenas para a expressão de sentimentos."],
+      correctAnswer: 2,
+      explanation: "O texto afirma que a língua é um reflexo da cultura e da identidade de um povo, indo além da simples comunicação.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "A variação linguística é um fenômeno natural das línguas vivas. Sobre esse tema, é correto afirmar que:",
+      options: ["A variação linguística é um sinal de degeneração da língua.", "Apenas as variações regionais são consideradas legítimas.", "A norma culta é a única forma correta de se expressar.", "As variações linguísticas refletem diferenças sociais, regionais e históricas.", "A língua escrita é superior à língua falada em todos os contextos."],
+      correctAnswer: 3,
+      explanation: "A variação linguística é um fenômeno natural que reflete diferenças sociais, regionais, históricas e situacionais. Nenhuma variante é intrinsecamente superior a outra.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "Leia o fragmento:\n\"Vou-me embora pra Pasárgada\nLá sou amigo do rei\nLá tenho a mulher que eu quero\nNa cama que escolherei\"\n(Manuel Bandeira)\n\nO poema de Manuel Bandeira expressa principalmente:",
+      options: ["A saudade de um lugar real visitado pelo poeta.", "O desejo de fuga para um lugar imaginário e idealizado.", "A crítica à sociedade brasileira da época.", "A celebração da amizade com o rei de Pasárgada.", "A descrição realista de uma cidade brasileira."],
+      correctAnswer: 1,
+      explanation: "Pasárgada é um lugar imaginário criado por Manuel Bandeira como símbolo de liberdade e fuga da realidade. O poema expressa o desejo de escapar para um mundo ideal.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "Em relação aos gêneros textuais, qual das alternativas abaixo apresenta corretamente a definição de um texto dissertativo-argumentativo?",
+      options: ["Texto que narra uma sequência de eventos em ordem cronológica.", "Texto que descreve detalhadamente pessoas, lugares ou objetos.", "Texto que defende um ponto de vista com argumentos e evidências.", "Texto que instrui o leitor sobre como realizar uma tarefa.", "Texto que expressa sentimentos e emoções do autor."],
+      correctAnswer: 2,
+      explanation: "O texto dissertativo-argumentativo tem como objetivo defender uma tese (ponto de vista) por meio de argumentos e evidências, buscando convencer o leitor.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "Leia o trecho:\n\"O Brasil é um país de dimensões continentais, com uma diversidade cultural, étnica e linguística sem igual. Essa riqueza, no entanto, convive com profundas desigualdades sociais que precisam ser enfrentadas.\"\n\nO conectivo 'no entanto' estabelece entre as orações uma relação de:",
+      options: ["Causa e consequência.", "Adição de informações.", "Oposição ou contraste.", "Explicação.", "Conclusão."],
+      correctAnswer: 2,
+      explanation: "'No entanto' é um conectivo adversativo que estabelece uma relação de oposição ou contraste entre as ideias apresentadas.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "Sobre o Modernismo brasileiro, é correto afirmar que:",
+      options: ["Surgiu no final do século XIX com a publicação de 'Os Sertões'.", "A Semana de Arte Moderna de 1922 foi seu marco inicial no Brasil.", "Valorizava exclusivamente a tradição clássica europeia.", "Rejeitava qualquer influência da cultura popular brasileira.", "Teve como principal característica o apego às formas fixas de versificação."],
+      correctAnswer: 1,
+      explanation: "A Semana de Arte Moderna de 1922, realizada em São Paulo, é considerada o marco inicial do Modernismo no Brasil, propondo a ruptura com os padrões estéticos tradicionais.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "Sobre a obra 'Dom Casmurro' de Machado de Assis, é correto afirmar que:",
+      options: ["É uma obra do Romantismo brasileiro.", "O narrador Bentinho é considerado não confiável por muitos críticos.", "A obra defende claramente a culpa de Capitu.", "É escrita em terceira pessoa por um narrador onisciente.", "A obra foi publicada no início do século XX."],
+      correctAnswer: 1,
+      explanation: "Em 'Dom Casmurro', o narrador Bentinho (Dom Casmurro) é considerado não confiável por muitos críticos, pois sua versão dos fatos pode ser distorcida pelo ciúme e pela subjetividade.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "A charge é um gênero textual que utiliza humor e ironia para fazer crítica social ou política. Qual recurso linguístico é mais característico da charge?",
+      options: ["Uso de linguagem técnica e formal.", "Emprego de figuras de linguagem como ironia e hipérbole.", "Descrição objetiva e imparcial dos fatos.", "Uso exclusivo de linguagem verbal.", "Apresentação de dados estatísticos."],
+      correctAnswer: 1,
+      explanation: "A charge utiliza principalmente a ironia e a hipérbole para fazer crítica social ou política de forma humorística, combinando linguagem verbal e não verbal.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "Leia o trecho:\n\"A educação é a arma mais poderosa que você pode usar para mudar o mundo.\" (Nelson Mandela)\n\nA figura de linguagem presente nessa frase é:",
+      options: ["Hipérbole", "Eufemismo", "Metáfora", "Metonímia", "Antítese"],
+      correctAnswer: 2,
+      explanation: "A frase usa metáfora ao comparar a educação a uma arma, sem usar termos comparativos explícitos como 'como' ou 'tal qual'.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "Sobre a estrutura da redação do ENEM, é correto afirmar que:",
+      options: ["Deve ter obrigatoriamente 5 parágrafos.", "A proposta de intervenção deve ser apresentada na introdução.", "A tese deve ser defendida com argumentos na conclusão.", "A proposta de intervenção é um dos critérios de avaliação.", "O texto deve ser escrito em primeira pessoa do plural."],
+      correctAnswer: 3,
+      explanation: "A proposta de intervenção é avaliada pela Competência 5 do ENEM, que verifica se o candidato elabora uma proposta de intervenção para o problema abordado, respeitando os direitos humanos.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "Leia o poema:\n\"No meio do caminho tinha uma pedra\ntinha uma pedra no meio do caminho\ntinha uma pedra\nno meio do caminho tinha uma pedra.\"\n(Carlos Drummond de Andrade)\n\nO recurso estilístico predominante nesse poema é:",
+      options: ["Aliteração", "Anáfora", "Assonância", "Eufemismo", "Gradação"],
+      correctAnswer: 1,
+      explanation: "A anáfora é a repetição de palavras ou expressões no início de versos ou frases. No poema de Drummond, a repetição de 'tinha uma pedra' e 'no meio do caminho' caracteriza esse recurso.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "Sobre o Realismo brasileiro, é correto afirmar que:",
+      options: ["Surgiu no Brasil antes do Romantismo.", "Machado de Assis é seu principal representante.", "Valorizava o sentimentalismo e o idealismo.", "Tinha como tema central a natureza exuberante do Brasil.", "Rejeitava a análise psicológica dos personagens."],
+      correctAnswer: 1,
+      explanation: "Machado de Assis é o principal representante do Realismo brasileiro, com obras como 'Memórias Póstumas de Brás Cubas', 'Dom Casmurro' e 'Quincas Borba'.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "Sobre a concordância verbal, assinale a alternativa correta:",
+      options: ["'Fazem dois anos que não te vejo.' está correta.", "'Houveram muitos problemas na reunião.' está correta.", "'Existem várias soluções para esse problema.' está correta.", "'Faz muitos anos que ele partiu.' está incorreta.", "'Havia muitas pessoas na festa.' está incorreta."],
+      correctAnswer: 2,
+      explanation: "'Existem várias soluções' está correta pois o verbo 'existir' concorda com o sujeito 'várias soluções' (plural). Os verbos 'fazer', 'haver' no sentido de tempo são impessoais e ficam no singular.",
+      topic: "por",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "Leia o trecho de 'Memórias Póstumas de Brás Cubas' de Machado de Assis:\n\"Ao verme que primeiro roeu as frias carnes do meu cadáver dedico como saudosa lembrança estas memórias póstumas.\"\n\nEsse trecho é característico do Realismo machadiano por:",
+      options: ["Apresentar linguagem sentimental e idealizada.", "Usar ironia e humor negro para tratar da morte.", "Descrever a natureza de forma exuberante.", "Valorizar os sentimentos românticos do narrador.", "Apresentar uma visão otimista da vida."],
+      correctAnswer: 1,
+      explanation: "Machado de Assis usa ironia e humor negro ao dedicar suas memórias ao verme que comeu seu cadáver, característica do Realismo que critica a hipocrisia e as convenções sociais.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "Em 'Grande Sertão: Veredas', de Guimarães Rosa, a linguagem utilizada é marcada por:",
+      options: ["Linguagem simples e coloquial sem inovações.", "Neologismos, arcaísmos e fusão entre o erudito e o popular.", "Linguagem técnica e científica.", "Uso exclusivo do português europeu clássico.", "Linguagem jornalística e objetiva."],
+      correctAnswer: 1,
+      explanation: "Guimarães Rosa criou uma linguagem única em 'Grande Sertão: Veredas', misturando neologismos, arcaísmos, regionalismos e elementos do português erudito e popular.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "O Romantismo brasileiro teve como uma de suas principais características:",
+      options: ["A crítica objetiva à sociedade burguesa.", "A idealização da natureza e do índio como símbolo nacional.", "O pessimismo e o determinismo social.", "A valorização da razão sobre o sentimento.", "A análise psicológica profunda dos personagens."],
+      correctAnswer: 1,
+      explanation: "O Romantismo brasileiro valorizou a natureza exuberante do Brasil e idealizou o índio como símbolo da identidade nacional, especialmente na obra de José de Alencar.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "Sobre a obra 'Vidas Secas' de Graciliano Ramos, é correto afirmar que:",
+      options: ["É uma obra do Romantismo brasileiro.", "Retrata a vida de uma família de retirantes nordestinos com linguagem seca e objetiva.", "Apresenta personagens da elite urbana carioca.", "Foi escrita em primeira pessoa por um narrador-personagem.", "Valoriza o lirismo e a subjetividade."],
+      correctAnswer: 1,
+      explanation: "'Vidas Secas' retrata a vida de Fabiano e sua família de retirantes nordestinos, usando uma linguagem seca e objetiva que reflete a aridez do sertão e a desumanização dos personagens.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "O Parnasianismo, movimento literário do final do século XIX, caracterizava-se por:",
+      options: ["Valorizar a liberdade formal e a expressão dos sentimentos.", "Buscar a perfeição formal, o culto à forma e a objetividade.", "Criticar a sociedade burguesa de forma direta.", "Valorizar o misticismo e o simbolismo.", "Usar linguagem coloquial e popular."],
+      correctAnswer: 1,
+      explanation: "O Parnasianismo valorizava a perfeição formal, o 'culto à forma', a objetividade e a impessoalidade, em oposição ao subjetivismo romântico. Olavo Bilac é seu principal representante no Brasil.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "Sobre a obra 'O Cortiço' de Aluísio Azevedo, é correto afirmar que:",
+      options: ["É uma obra do Romantismo que idealiza a vida urbana.", "É uma obra Naturalista que retrata o determinismo social e o ambiente como condicionante do comportamento.", "Apresenta personagens da elite aristocrática brasileira.", "Valoriza o individualismo e a liberdade humana.", "Foi escrita no século XX."],
+      correctAnswer: 1,
+      explanation: "'O Cortiço' é uma obra Naturalista que retrata como o ambiente (o cortiço) e as condições sociais determinam o comportamento dos personagens, refletindo o determinismo característico do Naturalismo.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "Leia o verso de Carlos Drummond de Andrade:\n\"E agora, José? A festa acabou, a luz apagou, o povo sumiu, a noite esfriou, e agora, José?\"\n\nO recurso expressivo predominante nesse trecho é:",
+      options: ["Metáfora", "Anáfora e enumeração", "Hipérbole", "Eufemismo", "Antítese"],
+      correctAnswer: 1,
+      explanation: "O trecho usa anáfora (repetição de 'a' no início das orações) e enumeração (sequência de ações que aconteceram), criando um ritmo de acumulação e desespero.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2022
+    },
+    {
+      text: "Sobre a obra 'Iracema' de José de Alencar, é correto afirmar que:",
+      options: ["É uma obra Realista que critica a sociedade colonial.", "É um romance indianista que idealiza o índio e a natureza brasileira.", "Retrata a vida urbana do Rio de Janeiro.", "Foi escrita no século XX.", "Apresenta personagens da classe operária."],
+      correctAnswer: 1,
+      explanation: "'Iracema' é um romance indianista de José de Alencar que idealiza o índio (representado por Iracema) e a natureza brasileira, sendo um símbolo do Romantismo nacional.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2023
+    },
+    {
+      text: "A obra 'Capitães da Areia' de Jorge Amado retrata:",
+      options: ["A vida da elite baiana.", "A vida de meninos abandonados que vivem nas ruas de Salvador.", "A história da colonização do Brasil.", "A vida rural no sertão nordestino.", "A industrialização de São Paulo."],
+      correctAnswer: 1,
+      explanation: "'Capitães da Areia' retrata a vida de meninos abandonados que vivem nas ruas de Salvador, Bahia, criticando a desigualdade social e a marginalização da infância.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2024
+    },
+    {
+      text: "Sobre a obra 'Macunaíma' de Mário de Andrade, é correto afirmar que:",
+      options: ["É uma obra Realista do século XIX.", "É uma rapsódia modernista que sintetiza elementos da cultura popular brasileira.", "Retrata a vida da elite paulistana.", "Foi escrita em linguagem clássica e formal.", "Apresenta um herói com características europeias."],
+      correctAnswer: 1,
+      explanation: "'Macunaíma' é uma rapsódia modernista de Mário de Andrade que sintetiza elementos da cultura popular, folclore e mitologia brasileira, criando um herói sem nenhum caráter que representa a identidade nacional.",
+      topic: "por",
+      institution: "FUVEST",
+      year: 2025
+    },
+    {
+      text: "Leia o trecho de 'Sagarana' de Guimarães Rosa:\n\"O sertão está em toda parte.\"\n\nEssa frase pode ser interpretada como:",
+      options: ["Uma descrição geográfica do sertão nordestino.", "Uma afirmação de que o sertão é um estado de espírito universal.", "Uma crítica à pobreza do sertão.", "Uma referência à expansão territorial do sertão.", "Uma descrição da fauna e flora sertaneja."],
+      correctAnswer: 1,
+      explanation: "Em Guimarães Rosa, o sertão transcende a dimensão geográfica e se torna um espaço simbólico, representando a condição humana universal, seus conflitos e sua busca por sentido.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "O Barroco brasileiro, representado por Gregório de Matos, caracterizava-se por:",
+      options: ["Linguagem simples e direta.", "Tensão entre opostos, como sagrado e profano, e uso de antíteses e paradoxos.", "Valorização da razão iluminista.", "Descrição objetiva da realidade colonial.", "Uso exclusivo de formas poéticas populares."],
+      correctAnswer: 1,
+      explanation: "O Barroco é marcado pela tensão entre opostos (sagrado/profano, carne/espírito), pelo uso de antíteses, paradoxos e pelo estilo rebuscado, características presentes na obra de Gregório de Matos.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "O discurso indireto livre é uma técnica narrativa que:",
+      options: ["Apresenta a fala do personagem entre aspas.", "Funde a voz do narrador com a voz do personagem, sem marcas claras de separação.", "Usa verbos de elocução para introduzir a fala.", "Apresenta o pensamento do personagem em primeira pessoa.", "Usa travessão para indicar a fala do personagem."],
+      correctAnswer: 1,
+      explanation: "O discurso indireto livre funde a voz do narrador com a voz do personagem, sem marcas claras de separação (aspas, travessão ou verbos de elocução), criando uma ambiguidade narrativa.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "Sobre a obra 'A Hora da Estrela' de Clarice Lispector, é correto afirmar que:",
+      options: ["É uma obra do Romantismo brasileiro.", "Apresenta Macabéa como símbolo da marginalização social e da invisibilidade dos pobres.", "Retrata a vida da elite carioca.", "Foi escrita em terceira pessoa por um narrador onisciente neutro.", "Apresenta uma narrativa linear e objetiva."],
+      correctAnswer: 1,
+      explanation: "'A Hora da Estrela' apresenta Macabéa como símbolo da marginalização social, da invisibilidade dos pobres e da condição feminina, narrada pelo escritor Rodrigo S.M., que questiona sua própria capacidade de narrar.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "O Arcadismo brasileiro, representado por Tomás Antônio Gonzaga e Cláudio Manuel da Costa, caracterizava-se por:",
+      options: ["Valorização do misticismo e do sobrenatural.", "Idealização da vida simples no campo (bucolismo) e uso de pseudônimos pastoris.", "Crítica social direta e engajamento político.", "Uso de linguagem popular e coloquial.", "Valorização do sentimentalismo exacerbado."],
+      correctAnswer: 1,
+      explanation: "O Arcadismo valorizava a vida simples no campo (bucolismo), o uso de pseudônimos pastoris e a razão iluminista, em oposição ao exagero barroco.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "A obra 'Quarto de Despejo' de Carolina Maria de Jesus é importante para a literatura brasileira porque:",
+      options: ["É uma obra do Modernismo de 1922.", "Apresenta o testemunho de uma mulher negra e pobre sobre a vida na favela.", "Retrata a vida da elite paulistana.", "Foi escrita em linguagem erudita e formal.", "Apresenta personagens fictícios da classe média."],
+      correctAnswer: 1,
+      explanation: "'Quarto de Despejo' é o diário de Carolina Maria de Jesus, uma mulher negra, pobre e catadora de papel que vivia na favela do Canindé em São Paulo, oferecendo um testemunho único sobre a marginalização social.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "O Naturalismo, como corrente literária, diferencia-se do Realismo principalmente por:",
+      options: ["Valorizar a subjetividade e os sentimentos.", "Aplicar o determinismo científico (biológico e social) à análise dos personagens.", "Usar linguagem poética e metafórica.", "Idealizar a natureza e o campo.", "Criticar exclusivamente a burguesia."],
+      correctAnswer: 1,
+      explanation: "O Naturalismo aplica o determinismo científico à literatura, analisando os personagens como produtos do meio social e da herança biológica, com influência do positivismo e do darwinismo.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2022
+    },
+    {
+      text: "Sobre a obra 'Morte e Vida Severina' de João Cabral de Melo Neto, é correto afirmar que:",
+      options: ["É uma obra do Romantismo que idealiza o sertão.", "É um auto de natal que retrata a migração nordestina e a luta pela sobrevivência.", "Apresenta personagens da elite nordestina.", "Foi escrita em prosa.", "Valoriza o misticismo e o sobrenatural."],
+      correctAnswer: 1,
+      explanation: "'Morte e Vida Severina' é um auto de natal que retrata a jornada de Severino, um retirante nordestino que migra do sertão para o litoral em busca de uma vida menos severa.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "A obra 'Dois Irmãos' de Milton Hatoum retrata:",
+      options: ["A vida rural no sertão nordestino.", "A saga de uma família de imigrantes libaneses em Manaus e os conflitos entre dois irmãos gêmeos.", "A vida da elite carioca.", "A industrialização de São Paulo.", "A colonização portuguesa no Brasil."],
+      correctAnswer: 1,
+      explanation: "'Dois Irmãos' retrata a saga de uma família de imigrantes libaneses em Manaus, focando nos conflitos entre os irmãos gêmeos Yaqub e Omar, narrada pelo filho de uma empregada da família.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2024
+    },
+    {
+      text: "Sobre a literatura afro-brasileira contemporânea, é correto afirmar que:",
+      options: ["É um fenômeno recente sem tradição literária.", "Tem raízes históricas e busca afirmar identidades negras e denunciar o racismo.", "Limita-se à poesia.", "É produzida exclusivamente por autores do nordeste.", "Rejeita qualquer influência da cultura africana."],
+      correctAnswer: 1,
+      explanation: "A literatura afro-brasileira tem raízes históricas (Cruz e Sousa, Lima Barreto) e, na contemporaneidade, busca afirmar identidades negras, denunciar o racismo e recuperar a memória africana no Brasil.",
+      topic: "por",
+      institution: "UNICAMP",
+      year: 2025
+    },
+  ],
   "his": [
 {
       text: ".\n\nO referido autor, no texto e imagem acima,",
@@ -1022,7 +1852,332 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "his",
       institution: "ENEM",
       year: 2014
-    },  ],
+    },  
+{
+      text: "A Revolução Francesa (1789) é considerada um marco histórico porque:",
+      options: ["Restaurou o poder absoluto da monarquia francesa.", "Difundiu os ideais de liberdade, igualdade e fraternidade.", "Fortaleceu o poder da Igreja Católica na Europa.", "Iniciou o processo de colonização da América.", "Estabeleceu o feudalismo como sistema político."],
+      correctAnswer: 1,
+      explanation: "A Revolução Francesa difundiu os ideais iluministas de liberdade, igualdade e fraternidade, influenciando movimentos políticos em todo o mundo e marcando o fim do Antigo Regime.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "O processo de industrialização no Brasil, intensificado a partir da Era Vargas (1930-1945), caracterizou-se principalmente por:",
+      options: ["Investimento exclusivo do capital privado estrangeiro.", "Forte intervenção do Estado na economia e criação de empresas estatais.", "Adoção do modelo liberal sem interferência governamental.", "Desenvolvimento exclusivo da indústria de bens de consumo.", "Abandono da agricultura como base econômica."],
+      correctAnswer: 1,
+      explanation: "Durante a Era Vargas, o Estado brasileiro assumiu papel central no processo de industrialização, criando empresas estatais como a CSN e a Petrobras, adotando um modelo de desenvolvimento nacional.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "A Guerra Fria (1947-1991) foi um conflito caracterizado por:",
+      options: ["Confronto militar direto entre EUA e URSS.", "Disputa ideológica, econômica e tecnológica entre capitalismo e socialismo.", "Conflito armado na Europa Central.", "Disputa pelo controle das colônias africanas.", "Guerra nuclear entre as superpotências."],
+      correctAnswer: 1,
+      explanation: "A Guerra Fria foi uma disputa ideológica, econômica, política e tecnológica entre os EUA (capitalismo) e a URSS (socialismo), sem confronto militar direto entre as duas superpotências.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "O Iluminismo foi um movimento intelectual do século XVIII que defendia:",
+      options: ["A supremacia da fé religiosa sobre a razão.", "O poder absoluto dos monarcas.", "A razão como guia para o progresso humano e a crítica às tradições.", "O retorno aos valores medievais.", "A manutenção da ordem social estabelecida."],
+      correctAnswer: 2,
+      explanation: "O Iluminismo defendia a razão como instrumento para o progresso humano, criticando o absolutismo, a Igreja e as tradições, influenciando as revoluções burguesas do século XVIII.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "A Ditadura Militar no Brasil (1964-1985) foi marcada por:",
+      options: ["Ampliação das liberdades civis e políticas.", "Censura, repressão política e violação dos direitos humanos.", "Eleições livres e democráticas em todos os níveis.", "Fortalecimento dos partidos políticos de oposição.", "Respeito irrestrito à Constituição de 1946."],
+      correctAnswer: 1,
+      explanation: "A Ditadura Militar brasileira foi marcada pela censura à imprensa, repressão política, tortura de opositores e violação sistemática dos direitos humanos, especialmente após o AI-5 (1968).",
+      topic: "his",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "A Proclamação da República no Brasil (1889) foi resultado principalmente de:",
+      options: ["Um movimento popular de massa nas ruas.", "Uma articulação entre militares e setores da elite agrária insatisfeitos com a monarquia.", "Uma revolução socialista liderada por operários.", "Uma intervenção estrangeira no país.", "Um plebiscito popular que rejeitou a monarquia."],
+      correctAnswer: 1,
+      explanation: "A Proclamação da República foi resultado de uma articulação entre militares positivistas e setores da elite agrária (especialmente cafeicultores de São Paulo) insatisfeitos com a monarquia.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "A Abolição da Escravidão no Brasil (1888) foi um processo que:",
+      options: ["Garantiu plena integração social e econômica dos ex-escravizados.", "Ocorreu de forma gradual e não foi acompanhada de políticas de inclusão social.", "Foi resultado de uma revolução liderada pelos próprios escravizados.", "Aconteceu antes de todos os outros países americanos.", "Foi imposta por pressão militar estrangeira."],
+      correctAnswer: 1,
+      explanation: "A abolição da escravidão no Brasil foi gradual (Lei do Ventre Livre, Lei dos Sexagenários, Lei Áurea) e não foi acompanhada de políticas de inclusão social, deixando os ex-escravizados à margem da sociedade.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "A Segunda Guerra Mundial (1939-1945) teve como uma de suas principais consequências:",
+      options: ["O fortalecimento do nazismo na Europa.", "A criação da ONU e a nova ordem mundial bipolar.", "O fim do colonialismo na África e Ásia.", "A hegemonia da União Soviética no mundo.", "O retorno ao isolacionismo dos Estados Unidos."],
+      correctAnswer: 1,
+      explanation: "Uma das principais consequências da Segunda Guerra Mundial foi a criação da ONU (1945) e o estabelecimento de uma nova ordem mundial bipolar, com EUA e URSS como superpotências.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "A Constituição Federal de 1988 é conhecida como 'Constituição Cidadã' porque:",
+      options: ["Foi a primeira constituição brasileira.", "Ampliou significativamente os direitos civis, políticos e sociais dos cidadãos.", "Estabeleceu o regime militar no Brasil.", "Restringiu os direitos políticos da população.", "Foi elaborada exclusivamente por juristas."],
+      correctAnswer: 1,
+      explanation: "A Constituição de 1988 é chamada de 'Constituição Cidadã' por ter ampliado significativamente os direitos civis, políticos e sociais, sendo um marco da redemocratização brasileira.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "O conceito de 'neoliberalismo' refere-se a uma política econômica que defende:",
+      options: ["A ampliação do papel do Estado na economia.", "A redução do Estado, privatizações e abertura de mercados.", "O protecionismo e o fechamento da economia.", "A planificação central da economia.", "O fortalecimento dos sindicatos trabalhistas."],
+      correctAnswer: 1,
+      explanation: "O neoliberalismo defende a redução do papel do Estado na economia, privatizações, desregulamentação e abertura de mercados ao capital internacional.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "O surgimento das redes sociais digitais transformou as relações políticas contemporâneas ao:",
+      options: ["Eliminar a desinformação e as fake news.", "Ampliar a participação política e facilitar a disseminação de informações.", "Fortalecer exclusivamente os partidos políticos tradicionais.", "Reduzir o acesso à informação política.", "Substituir completamente os meios de comunicação tradicionais."],
+      correctAnswer: 1,
+      explanation: "As redes sociais ampliaram a participação política e facilitaram a disseminação de informações, mas também trouxeram desafios como a desinformação e as fake news.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "O Acordo de Paris (2015) tem como objetivo:",
+      options: ["Aumentar a produção de combustíveis fósseis.", "Limitar o aumento da temperatura global e reduzir emissões de gases de efeito estufa.", "Promover o desmatamento para expansão agrícola.", "Eliminar as energias renováveis.", "Fortalecer a indústria petrolífera mundial."],
+      correctAnswer: 1,
+      explanation: "O Acordo de Paris tem como objetivo limitar o aumento da temperatura global a 1,5°C acima dos níveis pré-industriais, por meio da redução das emissões de gases de efeito estufa.",
+      topic: "his",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "A Semana de Arte Moderna de 1922 foi um evento cultural que marcou o início do Modernismo no Brasil. Ela foi realizada em:",
+      options: ["Rio de Janeiro", "Salvador", "São Paulo", "Recife", "Porto Alegre"],
+      correctAnswer: 2,
+      explanation: "A Semana de Arte Moderna de 1922 foi realizada no Teatro Municipal de São Paulo, entre os dias 11 e 18 de fevereiro, reunindo artistas, escritores e intelectuais modernistas.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "O Tratado de Tordesilhas (1494) dividiu o mundo entre Portugal e Espanha. Qual foi a principal consequência desse tratado para o Brasil?",
+      options: ["O Brasil ficou sob domínio espanhol.", "A parte leste do Brasil ficou sob domínio português.", "O Brasil foi dividido entre as duas potências.", "O Brasil ficou fora da área de influência europeia.", "O tratado não teve efeito sobre o Brasil."],
+      correctAnswer: 1,
+      explanation: "O Tratado de Tordesilhas estabeleceu uma linha divisória a 370 léguas a oeste de Cabo Verde. A parte leste dessa linha (onde ficava o Brasil) pertencia a Portugal, o que legitimou a colonização portuguesa.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "A Revolução de 1930 no Brasil foi liderada por Getúlio Vargas e representou:",
+      options: ["A consolidação da República Velha.", "O fim da política do café com leite e o início de uma nova era política.", "A implantação do socialismo no Brasil.", "A restauração da monarquia.", "O início da industrialização no Brasil."],
+      correctAnswer: 1,
+      explanation: "A Revolução de 1930 pôs fim à República Velha e à política do café com leite (alternância entre São Paulo e Minas Gerais), inaugurando a Era Vargas e uma nova fase política no Brasil.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "O Renascimento Cultural (séculos XIV-XVI) foi um movimento que:",
+      options: ["Valorizou a fé religiosa acima de tudo.", "Resgatou os valores greco-romanos e colocou o ser humano no centro do universo (humanismo).", "Defendeu o poder absoluto dos reis.", "Rejeitou o conhecimento científico.", "Fortaleceu o sistema feudal."],
+      correctAnswer: 1,
+      explanation: "O Renascimento foi um movimento cultural que resgatou os valores da Antiguidade Clássica greco-romana e colocou o ser humano no centro do universo (antropocentrismo e humanismo), em oposição ao teocentrismo medieval.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "A Independência do Brasil (1822) foi proclamada por D. Pedro I. Esse processo foi marcado por:",
+      options: ["Uma revolução popular violenta.", "Uma transição relativamente pacífica, mantendo a estrutura social e econômica colonial.", "A abolição imediata da escravidão.", "A implantação de uma república.", "A expulsão completa dos portugueses do Brasil."],
+      correctAnswer: 1,
+      explanation: "A Independência do Brasil foi um processo relativamente pacífico, liderado pela elite colonial, que manteve a estrutura social e econômica colonial, incluindo a escravidão e a monarquia.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "A Primeira Guerra Mundial (1914-1918) foi desencadeada pelo assassinato do arquiduque Francisco Ferdinando. Mas suas causas profundas incluíam:",
+      options: ["A disputa pelo controle da América Latina.", "O imperialismo, o nacionalismo exacerbado e a corrida armamentista.", "A expansão do socialismo na Europa.", "A crise econômica global.", "A disputa pelo controle da China."],
+      correctAnswer: 1,
+      explanation: "As causas profundas da Primeira Guerra Mundial incluíam o imperialismo (disputa por colônias), o nacionalismo exacerbado, a corrida armamentista e o sistema de alianças militares.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "O Estado Novo (1937-1945) foi um regime autoritário implantado por Getúlio Vargas. Suas principais características eram:",
+      options: ["Democracia representativa e liberdade de imprensa.", "Centralização do poder, censura e supressão dos partidos políticos.", "Descentralização política e autonomia dos estados.", "Eleições livres e diretas.", "Respeito irrestrito à Constituição."],
+      correctAnswer: 1,
+      explanation: "O Estado Novo foi um regime autoritário caracterizado pela centralização do poder nas mãos de Vargas, censura à imprensa, supressão dos partidos políticos e suspensão das eleições.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "A Reforma Protestante, iniciada por Martinho Lutero em 1517, questionou principalmente:",
+      options: ["O poder dos reis europeus.", "A autoridade e as práticas da Igreja Católica, especialmente a venda de indulgências.", "O sistema feudal de produção.", "A expansão colonial europeia.", "O humanismo renascentista."],
+      correctAnswer: 1,
+      explanation: "Martinho Lutero questionou a autoridade da Igreja Católica e suas práticas, especialmente a venda de indulgências, iniciando a Reforma Protestante com a publicação das 95 Teses em 1517.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "A Guerra do Paraguai (1864-1870) teve consequências devastadoras para o Paraguai. Para o Brasil, uma das principais consequências foi:",
+      options: ["O enfraquecimento do Exército.", "O fortalecimento político do Exército e o início do questionamento da monarquia.", "A abolição imediata da escravidão.", "O enriquecimento econômico do país.", "A perda de território para a Argentina."],
+      correctAnswer: 1,
+      explanation: "A Guerra do Paraguai fortaleceu politicamente o Exército brasileiro, que passou a questionar a monarquia e a defender a república, contribuindo para a Proclamação da República em 1889.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2022
+    },
+    {
+      text: "A Revolução Cubana (1959), liderada por Fidel Castro e Che Guevara, resultou em:",
+      options: ["A implantação de uma democracia liberal.", "A instauração de um regime socialista em Cuba.", "A anexação de Cuba pelos Estados Unidos.", "A restauração da monarquia cubana.", "A criação de uma república federativa."],
+      correctAnswer: 1,
+      explanation: "A Revolução Cubana de 1959 derrubou o ditador Fulgêncio Batista e instaurou um regime socialista em Cuba, liderado por Fidel Castro, gerando tensões com os Estados Unidos.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2023
+    },
+    {
+      text: "A Revolução Francesa (1789) produziu três documentos fundamentais. Qual deles proclamou os direitos naturais do homem?",
+      options: ["A Constituição de 1791.", "A Declaração dos Direitos do Homem e do Cidadão.", "O Código Napoleônico.", "O Tratado de Vestfália.", "A Declaração de Independência Americana."],
+      correctAnswer: 1,
+      explanation: "A Declaração dos Direitos do Homem e do Cidadão (1789) proclamou os direitos naturais, inalienáveis e sagrados do homem, incluindo liberdade, propriedade, segurança e resistência à opressão.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2024
+    },
+    {
+      text: "O Plano Real (1994) foi um programa econômico que:",
+      options: ["Aumentou a inflação no Brasil.", "Controlou a hiperinflação e estabilizou a economia brasileira.", "Privatizou todas as empresas estatais.", "Aumentou a dívida externa do Brasil.", "Implantou o socialismo no Brasil."],
+      correctAnswer: 1,
+      explanation: "O Plano Real, implementado pelo então ministro Fernando Henrique Cardoso, controlou a hiperinflação que assolava o Brasil e estabilizou a economia, criando a moeda Real.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2024
+    },
+    {
+      text: "A Primavera Árabe (2010-2012) foi motivada principalmente por:",
+      options: ["Disputas religiosas entre sunitas e xiitas.", "Insatisfação com regimes autoritários, desigualdade social e desemprego.", "Invasão militar estrangeira.", "Disputas por recursos naturais.", "Conflitos étnicos históricos."],
+      correctAnswer: 1,
+      explanation: "A Primavera Árabe foi motivada pela insatisfação popular com regimes autoritários, corrupção, desigualdade social, desemprego e falta de liberdades políticas.",
+      topic: "his",
+      institution: "FUVEST",
+      year: 2025
+    },
+    {
+      text: "A Revolução de 1932 (Revolução Constitucionalista) foi um movimento armado que ocorreu em São Paulo contra o governo de Getúlio Vargas. Suas principais reivindicações eram:",
+      options: ["A implantação do socialismo no Brasil.", "A convocação de uma Assembleia Constituinte e a elaboração de uma nova Constituição.", "A restauração da monarquia.", "A independência de São Paulo.", "A expulsão dos imigrantes europeus."],
+      correctAnswer: 1,
+      explanation: "A Revolução de 1932 reivindicava a convocação de uma Assembleia Constituinte para elaborar uma nova Constituição e o fim do governo provisório de Vargas, que governava por decretos.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "A Revolução Russa de 1917 resultou na criação da União Soviética. O líder que liderou a Revolução Bolchevique foi:",
+      options: ["Stálin", "Trotsky", "Lênin", "Kerensky", "Rasputin"],
+      correctAnswer: 2,
+      explanation: "Lênin liderou a Revolução Bolchevique de outubro de 1917, que derrubou o governo provisório e instaurou o poder soviético, baseado nos princípios do marxismo-leninismo.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "O conceito de 'diáspora africana' refere-se ao:",
+      options: ["Movimento de africanos para o interior do continente.", "Dispersão forçada de africanos pelo mundo, principalmente através do tráfico de escravizados.", "Migração voluntária de africanos para a Europa.", "Expansão do Islã na África.", "Colonização europeia da África."],
+      correctAnswer: 1,
+      explanation: "A diáspora africana refere-se à dispersão forçada de africanos pelo mundo, principalmente através do tráfico transatlântico de escravizados, que levou milhões de africanos para as Américas e outras regiões.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "O Movimento dos Direitos Civis nos Estados Unidos, liderado por Martin Luther King Jr., lutava principalmente contra:",
+      options: ["A pobreza e o desemprego.", "A segregação racial e a discriminação contra os afro-americanos.", "A Guerra do Vietnã.", "O imperialismo americano.", "A desigualdade de gênero."],
+      correctAnswer: 1,
+      explanation: "O Movimento dos Direitos Civis lutava contra a segregação racial e a discriminação contra os afro-americanos nos EUA, conquistando importantes vitórias como a Lei dos Direitos Civis de 1964.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "A Conferência de Bandung (1955) foi importante para a história do século XX porque:",
+      options: ["Criou a OTAN.", "Reuniu países afro-asiáticos e lançou as bases do Movimento dos Não Alinhados.", "Estabeleceu o Plano Marshall.", "Criou o Fundo Monetário Internacional.", "Dividiu a Alemanha em dois países."],
+      correctAnswer: 1,
+      explanation: "A Conferência de Bandung reuniu 29 países afro-asiáticos recém-independentes e lançou as bases do Movimento dos Não Alinhados, que buscava uma terceira via entre o capitalismo americano e o socialismo soviético.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "O Apartheid foi um sistema de segregação racial que vigorou na África do Sul de 1948 a 1994. Sua abolição foi resultado principalmente de:",
+      options: ["Uma intervenção militar estrangeira.", "Pressão internacional, resistência interna e a liderança de Nelson Mandela.", "Uma decisão unilateral do governo sul-africano.", "Uma revolução armada.", "Uma decisão da ONU."],
+      correctAnswer: 1,
+      explanation: "O fim do Apartheid foi resultado da combinação de pressão internacional (sanções econômicas), resistência interna (ANC) e a liderança de Nelson Mandela, que se tornou o primeiro presidente negro da África do Sul em 1994.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "A Revolução Mexicana (1910-1920) foi um conflito que resultou em:",
+      options: ["A implantação do socialismo no México.", "Reformas agrárias, trabalhistas e a elaboração de uma nova Constituição (1917).", "A anexação do México pelos Estados Unidos.", "A restauração da monarquia mexicana.", "A criação de um regime militar."],
+      correctAnswer: 1,
+      explanation: "A Revolução Mexicana resultou em reformas agrárias (redistribuição de terras), trabalhistas e na elaboração da Constituição de 1917, uma das mais progressistas da época.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2022
+    },
+    {
+      text: "A Ditadura de Pinochet no Chile (1973-1990) foi instaurada por um golpe de Estado que derrubou o governo de:",
+      options: ["Eduardo Frei.", "Salvador Allende.", "Ricardo Lagos.", "Michelle Bachelet.", "Patricio Aylwin."],
+      correctAnswer: 1,
+      explanation: "O golpe de Estado de 11 de setembro de 1973 derrubou o governo democraticamente eleito de Salvador Allende, instaurando a ditadura militar de Augusto Pinochet.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "O processo de redemocratização no Brasil (1985-1988) foi marcado por:",
+      options: ["Uma revolução popular violenta.", "A transição gradual do regime militar para a democracia, culminando na Constituição de 1988.", "A intervenção militar estrangeira.", "Um golpe de Estado civil.", "A restauração da monarquia."],
+      correctAnswer: 1,
+      explanation: "A redemocratização brasileira foi um processo gradual, marcado pela campanha das Diretas Já (1984), a eleição indireta de Tancredo Neves (1985) e a promulgação da Constituição Cidadã (1988).",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "A crise climática global é resultado principalmente de:",
+      options: ["Variações naturais do clima terrestre.", "Emissões de gases de efeito estufa resultantes das atividades humanas desde a Revolução Industrial.", "Atividade vulcânica intensa.", "Variações na atividade solar.", "Mudanças nas correntes oceânicas."],
+      correctAnswer: 1,
+      explanation: "O consenso científico aponta que a crise climática atual é resultado principalmente das emissões de gases de efeito estufa (CO₂, metano, etc.) resultantes das atividades humanas desde a Revolução Industrial.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2024
+    },
+    {
+      text: "O conceito de 'multipolaridade' nas relações internacionais contemporâneas refere-se a:",
+      options: ["A hegemonia exclusiva dos Estados Unidos.", "A existência de múltiplos centros de poder no sistema internacional.", "O fim das organizações internacionais.", "A dominação da China no mundo.", "O retorno à Guerra Fria bipolar."],
+      correctAnswer: 1,
+      explanation: "A multipolaridade refere-se à existência de múltiplos centros de poder no sistema internacional (EUA, China, União Europeia, Rússia, etc.), em contraste com a unipolaridade americana do pós-Guerra Fria.",
+      topic: "his",
+      institution: "UNICAMP",
+      year: 2025
+    },
+  ],
   "geo": [
 {
       text: "O gráfico representa a relação entre o tamanho e a totalidade dos imóveis rurais no Brasil. Que característica da estrutura fundiária brasileira está evidenciada\nno gráfico apresentado?\n\nCLAVAL, P. Terra dos homens: a geografia.\nSão Paulo: Contexto, 2010 (adaptado).\n\nNo texto, é apresentada uma forma de integração da paisagem\ngeográfica com a vida social. Nesse sentido, a paisagem, além\nde existir como forma concreta, apresenta uma dimensão",
@@ -1394,7 +2549,422 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       topic: "bio",
       institution: "ENEM",
       year: 2012
-    },  ],
+    },  
+{
+      text: "A fotossíntese é o processo pelo qual as plantas produzem seu próprio alimento. A equação geral da fotossíntese é:\n6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂\n\nNesse processo, a energia luminosa é convertida em:",
+      options: ["Energia cinética", "Energia elétrica", "Energia química armazenada na glicose", "Energia térmica", "Energia nuclear"],
+      correctAnswer: 2,
+      explanation: "Na fotossíntese, a energia luminosa é convertida em energia química, armazenada nas ligações químicas da glicose (C₆H₁₂O₆), que serve como fonte de energia para a planta.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "O DNA (ácido desoxirribonucleico) é a molécula responsável pelo armazenamento da informação genética. Sobre a estrutura do DNA, é correto afirmar que:",
+      options: ["É formado por uma única fita de nucleotídeos.", "As bases nitrogenadas adenina e timina se pareiam entre si.", "É composto por ribose como açúcar.", "As bases guanina e citosina se pareiam em proporção 1:2.", "É encontrado exclusivamente no citoplasma celular."],
+      correctAnswer: 1,
+      explanation: "No DNA, as bases nitrogenadas se pareiam de forma complementar: adenina (A) com timina (T), e guanina (G) com citosina (C). Essa complementaridade é fundamental para a replicação do DNA.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "A Lei de Ohm estabelece a relação entre tensão (V), corrente (I) e resistência (R) em um circuito elétrico. Se a tensão em um resistor é de 12 V e a corrente que passa por ele é de 3 A, qual é a resistência?",
+      options: ["2 Ω", "3 Ω", "4 Ω", "6 Ω", "9 Ω"],
+      correctAnswer: 2,
+      explanation: "Pela Lei de Ohm: R = V/I = 12/3 = 4 Ω.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "A mitose é o processo de divisão celular que resulta em:",
+      options: ["Duas células-filhas com metade do número de cromossomos.", "Quatro células-filhas geneticamente idênticas à célula-mãe.", "Duas células-filhas geneticamente idênticas à célula-mãe.", "Células com variação genética em relação à célula-mãe.", "Células haploides a partir de células diploides."],
+      correctAnswer: 2,
+      explanation: "A mitose resulta em duas células-filhas geneticamente idênticas à célula-mãe, com o mesmo número de cromossomos. É o processo de divisão celular para crescimento e regeneração.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "O efeito estufa é um fenômeno natural essencial para a vida na Terra. No entanto, o aumento da concentração de gases de efeito estufa tem causado o aquecimento global. O principal gás responsável por esse aumento é:",
+      options: ["Oxigênio (O₂)", "Nitrogênio (N₂)", "Dióxido de carbono (CO₂)", "Argônio (Ar)", "Hidrogênio (H₂)"],
+      correctAnswer: 2,
+      explanation: "O dióxido de carbono (CO₂) é o principal gás de efeito estufa cujo aumento na atmosfera está relacionado às atividades humanas, especialmente a queima de combustíveis fósseis.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "A seleção natural, proposta por Charles Darwin, é o mecanismo evolutivo que explica:",
+      options: ["A criação de novas espécies por intervenção divina.", "A sobrevivência e reprodução preferencial de indivíduos com características adaptativas ao ambiente.", "A herança de características adquiridas durante a vida.", "A evolução em direção a formas mais complexas e perfeitas.", "A extinção aleatória de espécies."],
+      correctAnswer: 1,
+      explanation: "A seleção natural é o mecanismo pelo qual indivíduos com características mais adaptadas ao ambiente têm maior probabilidade de sobreviver e se reproduzir, transmitindo essas características às gerações seguintes.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "Em química, o pH é uma medida da acidez ou basicidade de uma solução. Uma solução com pH = 7 é considerada:",
+      options: ["Ácida", "Básica", "Neutra", "Fortemente ácida", "Fortemente básica"],
+      correctAnswer: 2,
+      explanation: "O pH = 7 corresponde a uma solução neutra. Valores abaixo de 7 indicam acidez e valores acima de 7 indicam basicidade.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "A vacina funciona como mecanismo de prevenção de doenças infecciosas porque:",
+      options: ["Elimina diretamente os patógenos do organismo.", "Estimula o sistema imunológico a produzir anticorpos sem causar a doença.", "Substitui os anticorpos naturais do organismo.", "Aumenta a temperatura corporal para matar os vírus.", "Bloqueia a entrada de patógenos no organismo."],
+      correctAnswer: 1,
+      explanation: "A vacina estimula o sistema imunológico a produzir anticorpos e células de memória imunológica, preparando o organismo para combater o patógeno sem causar a doença.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "A Segunda Lei da Termodinâmica afirma que a entropia de um sistema isolado tende a aumentar. Isso explica por que:",
+      options: ["A energia pode ser criada espontaneamente.", "Processos naturais tendem a evoluir para estados de maior desordem.", "A temperatura sempre aumenta em processos naturais.", "A energia se conserva em todos os processos.", "Máquinas térmicas têm eficiência de 100%."],
+      correctAnswer: 1,
+      explanation: "A Segunda Lei da Termodinâmica explica que processos naturais tendem a evoluir espontaneamente para estados de maior desordem (maior entropia), como o derretimento do gelo ou a mistura de gases.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "A biotecnologia moderna utiliza técnicas de engenharia genética para modificar organismos. O milho transgênico resistente a insetos foi desenvolvido pela inserção de um gene da bactéria Bacillus thuringiensis. Esse gene codifica uma proteína que:",
+      options: ["Aumenta a produção de clorofila na planta.", "É tóxica para determinados insetos, mas inofensiva para humanos.", "Acelera o crescimento da planta.", "Aumenta a resistência à seca.", "Melhora o sabor do milho."],
+      correctAnswer: 1,
+      explanation: "O gene Bt da bactéria Bacillus thuringiensis codifica uma proteína (toxina Bt) que é tóxica para determinados insetos-praga, mas inofensiva para humanos e outros mamíferos.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "A reação de combustão completa do metano (CH₄) produz:",
+      options: ["CO + H₂O", "CO₂ + H₂", "CO₂ + H₂O", "C + H₂O", "CO + H₂"],
+      correctAnswer: 2,
+      explanation: "Na combustão completa do metano: CH₄ + 2O₂ → CO₂ + 2H₂O. Os produtos são dióxido de carbono e água.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "A pandemia de COVID-19 demonstrou a importância da epidemiologia. O número básico de reprodução (R₀) de um vírus indica:",
+      options: ["A taxa de mortalidade da doença.", "O número médio de pessoas que um infectado pode contaminar.", "A velocidade de mutação do vírus.", "O tempo de incubação da doença.", "A eficácia das vacinas disponíveis."],
+      correctAnswer: 1,
+      explanation: "O R₀ (número básico de reprodução) indica o número médio de pessoas que um indivíduo infectado pode contaminar em uma população totalmente suscetível. R₀ > 1 indica que a doença se espalha.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "A crise de biodiversidade é considerada uma das maiores ameaças ambientais do século XXI. A principal causa da perda de biodiversidade é:",
+      options: ["As mudanças climáticas naturais.", "A destruição e fragmentação de habitats pela ação humana.", "A evolução natural das espécies.", "As erupções vulcânicas.", "As variações solares."],
+      correctAnswer: 1,
+      explanation: "A principal causa da perda de biodiversidade é a destruição e fragmentação de habitats pela ação humana, especialmente o desmatamento, a urbanização e a expansão agrícola.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "A tabela periódica organiza os elementos químicos por número atômico crescente. Os elementos de um mesmo grupo (coluna) possuem:",
+      options: ["O mesmo número de massa.", "O mesmo número de nêutrons.", "O mesmo número de elétrons na camada de valência.", "A mesma massa atômica.", "O mesmo estado físico à temperatura ambiente."],
+      correctAnswer: 2,
+      explanation: "Os elementos de um mesmo grupo da tabela periódica possuem o mesmo número de elétrons na camada de valência, o que lhes confere propriedades químicas semelhantes.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "As energias renováveis têm ganhado destaque como alternativa aos combustíveis fósseis. A energia solar fotovoltaica funciona pela:",
+      options: ["Combustão de materiais orgânicos.", "Conversão direta da luz solar em eletricidade por meio de células fotovoltaicas.", "Aquecimento de água para geração de vapor.", "Aproveitamento da energia cinética do vento.", "Fissão de átomos de urânio."],
+      correctAnswer: 1,
+      explanation: "A energia solar fotovoltaica converte diretamente a luz solar em eletricidade por meio do efeito fotoelétrico em células fotovoltaicas (painéis solares).",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "A CRISPR-Cas9 é uma tecnologia de edição genética que permite:",
+      options: ["Clonar organismos inteiros.", "Cortar e modificar sequências específicas do DNA com alta precisão.", "Criar organismos a partir do zero.", "Transferir genes entre espécies sem precisão.", "Eliminar todos os genes de um organismo."],
+      correctAnswer: 1,
+      explanation: "A CRISPR-Cas9 é uma ferramenta de edição genética que permite cortar e modificar sequências específicas do DNA com alta precisão, tendo aplicações em medicina, agricultura e pesquisa científica.",
+      topic: "bio",
+      institution: "ENEM",
+      year: 2025
+    },
+    {
+      text: "A respiração celular aeróbica ocorre em três etapas principais. A etapa que ocorre na matriz mitocondrial e produz CO₂ é:",
+      options: ["Glicólise", "Ciclo de Krebs", "Cadeia respiratória", "Fermentação", "Fotossíntese"],
+      correctAnswer: 1,
+      explanation: "O Ciclo de Krebs (ou Ciclo do Ácido Cítrico) ocorre na matriz mitocondrial e é responsável pela produção de CO₂ e pela geração de NADH e FADH₂.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "Em genética, um indivíduo heterozigoto para um gene com dois alelos (Aa) é cruzado com outro heterozigoto (Aa). A proporção fenotípica esperada na prole, considerando dominância completa, é:",
+      options: ["1:1", "1:2:1", "3:1", "1:3", "2:1"],
+      correctAnswer: 2,
+      explanation: "No cruzamento Aa × Aa: AA (25%), Aa (50%), aa (25%). Com dominância completa, 75% apresentam o fenótipo dominante e 25% o recessivo, proporção 3:1.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2018
+    },
+    {
+      text: "A reação de neutralização entre um ácido forte e uma base forte produz:",
+      options: ["Um sal e um ácido.", "Água e um sal.", "Uma base e água.", "Dois sais diferentes.", "Apenas água."],
+      correctAnswer: 1,
+      explanation: "A reação de neutralização entre um ácido forte e uma base forte produz água e um sal. Por exemplo: HCl + NaOH → NaCl + H₂O.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2019
+    },
+    {
+      text: "A osmose é o movimento de água através de uma membrana semipermeável. Uma célula animal colocada em solução hipertônica irá:",
+      options: ["Absorver água e aumentar de volume.", "Perder água e encolher (crenação).", "Manter seu volume inalterado.", "Explodir devido ao excesso de água.", "Produzir mais ATP."],
+      correctAnswer: 1,
+      explanation: "Em solução hipertônica (maior concentração de soluto fora da célula), a célula perde água por osmose, encolhendo (crenação).",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "A fórmula molecular da glicose é C₆H₁₂O₆. Sua massa molar é: (C=12, H=1, O=16)",
+      options: ["120 g/mol", "150 g/mol", "180 g/mol", "200 g/mol", "240 g/mol"],
+      correctAnswer: 2,
+      explanation: "M(glicose) = 6×12 + 12×1 + 6×16 = 72 + 12 + 96 = 180 g/mol.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2020
+    },
+    {
+      text: "O sistema nervoso central (SNC) é composto por:",
+      options: ["Nervos e gânglios.", "Encéfalo e medula espinhal.", "Coração e pulmões.", "Fígado e rins.", "Músculos e tendões."],
+      correctAnswer: 1,
+      explanation: "O Sistema Nervoso Central (SNC) é composto pelo encéfalo (cérebro, cerebelo e tronco encefálico) e pela medula espinhal.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "A velocidade média de um objeto que percorre 120 m em 8 s é:",
+      options: ["10 m/s", "12 m/s", "15 m/s", "18 m/s", "20 m/s"],
+      correctAnswer: 2,
+      explanation: "v = d/t = 120/8 = 15 m/s.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2021
+    },
+    {
+      text: "A teoria da evolução de Darwin e Wallace baseia-se em quatro princípios fundamentais. Qual dos seguintes NÃO é um desses princípios?",
+      options: ["Variação entre indivíduos da mesma espécie.", "Herança das características dos pais para os filhos.", "Seleção natural dos mais adaptados.", "Herança de características adquiridas durante a vida.", "Luta pela sobrevivência."],
+      correctAnswer: 3,
+      explanation: "A herança de características adquiridas durante a vida é o princípio de Lamarck, não de Darwin. Darwin baseou sua teoria na variação, herança, seleção natural e luta pela sobrevivência.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2022
+    },
+    {
+      text: "A entalpia de formação do CO₂ é -393,5 kJ/mol. Isso significa que a reação C + O₂ → CO₂ é:",
+      options: ["Endotérmica, absorvendo calor.", "Exotérmica, liberando calor.", "Neutra, sem variação de energia.", "Reversível em condições normais.", "Impossível de ocorrer."],
+      correctAnswer: 1,
+      explanation: "Uma entalpia negativa (ΔH < 0) indica que a reação é exotérmica, ou seja, libera calor para o ambiente.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2022
+    },
+    {
+      text: "O processo de meiose é fundamental para a reprodução sexuada porque:",
+      options: ["Produz células somáticas idênticas.", "Reduz o número de cromossomos à metade, gerando células haploides.", "Duplica o número de cromossomos.", "Produz células com o mesmo número de cromossomos da célula-mãe.", "Ocorre apenas em células vegetais."],
+      correctAnswer: 1,
+      explanation: "A meiose reduz o número de cromossomos à metade (de diploide para haploide), gerando gametas. Na fecundação, dois gametas haploides se unem, restaurando o número diploide.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2023
+    },
+    {
+      text: "A força elétrica entre duas cargas q₁ e q₂ separadas por uma distância r é dada pela Lei de Coulomb: F = k×q₁×q₂/r². Se a distância entre as cargas for dobrada, a força elétrica:",
+      options: ["Dobra.", "Quadruplica.", "Reduz à metade.", "Reduz a um quarto.", "Permanece igual."],
+      correctAnswer: 3,
+      explanation: "Se r dobra (r → 2r), então r² quadruplica (r² → 4r²), e F = k×q₁×q₂/(4r²) = F₀/4. A força reduz a um quarto.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2023
+    },
+    {
+      text: "A fotossíntese ocorre em duas etapas: as reações luminosas e o Ciclo de Calvin. O Ciclo de Calvin ocorre no:",
+      options: ["Tilacóide", "Estroma do cloroplasto", "Mitocôndria", "Núcleo celular", "Ribossomo"],
+      correctAnswer: 1,
+      explanation: "O Ciclo de Calvin (fase escura da fotossíntese) ocorre no estroma do cloroplasto, onde o CO₂ é fixado e convertido em glicose usando o ATP e NADPH produzidos nas reações luminosas.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2024
+    },
+    {
+      text: "O RNA mensageiro (mRNA) é produzido no processo de transcrição. Qual enzima é responsável pela síntese do mRNA?",
+      options: ["DNA polimerase", "RNA polimerase", "Helicase", "Ligase", "Primase"],
+      correctAnswer: 1,
+      explanation: "A RNA polimerase é a enzima responsável pela transcrição, sintetizando o mRNA a partir do molde de DNA.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2025
+    },
+    {
+      text: "Um objeto de massa 2 kg é acelerado de 0 a 10 m/s em 5 s. A força resultante aplicada sobre ele é:",
+      options: ["1 N", "2 N", "4 N", "5 N", "10 N"],
+      correctAnswer: 2,
+      explanation: "a = Δv/Δt = 10/5 = 2 m/s². F = m×a = 2×2 = 4 N.",
+      topic: "bio",
+      institution: "FUVEST",
+      year: 2025
+    },
+    {
+      text: "A membrana plasmática é formada principalmente por uma bicamada de fosfolipídios. Essa estrutura é responsável por:",
+      options: ["Produzir energia para a célula.", "Regular a entrada e saída de substâncias na célula.", "Sintetizar proteínas.", "Armazenar informação genética.", "Realizar a fotossíntese."],
+      correctAnswer: 1,
+      explanation: "A membrana plasmática regula a entrada e saída de substâncias na célula (permeabilidade seletiva), mantendo o equilíbrio interno (homeostase).",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "A reação de saponificação é usada na fabricação de sabão. Ela consiste na reação entre:",
+      options: ["Ácido e base.", "Gordura (éster) e base forte (NaOH ou KOH).", "Álcool e ácido.", "Sal e água.", "Proteína e ácido."],
+      correctAnswer: 1,
+      explanation: "A saponificação é a reação de hidrólise básica de gorduras (ésteres) com uma base forte (NaOH ou KOH), produzindo glicerol e sabão (sal de ácido graxo).",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2018
+    },
+    {
+      text: "O movimento uniformemente acelerado (MUA) é caracterizado por:",
+      options: ["Velocidade constante e aceleração zero.", "Aceleração constante e diferente de zero.", "Velocidade crescente e aceleração variável.", "Posição constante.", "Velocidade decrescente e aceleração zero."],
+      correctAnswer: 1,
+      explanation: "No MUA, a aceleração é constante e diferente de zero, o que causa variação uniforme da velocidade ao longo do tempo.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "A síndrome de Down é causada por:",
+      options: ["Uma mutação no gene BRCA1.", "Trissomia do cromossomo 21 (três cópias do cromossomo 21).", "Monossomia do cromossomo X.", "Uma deleção no cromossomo 5.", "Uma translocação entre os cromossomos 14 e 21."],
+      correctAnswer: 1,
+      explanation: "A síndrome de Down é causada pela trissomia do cromossomo 21, ou seja, a presença de três cópias do cromossomo 21 em vez de duas, resultando em 47 cromossomos.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2019
+    },
+    {
+      text: "A pressão exercida por um líquido em repouso aumenta com a profundidade. Se a densidade da água é 1000 kg/m³ e g = 10 m/s², qual é a pressão a 5 m de profundidade?",
+      options: ["5.000 Pa", "10.000 Pa", "50.000 Pa", "100.000 Pa", "500.000 Pa"],
+      correctAnswer: 2,
+      explanation: "P = ρgh = 1000 × 10 × 5 = 50.000 Pa.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "A ligação peptídica é a ligação química que une os aminoácidos nas proteínas. Ela se forma entre:",
+      options: ["Dois grupos amino (-NH₂).", "O grupo carboxila (-COOH) de um aminoácido e o grupo amino (-NH₂) de outro.", "Dois grupos carboxila (-COOH).", "O grupo R de dois aminoácidos.", "O grupo amino e o grupo R."],
+      correctAnswer: 1,
+      explanation: "A ligação peptídica se forma entre o grupo carboxila (-COOH) de um aminoácido e o grupo amino (-NH₂) do aminoácido seguinte, com liberação de água (reação de condensação).",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2020
+    },
+    {
+      text: "O princípio de Arquimedes afirma que um corpo imerso em um fluido recebe um empuxo igual ao peso do fluido deslocado. Um objeto de volume 0,5 m³ está completamente imerso em água (ρ = 1000 kg/m³, g = 10 m/s²). O empuxo é:",
+      options: ["500 N", "1.000 N", "2.500 N", "5.000 N", "10.000 N"],
+      correctAnswer: 3,
+      explanation: "E = ρ × V × g = 1000 × 0,5 × 10 = 5.000 N.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "A fermentação alcoólica é realizada por leveduras e produz:",
+      options: ["CO₂ e água.", "Etanol e CO₂.", "Ácido lático e CO₂.", "Acetona e CO₂.", "Glicose e O₂."],
+      correctAnswer: 1,
+      explanation: "Na fermentação alcoólica, as leveduras convertem glicose em etanol (álcool etílico) e CO₂, na ausência de oxigênio: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2021
+    },
+    {
+      text: "A teoria da relatividade especial de Einstein postula que:",
+      options: ["A velocidade da luz varia com o referencial.", "A velocidade da luz no vácuo é constante para todos os observadores inerciais.", "A massa de um objeto é sempre constante.", "O tempo é absoluto e igual para todos os observadores.", "A energia não pode ser convertida em massa."],
+      correctAnswer: 1,
+      explanation: "Um dos postulados da relatividade especial de Einstein é que a velocidade da luz no vácuo (c ≈ 3×10⁸ m/s) é constante para todos os observadores inerciais, independentemente do movimento da fonte.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2022
+    },
+    {
+      text: "O ciclo do nitrogênio é fundamental para os ecossistemas. A fixação biológica do nitrogênio é realizada por:",
+      options: ["Plantas superiores.", "Bactérias como Rhizobium e cianobactérias.", "Fungos decompositores.", "Animais herbívoros.", "Vírus bacteriófagos."],
+      correctAnswer: 1,
+      explanation: "A fixação biológica do nitrogênio é realizada por bactérias como Rhizobium (em simbiose com leguminosas) e cianobactérias, que convertem N₂ atmosférico em amônia (NH₃).",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2022
+    },
+    {
+      text: "A lei de Mendel da segregação independente afirma que:",
+      options: ["Genes do mesmo cromossomo sempre são herdados juntos.", "Alelos de genes diferentes se segregam independentemente durante a formação dos gametas.", "Todos os genes são dominantes.", "A herança é sempre influenciada pelo ambiente.", "Genes ligados ao sexo seguem as mesmas regras dos autossômicos."],
+      correctAnswer: 1,
+      explanation: "A Segunda Lei de Mendel (segregação independente) afirma que alelos de genes localizados em cromossomos diferentes se segregam independentemente durante a formação dos gametas.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "A reação de combustão do etanol (C₂H₅OH) completa produz:",
+      options: ["CO + H₂O", "CO₂ + H₂", "CO₂ + H₂O", "C + H₂O", "CO + H₂O₂"],
+      correctAnswer: 2,
+      explanation: "Combustão completa do etanol: C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O. Os produtos são CO₂ e H₂O.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2023
+    },
+    {
+      text: "O efeito fotoelétrico, explicado por Einstein em 1905, demonstrou que a luz tem natureza:",
+      options: ["Exclusivamente ondulatória.", "Corpuscular (quântica), sendo composta por fótons.", "Magnética.", "Elétrica.", "Gravitacional."],
+      correctAnswer: 1,
+      explanation: "Einstein explicou o efeito fotoelétrico propondo que a luz é composta por quanta de energia (fótons), demonstrando sua natureza corpuscular e contribuindo para o desenvolvimento da mecânica quântica.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2024
+    },
+    {
+      text: "A cadeia alimentar representa o fluxo de energia em um ecossistema. Em uma cadeia: Capim → Gafanhoto → Sapo → Cobra → Gavião, o capim é classificado como:",
+      options: ["Consumidor primário.", "Consumidor secundário.", "Produtor.", "Decomposto.", "Parasita."],
+      correctAnswer: 2,
+      explanation: "O capim é um produtor (autótrofo), pois realiza fotossíntese para produzir seu próprio alimento. Os produtores são a base das cadeias alimentares.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2024
+    },
+    {
+      text: "A nanotecnologia é uma área da ciência que trabalha com materiais e dispositivos em escala nanométrica. Uma das aplicações mais promissoras da nanotecnologia na medicina é:",
+      options: ["A criação de órgãos artificiais macroscópicos.", "O desenvolvimento de nanopartículas para entrega direcionada de medicamentos.", "A substituição de cirurgias por tratamentos orais.", "A eliminação de todas as doenças infecciosas.", "A criação de vacinas sem efeitos colaterais."],
+      correctAnswer: 1,
+      explanation: "Uma das aplicações mais promissoras da nanotecnologia na medicina é o desenvolvimento de nanopartículas que podem transportar medicamentos diretamente para células-alvo (como células cancerosas), aumentando a eficácia e reduzindo efeitos colaterais.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2025
+    },
+    {
+      text: "A lei de conservação da massa (Lei de Lavoisier) afirma que:",
+      options: ["A massa pode ser criada em reações químicas.", "A massa total dos reagentes é igual à massa total dos produtos em uma reação química.", "A massa diminui em reações exotérmicas.", "A massa aumenta em reações endotérmicas.", "A massa é irrelevante em reações químicas."],
+      correctAnswer: 1,
+      explanation: "A Lei de Lavoisier afirma que 'na natureza, nada se cria, nada se perde, tudo se transforma'. A massa total dos reagentes é igual à massa total dos produtos em uma reação química.",
+      topic: "bio",
+      institution: "UNICAMP",
+      year: 2025
+    },
+  ],
   "fis": [
 {
       text: "De repente, sente-se uma vibração que aumenta rapidamente; lustres balançam, objetos se movem sozinhos\ne somos invadidos pela estranha sensação de medo do\nimprevisto. Segundos parecem horas, poucos minutos\nsão uma eternidade. Estamos sentindo os efeitos de um\nterremoto, um tipo de abalo sísmico.\nASSAD, L Os (não tão) imperceptíveis movimentos da Terra. ComCiência:\nRevista Eletrônica de Jornalismo Científico, n. 117, abr. 2010.\nDisponível em: <http://comciencia.br>. Acesso em: 2 mar. 2012.\n\nO fenômeno físico descrito no texto afeta intensamente as\npopulações que ocupam espaços próximos às áreas de",
@@ -1656,5 +3226,78 @@ export const QUESTION_BANK: Record<string, Question[]> = {
       year: 2015
     },  ],
   "red": [
+  
+{
+      text: "A redação do ENEM exige a produção de um texto dissertativo-argumentativo. Sobre a Competência 1 (domínio da norma culta), é correto afirmar que ela avalia:",
+      options: ["A criatividade e originalidade do texto.", "O domínio da modalidade escrita formal da língua portuguesa.", "A quantidade de argumentos apresentados.", "A proposta de intervenção social.", "O uso de figuras de linguagem."],
+      correctAnswer: 1,
+      explanation: "A Competência 1 avalia o domínio da modalidade escrita formal da língua portuguesa, incluindo ortografia, acentuação, pontuação, concordância e regência.",
+      topic: "red",
+      institution: "ENEM",
+      year: 2018
+    },
+    {
+      text: "A proposta de intervenção na redação do ENEM deve ser avaliada pela Competência 5. Para obter nota máxima nessa competência, a proposta deve:",
+      options: ["Ser genérica e aplicável a qualquer situação.", "Ser detalhada, com agente, ação, modo/meio, efeito e respeitar os direitos humanos.", "Ocupar pelo menos metade do texto.", "Ser apresentada na introdução.", "Conter apenas uma ação."],
+      correctAnswer: 1,
+      explanation: "Para nota máxima na Competência 5, a proposta de intervenção deve ser detalhada, apresentando agente (quem vai agir), ação (o que fazer), modo/meio (como fazer), efeito (resultado esperado) e respeitar os direitos humanos.",
+      topic: "red",
+      institution: "ENEM",
+      year: 2019
+    },
+    {
+      text: "O repertório sociocultural na redação do ENEM é avaliado pela Competência 2. Ele consiste em:",
+      options: ["Usar palavras difíceis e rebuscadas.", "Mobilizar conhecimentos de diversas áreas para embasar a argumentação.", "Citar apenas autores brasileiros.", "Usar dados estatísticos exclusivamente.", "Apresentar experiências pessoais."],
+      correctAnswer: 1,
+      explanation: "O repertório sociocultural consiste em mobilizar conhecimentos de diversas áreas (filosofia, história, ciências, literatura, etc.) de forma pertinente para embasar a argumentação e demonstrar leitura de mundo.",
+      topic: "red",
+      institution: "ENEM",
+      year: 2020
+    },
+    {
+      text: "A coesão textual na redação do ENEM é avaliada pela Competência 4. Os mecanismos de coesão incluem:",
+      options: ["Apenas o uso de vírgulas.", "Conectivos, pronomes, elipses e outros recursos que articulam as partes do texto.", "Apenas a pontuação.", "O uso de parágrafos.", "Apenas os verbos."],
+      correctAnswer: 1,
+      explanation: "Os mecanismos de coesão incluem conectivos (portanto, entretanto, além disso), pronomes (ele, isso, aquele), elipses e outros recursos que articulam as partes do texto, garantindo sua unidade.",
+      topic: "red",
+      institution: "ENEM",
+      year: 2021
+    },
+    {
+      text: "A estrutura básica de uma redação dissertativo-argumentativa do ENEM é composta por:",
+      options: ["Apenas introdução e conclusão.", "Introdução (com tese), desenvolvimento (com argumentos) e conclusão (com proposta de intervenção).", "Narração, descrição e dissertação.", "Apenas parágrafos de desenvolvimento.", "Introdução, nó e desfecho."],
+      correctAnswer: 1,
+      explanation: "A redação dissertativo-argumentativa do ENEM é composta por: introdução (apresentação do tema e tese), desenvolvimento (argumentação com repertório sociocultural) e conclusão (proposta de intervenção detalhada).",
+      topic: "red",
+      institution: "ENEM",
+      year: 2022
+    },
+    {
+      text: "Sobre os temas de redação do ENEM, é correto afirmar que:",
+      options: ["São sempre sobre temas históricos.", "Abordam questões sociais, culturais e políticas relevantes para a sociedade brasileira.", "São sempre sobre temas científicos.", "Nunca abordam questões polêmicas.", "São escolhidos pelos candidatos."],
+      correctAnswer: 1,
+      explanation: "Os temas de redação do ENEM abordam questões sociais, culturais e políticas relevantes para a sociedade brasileira, como desigualdade, saúde, educação, meio ambiente e direitos humanos.",
+      topic: "red",
+      institution: "ENEM",
+      year: 2023
+    },
+    {
+      text: "A argumentação na redação do ENEM é avaliada pela Competência 3. Para uma boa argumentação, é necessário:",
+      options: ["Apresentar apenas a opinião pessoal sem justificativas.", "Defender uma tese com argumentos consistentes, evidências e exemplos pertinentes.", "Usar apenas argumentos de autoridade.", "Apresentar todos os lados do debate sem tomar posição.", "Usar linguagem coloquial para aproximar o leitor."],
+      correctAnswer: 1,
+      explanation: "A Competência 3 avalia a capacidade de selecionar, relacionar e organizar informações e argumentos em defesa de uma tese, com consistência e coerência.",
+      topic: "red",
+      institution: "ENEM",
+      year: 2024
+    },
+    {
+      text: "A nota máxima na redação do ENEM é 1000 pontos, distribuídos igualmente entre as 5 competências. Isso significa que cada competência vale:",
+      options: ["100 pontos", "150 pontos", "200 pontos", "250 pontos", "300 pontos"],
+      correctAnswer: 2,
+      explanation: "A nota máxima é 1000 pontos, distribuídos igualmente entre as 5 competências. Cada competência vale 200 pontos (1000 ÷ 5 = 200).",
+      topic: "red",
+      institution: "ENEM",
+      year: 2025
+    },
   ],
 };
