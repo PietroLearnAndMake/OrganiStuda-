@@ -1,5 +1,5 @@
 // Top-level build file — OrganiStuda
-// AGP 8.13.0 — compatível com Capacitor Android 8.2.0 e Gradle 8.11.1
+// AGP 8.9.1 — compatível com Capacitor Android 8.2.0 e Gradle 8.11.1
 
 buildscript {
     repositories {
@@ -7,8 +7,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // Mesma versão usada pelo Capacitor Android 8.2.0
-        classpath 'com.android.tools.build:gradle:8.13.0'
+        // Versão estável compatível com Capacitor Android 8.2.0
+        classpath 'com.android.tools.build:gradle:8.9.1'
     }
 }
 

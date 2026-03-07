@@ -48,9 +48,13 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | sdkmanager --licenses --sdk_root=$ANDROID_SDK_ROOT
+
       - name: Install Android SDK platforms
         run: |
-          sdkmanager "platforms;android-36" "platforms;android-35" "build-tools;36.0.0" --sdk_root=$ANDROID_SDK_ROOT
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" --sdk_root=$ANDROID_SDK_ROOT
 
       # ── 8. ETAPA 5 — Sincronizar Capacitor ────────────────────────────
       - name: Sync Capacitor
