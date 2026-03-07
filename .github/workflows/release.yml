@@ -51,6 +51,11 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      # ── 6.1 Aceitar Licenças Android ───────────────────────────────────
+      - name: Accept Android SDK Licenses
+        run: |
+          yes | sdkmanager --licenses --sdk_root=$ANDROID_SDK_ROOT
+
       # ── 7. Android SDK ─────────────────────────────────────────────────
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
