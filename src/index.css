@@ -9,6 +9,19 @@
   body {
     @apply antialiased selection:bg-indigo-100 selection:text-indigo-900;
   }
+
+  /* Melhorias de acessibilidade */
+  @media (prefers-color-scheme: dark) {
+    body {
+      @apply bg-stone-950 text-stone-100;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    body {
+      @apply bg-white text-stone-900;
+    }
+  }
 }
 
 @layer base {
@@ -28,5 +41,42 @@
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+    /* Suporte para Window Controls Overlay */
+    padding-top: max(env(safe-area-inset-top), env(titlebar-area-height, 0px));
+  }
+}
+
+/* Window Controls Overlay Support */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(titlebar-area-x, 0);
+    padding-top: env(titlebar-area-height, 0);
+  }
+}
+
+/* Customização de scrollbar para melhor UX */
+@layer utilities {
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-stone-100 dark:bg-stone-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-stone-300 dark:bg-stone-700 rounded-full hover:bg-stone-400 dark:hover:bg-stone-600;
+  }
+
+  /* Smooth transitions para melhor UX */
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  /* Suporte para prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      @apply !transition-none !duration-0;
+    }
   }
 }
