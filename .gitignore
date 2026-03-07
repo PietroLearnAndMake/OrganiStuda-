@@ -1,9 +1,36 @@
+# Dependencies
 node_modules/
+
+# Build output
 build/
 dist/
 coverage/
+
+# Android build artifacts
+android/local.properties
+android/.gradle/
+android/app/build/
+android/build/
+android/capacitor-cordova-android-plugins/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
 *.log
+
+# Environment variables
 .env*
 !.env.example
-android_project_v1.8.3.zip
+
+# TypeScript
+*.tsbuildinfo
+
+# Archives
+*.zip
