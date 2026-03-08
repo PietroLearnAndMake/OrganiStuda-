@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { registerPlugin } from '@capacitor/core';
-// LocalNotifications removed
 import { 
   PieChart, 
   Pie, 
