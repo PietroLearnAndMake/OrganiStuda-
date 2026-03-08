@@ -337,6 +337,11 @@ export default function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
+  // Weekly Goals Edit State
+  const [isEditingGoals, setIsEditingGoals] = useState(false);
+  const [editGoalsQuestions, setEditGoalsQuestions] = useState(profile.weeklyGoals?.questions || 50);
+  const [editGoalsStudyTime, setEditGoalsStudyTime] = useState(profile.weeklyGoals?.studyTime || 300);
+
   // ─── Carregar Dados ──────────────────────────────────────────────
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -503,6 +508,27 @@ export default function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // ─── Função para salvar metas semanais ──────────────────────────────────────
+  const handleSaveWeeklyGoals = () => {
+    const newProfile = {
+      ...profile,
+      weeklyGoals: {
+        questions: Math.max(1, editGoalsQuestions),
+        studyTime: Math.max(1, editGoalsStudyTime)
+      }
+    };
+    setProfile(newProfile);
+    setIsEditingGoals(false);
+  };
+
+  // ─── Sincronizar estados de edição com profile ────────────────────────────────
+  useEffect(() => {
+    if (!isEditingGoals) {
+      setEditGoalsQuestions(profile.weeklyGoals?.questions || 50);
+      setEditGoalsStudyTime(profile.weeklyGoals?.studyTime || 300);
+    }
+  }, [profile.weeklyGoals, isEditingGoals]);
 
   // ─── Save data to localStorage ────────────────────────────────────────────
   useEffect(() => {
@@ -1504,40 +1530,90 @@ export default function App() {
                     <Target className="w-5 h-5 text-indigo-500" />
                     <h3 className="font-black text-base">Metas Semanais</h3>
                   </div>
-                  <div className={`text-[10px] font-bold px-2 py-1 rounded-full ${darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-500'}`}>
-                    Renova em 3 dias
-                  </div>
+                  <button
+                    onClick={() => setIsEditingGoals(!isEditingGoals)}
+                    className={`text-xs font-bold px-3 py-1 rounded-full transition-colors ${
+                      isEditingGoals
+                        ? 'bg-indigo-500 text-white'
+                        : darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'
+                    }`}
+                  >
+                    {isEditingGoals ? 'Cancelar' : 'Editar'}
+                  </button>
                 </div>
                 
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>Questões Resolvidas</span>
-                      <span className="font-bold">{profile.stats?.totalQuestions || 0} / {profile.weeklyGoals?.questions || 50}</span>
-                    </div>
-                    <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(100, ((profile.stats?.totalQuestions || 0) / (profile.weeklyGoals?.questions || 50)) * 100)}%` }}
-                        className="h-full bg-indigo-500 rounded-full"
+                {isEditingGoals ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className={`block text-xs font-bold mb-2 ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>
+                        Meta de Questões Resolvidas
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={editGoalsQuestions}
+                        onChange={(e) => setEditGoalsQuestions(Number(e.target.value))}
+                        className={`w-full px-3 py-2 rounded-lg outline-none text-sm font-medium ${
+                          darkMode
+                            ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-indigo-500/50'
+                            : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-indigo-500/20'
+                        }`}
                       />
                     </div>
-                  </div>
-                  
-                  <div>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>Tempo de Estudo</span>
-                      <span className="font-bold">{profile.totalStudyTime || 0} / {profile.weeklyGoals?.studyTime || 300} min</span>
-                    </div>
-                    <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.min(100, ((profile.totalStudyTime || 0) / (profile.weeklyGoals?.studyTime || 300)) * 100)}%` }}
-                        className="h-full bg-emerald-500 rounded-full"
+                    <div>
+                      <label className={`block text-xs font-bold mb-2 ${darkMode ? 'text-stone-400' : 'text-stone-600'}`}>
+                        Meta de Tempo de Estudo (minutos)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={editGoalsStudyTime}
+                        onChange={(e) => setEditGoalsStudyTime(Number(e.target.value))}
+                        className={`w-full px-3 py-2 rounded-lg outline-none text-sm font-medium ${
+                          darkMode
+                            ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-indigo-500/50'
+                            : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-indigo-500/20'
+                        }`}
                       />
                     </div>
+                    <button
+                      onClick={handleSaveWeeklyGoals}
+                      className="w-full py-2 rounded-lg font-bold text-white bg-indigo-500 hover:bg-indigo-600 transition-colors"
+                    >
+                      Salvar Metas
+                    </button>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-xs mb-1.5">
+                        <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>Questões Resolvidas</span>
+                        <span className="font-bold">{profile.stats?.totalQuestions || 0} / {profile.weeklyGoals?.questions || 50}</span>
+                      </div>
+                      <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(100, ((profile.stats?.totalQuestions || 0) / (profile.weeklyGoals?.questions || 50)) * 100)}%` }}
+                          className="h-full bg-indigo-500 rounded-full"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="flex justify-between text-xs mb-1.5">
+                        <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>Tempo de Estudo</span>
+                        <span className="font-bold">{profile.totalStudyTime || 0} / {profile.weeklyGoals?.studyTime || 300} min</span>
+                      </div>
+                      <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(100, ((profile.totalStudyTime || 0) / (profile.weeklyGoals?.studyTime || 300)) * 100)}%` }}
+                          className="h-full bg-emerald-500 rounded-full"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Streak Achievement Card */}
@@ -1602,7 +1678,7 @@ export default function App() {
                         tick={{ fontSize: 10, fontWeight: 'bold', fill: darkMode ? '#57534e' : '#a8a29e' }} 
                       />
                       <Tooltip 
-                        cursor={{ fill: darkMode ? '#1c1917' : '#f5f5f4' }}
+                        cursor={false}
                         contentStyle={{ 
                           borderRadius: '12px', 
                           border: 'none', 
@@ -1919,7 +1995,7 @@ export default function App() {
                             <select 
                               value={filterInstitution}
                               onChange={(e) => setFilterInstitution(e.target.value)}
-                              className={`w-full pl-3 pr-8 py-3 rounded-xl appearance-none outline-none text-sm font-medium transition-colors ${
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors ${
                                 darkMode 
                                   ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
                                   : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
@@ -1930,15 +2006,13 @@ export default function App() {
                               <option value="FUVEST">FUVEST</option>
                               <option value="UNICAMP">UNICAMP</option>
                             </select>
-                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                              <ChevronDown className={`w-3 h-3 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
-                            </div>
+
                           </div>
                           <div className="relative">
                             <select 
                               value={filterDiscipline}
                               onChange={(e) => setFilterDiscipline(e.target.value)}
-                              className={`w-full pl-3 pr-8 py-3 rounded-xl appearance-none outline-none text-sm font-medium transition-colors ${
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors ${
                                 darkMode 
                                   ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
                                   : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
@@ -1950,9 +2024,7 @@ export default function App() {
                               <option value="his">Ciências Humanas</option>
                               <option value="bio">Ciências da Natureza</option>
                             </select>
-                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                              <ChevronDown className={`w-3 h-3 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
-                            </div>
+
                           </div>
                         </div>
 
