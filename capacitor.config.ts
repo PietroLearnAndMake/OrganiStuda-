@@ -9,9 +9,16 @@ const config: CapacitorConfig = {
       overlaysWebView: true,
       style: 'DARK'
     },
-    NavigationBar: {
-      visibility: 'hidden'
+    Keyboard: {
+      resize: 'body',
+      style: 'DARK',
+      resizeOnFullScreen: true
     }
+  },
+  backgroundColor: '#000000',
+  server: {
+    androidScheme: 'https',
+    allowNavigation: ['*']
   }
 };
 

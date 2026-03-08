@@ -1,9 +1,9 @@
 {
-  "name": "OrganiStuda - Organizador e Banco de Questões para ENEM",
+  "name": "OrganiStuda",
   "short_name": "OrganiStuda",
-  "description": "Aplicativo profissional para organizar estudos, resolver questões do ENEM e acompanhar seu progresso com gamificação.",
-  "start_url": "/?source=pwa",
-  "display": "standalone",
+  "description": "App oficial OrganiStuda para organização de estudos e questões ENEM.",
+  "start_url": "/index.html",
+  "display": "fullscreen",
   "orientation": "portrait-primary",
   "background_color": "#000000",
   "theme_color": "#6c2cff",
@@ -121,7 +121,7 @@
       "id": "com.pietro.organizador.enem"
     }
   ],
-  "prefer_related_applications": false,
+  "prefer_related_applications": true,
   "protocol_handlers": [
     {
       "protocol": "web+organistuda",

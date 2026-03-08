@@ -41,11 +41,14 @@
     overflow: hidden;
     position: fixed;
     inset: 0;
-    touch-action: manipulation;
-    -webkit-text-size-adjust: 100%;
+    /* Comportamentos de App Nativo */
+    touch-action: pan-y; /* Permite scroll vertical mas evita gestos do navegador */
+    -webkit-text-size-adjust: none;
     -webkit-user-select: none;
     user-select: none;
-    /* Sem padding no body — o #root cuida das safe areas */
+    -webkit-touch-callout: none; /* Desabilita menu de contexto ao segurar */
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none; /* Desabilita o "bounce" de scroll do navegador */
   }
 
   /* ── Temas ───────────────────────────────────────────────────────────── */
@@ -102,7 +105,11 @@
   }
 
   /* Evitar zoom em inputs */
-  input, select, textarea { font-size: 16px !important; }
+  input, select, textarea { 
+    font-size: 16px !important; 
+    -webkit-user-select: text; /* Permite seleção apenas em campos de texto */
+    user-select: text;
+  }
 
   /* Toque sem highlight */
   button, a, [role="button"] {

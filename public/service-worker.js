@@ -4,7 +4,7 @@
 // Nenhum dado é enviado para servidores externos
 // ══════════════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'organistuda-v3.2.0';
+const CACHE_NAME = 'organistuda-v3.5.7'; // Versão atualizada
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -14,7 +14,9 @@ const ASSETS_TO_CACHE = [
   '/icon-96.png',
   '/icon-144.png',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/assets/index.css',
+  '/assets/index.js'
 ];
 
 // ── Instalação: cachear assets estáticos ──────────────────────────────
@@ -63,9 +65,23 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML e JS: network-first com fallback para cache
-  event.respondWith(networkFirstWithFallback(req));
+  // HTML e JS: cache-first com atualização em background (stale-while-revalidate)
+  event.respondWith(staleWhileRevalidate(req));
 });
+
+async function staleWhileRevalidate(req) {
+  const cache = await caches.open(CACHE_NAME);
+  const cached = await cache.match(req);
+  
+  const fetchPromise = fetch(req).then(networkResponse => {
+    if (networkResponse && networkResponse.status === 200) {
+      cache.put(req, networkResponse.clone());
+    }
+    return networkResponse;
+  }).catch(() => null);
+
+  return cached || fetchPromise;
+}
 
 async function cacheFirst(req) {
   const cached = await caches.match(req);
