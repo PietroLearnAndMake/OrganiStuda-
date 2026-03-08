@@ -328,8 +328,21 @@ export default function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // ─── Load data from localStorage ──────────────────────────────────────────
+  // ─── Solicitar Permissões e Carregar Dados ──────────────────────────────
   useEffect(() => {
+    const requestPermissions = async () => {
+      try {
+        const perm = await LocalNotifications.checkPermissions();
+        if (perm.display !== 'granted') {
+          await LocalNotifications.requestPermissions();
+        }
+      } catch (e) {
+        console.error('Falha ao solicitar permissões', e);
+      }
+    };
+
+    requestPermissions();
+
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -341,8 +354,9 @@ export default function App() {
     const savedTheme = localStorage.getItem('enem_theme');
     const savedQs = localStorage.getItem('enem_saved_questions');
 
-    if (savedSubjects) {
-      const local = JSON.parse(savedSubjects) as Subject[];
+        if (savedSubjects) {
+      try {
+        const local = JSON.parse(savedSubjects) as Subject[];
       
       const merged = ENEM_DATA.map(originalSubject => {
         const localSubject = local.find(ls => ls.id === originalSubject.id);
@@ -368,7 +382,12 @@ export default function App() {
       });
 
       const customSubjects = local.filter(ls => !ENEM_DATA.some(os => os.id === ls.id));
-      setSubjects([...merged, ...customSubjects]);
+              setSubjects([...merged, ...customSubjects]);
+      } catch (e) {
+        console.error('Falha ao carregar disciplinas do localStorage', e);
+        localStorage.removeItem('enem_subjects'); // Limpa dados corrompidos
+        setSubjects(ENEM_DATA);
+      }
     } else {
       setSubjects(ENEM_DATA);
     }
@@ -379,7 +398,8 @@ export default function App() {
     const yesterdayStr = yesterday.toISOString().split('T')[0];
 
     if (savedProfile) {
-      const parsedProfile = JSON.parse(savedProfile);
+      try {
+        const parsedProfile = JSON.parse(savedProfile);
 
       // Garantir que campos existam
       if (parsedProfile.xp === undefined || parsedProfile.xp === null) parsedProfile.xp = 0;
@@ -422,6 +442,9 @@ export default function App() {
 
       parsedProfile.lastLogin = today;
       setProfile(parsedProfile);
+      } catch (e) {
+        console.error('Falha ao processar perfil', e);
+      }
     } else {
       // ── Primeiro uso do app ───────────────────────────────────────────────
       setProfile(prev => ({
@@ -437,12 +460,20 @@ export default function App() {
     }
 
     if (savedQs) {
-      setSavedQuestions(JSON.parse(savedQs));
+      try {
+        setSavedQuestions(JSON.parse(savedQs));
+      } catch (e) {
+        console.error('Falha ao processar questões', e);
+      }
     }
 
     const savedTasks = localStorage.getItem('enem_tasks');
     if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
+      try {
+        setTasks(JSON.parse(savedTasks));
+      } catch (e) {
+        console.error('Falha ao processar tarefas', e);
+      }
     }
     
     // Hash-based routing
