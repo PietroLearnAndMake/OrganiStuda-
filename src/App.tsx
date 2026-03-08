@@ -293,6 +293,7 @@ export default function App() {
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState<'home' | 'achievements' | 'questions' | 'pomodoro' | 'tasks'>('home');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [initializationError, setInitializationError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const [newTopicTitle, setNewTopicTitle] = useState('');
   const [showSubjectMenu, setShowSubjectMenu] = useState(false);
@@ -480,7 +481,13 @@ export default function App() {
     window.addEventListener('hashchange', handleHashChange);
     handleHashChange();
     
-    setIsInitialized(true);
+    try {
+      setIsInitialized(true);
+    } catch (err) {
+      console.error('Erro fatal na inicialização:', err);
+      setInitializationError(String(err));
+    }
+
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
       window.removeEventListener('online', handleOnline);
@@ -965,7 +972,36 @@ export default function App() {
     return list;
   }, [subjects]);
 
-  if (!isInitialized) return null;
+  if (initializationError) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center p-6 bg-stone-950 text-white text-center">
+        <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center mb-4">
+          <XCircle className="w-8 h-8 text-red-500" />
+        </div>
+        <h1 className="text-xl font-black mb-2">Ops! Algo deu errado</h1>
+        <p className="text-stone-400 text-sm mb-6">O aplicativo encontrou um erro ao carregar seus dados.</p>
+        <button 
+          onClick={() => {
+            localStorage.clear();
+            window.location.reload();
+          }}
+          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold transition-colors"
+        >
+          Resetar e Recomeçar
+        </button>
+        <p className="mt-8 text-[10px] text-stone-600 font-mono">{initializationError}</p>
+      </div>
+    );
+  }
+
+  if (!isInitialized) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center bg-stone-950">
+        <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
+        <p className="mt-4 text-stone-500 font-bold tracking-widest uppercase text-[10px]">Carregando OrganiStuda...</p>
+      </div>
+    );
+  }
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
