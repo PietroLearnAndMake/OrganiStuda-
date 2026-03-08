@@ -28,6 +28,8 @@ jobs:
       # ── 3. pnpm ────────────────────────────────────────────────────────
       - name: Install pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       # ── 4. ETAPA 3 — Instalar dependências ────────────────────────────
       - name: Install Node dependencies

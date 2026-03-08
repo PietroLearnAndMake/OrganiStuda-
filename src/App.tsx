@@ -1573,51 +1573,7 @@ export default function App() {
                     </div>
                   ))}
                 </div>
-              </d              {/* Stats Widget in Achievements */}
-              <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
-
-              {/* Gráfico de Evolução */}
-              <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
-                <div className="flex items-center gap-2 mb-6">
-                  <BarChart2 className="w-5 h-5 text-purple-500" />
-                  <h3 className="font-black text-base">Evolução Semanal</h3>
-                </div>
-                <div className="h-48 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={[
-                      { day: 'Seg', xp: 120 },
-                      { day: 'Ter', xp: 450 },
-                      { day: 'Qua', xp: 300 },
-                      { day: 'Qui', xp: 600 },
-                      { day: 'Sex', xp: 200 },
-                      { day: 'Sab', xp: 800 },
-                      { day: 'Dom', xp: profile.xp % 1000 }
-                    ]}>
-                      <XAxis 
-                        dataKey="day" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fontSize: 10, fontWeight: 'bold', fill: darkMode ? '#57534e' : '#a8a29e' }} 
-                      />
-                      <Tooltip 
-                        cursor={{ fill: darkMode ? '#1c1917' : '#f5f5f4' }}
-                        contentStyle={{ 
-                          borderRadius: '12px', 
-                          border: 'none', 
-                          boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                          backgroundColor: darkMode ? '#1c1917' : '#ffffff',
-                          fontSize: '12px',
-                          fontWeight: 'bold'
-                        }}
-                      />
-                      <Bar 
-                        dataKey="xp" 
-                        fill="#6366f1" 
-                        radius={[4, 4, 0, 0]} 
-                        barSize={20}
-                      />
-                    </BarChart>
-                 </div>
+              </div>
 
               {/* Stats Widget in Achievements */}
               <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
@@ -1710,44 +1666,15 @@ export default function App() {
                       <h3 className={`font-bold ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>
                         Acumular {xpGoal} XP
                       </h3>
-                      <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-                        {(profile.xp || 0) >= xpGoal 
-                          ? 'Conquista desbloqueada! 🧠' 
-                          : `Faltam ${Math.max(0, xpGoal - (profile.xp || 0))} XP para desbloquear`}
+                      <p className={`text-xs ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>
+                        {(profile.xp || 0) >= xpGoal ? 'Conquista desbloqueada! 🎉' : `Faltam ${xpGoal - (profile.xp || 0)} XP`}
                       </p>
                     </div>
-                    {(profile.xp || 0) >= xpGoal && <CheckCircle2 className="w-5 h-5 text-green-500 ml-auto" />}
                   </div>
                 ))}
-
-                {/* Subject Achievements */}
-                {achievements.length > 0 && (
-                  <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
-                    <h3 className="font-black text-base mb-3 flex items-center gap-2">
-                      <Star className="w-5 h-5 text-yellow-500" />
-                      Conquistas por Matéria
-                    </h3>
-                    <div className="space-y-2">
-                      {achievements.map((ach, idx) => (
-                        <div key={idx} className={`flex items-center gap-3 p-3 rounded-xl ${darkMode ? 'bg-stone-800' : 'bg-stone-50'}`}>
-                          <div className={`p-2 rounded-lg ${ach.color} text-white`}>
-                            <Trophy className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <div className={`font-bold text-sm ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{ach.subjectName}</div>
-                            <div className={`text-xs ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
-                              {ach.type === 'perfeito' ? '🏆 100% Concluído!' : ach.type === 'melhor' ? '⭐ 5+ tópicos concluídos' : '✅ 2+ tópicos concluídos'}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </motion.div>
 
-          /* ── QUESTIONS TAB ────────────────────────────────────────────── */
           ) : currentTab === 'questions' ? (
             <motion.div 
               key="questions"
