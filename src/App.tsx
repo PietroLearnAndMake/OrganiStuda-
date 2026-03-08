@@ -504,6 +504,11 @@ export default function App() {
         addXP(50); // XP por completar uma sessão Pomodoro
         setPomodoroMode('break');
         setPomodoroTime(5 * 60);
+        
+        // Som de Pomodoro
+        const audio = new Audio('/sounds/pomodoro.mp3');
+        audio.play().catch(() => {});
+
         // Notificação de sessão concluída
         const toast = document.createElement('div');
         toast.className = 'fixed right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3'; toast.style.top = 'max(env(safe-area-inset-top, 0px), 2.5rem)';
@@ -750,6 +755,10 @@ export default function App() {
       }
 
       if (newLevel > currentLevel) {
+        // Som de Conquista / Level Up
+        const audio = new Audio('/sounds/achievement.mp3');
+        audio.play().catch(() => {});
+
         const notification = document.createElement('div');
         notification.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/60 backdrop-blur-sm p-6';
         notification.innerHTML = `
