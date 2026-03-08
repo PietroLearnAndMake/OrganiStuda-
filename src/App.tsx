@@ -519,7 +519,7 @@ export default function App() {
           studyTime: Math.max(1, editGoalsStudyTime)
         }
       };
-      localStorage.setItem('organistuda_profile', JSON.stringify(newProfile));
+      localStorage.setItem('enem_profile', JSON.stringify(newProfile));
       return newProfile;
     });
     setIsEditingGoals(false);
@@ -558,7 +558,7 @@ export default function App() {
               correctQuestions: correct
             }
           };
-          localStorage.setItem('organistuda_profile', JSON.stringify(newProfile));
+          localStorage.setItem('enem_profile', JSON.stringify(newProfile));
           return newProfile;
         });
       }
@@ -842,6 +842,10 @@ export default function App() {
    * Calcula o nível do usuário baseado no XP total.
    * Fórmula: Nível = floor(sqrt(XP / 100)) + 1
    */
+  /**
+   * Calcula o nível do usuário baseado no XP total.
+   * Fórmula: Nível = floor(sqrt(XP / 100)) + 1
+   */
   const calculateLevel = useCallback((xp: number) => {
     if (xp <= 0) return 1;
     return Math.floor(Math.sqrt(xp / 100)) + 1;
@@ -918,7 +922,9 @@ export default function App() {
         document.body.appendChild(notification);
       }
       
-      return { ...prev, xp: newXP, level: newLevel };
+      const updatedProfile = { ...prev, xp: newXP, level: newLevel };
+      localStorage.setItem('enem_profile', JSON.stringify(updatedProfile));
+      return updatedProfile;
     });
   }, [calculateLevel]);
 
@@ -1998,23 +2004,59 @@ export default function App() {
                         </p>
 
                         <div className="relative">
-                          <select 
-                            value={selectedSubjectForQuestion}
-                            onChange={(e) => setSelectedSubjectForQuestion(e.target.value)}
-                            className={`w-full pl-4 pr-10 py-3 rounded-xl appearance-none outline-none font-medium transition-colors ${
+                          <button
+                            onClick={() => setShowSubjectDropdown(!showSubjectDropdown)}
+                            className={`w-full pl-4 pr-10 py-3 rounded-xl outline-none text-sm font-medium transition-colors flex items-center justify-between ${
                               darkMode 
-                                ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
-                                : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
+                                ? 'bg-stone-800 text-stone-200' 
+                                : 'bg-stone-100 text-stone-700'
                             }`}
                           >
-                            <option value="geral">Todas as Matérias</option>
-                            {subjects.map(s => (
-                              <option key={s.id} value={s.id}>{s.name}</option>
-                            ))}
-                          </select>
-                          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                            <ChevronDown className={`w-4 h-4 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
-                          </div>
+                            <span>{selectedSubjectForQuestion === 'geral' ? 'Todas as Matérias' : subjects.find(s => s.id === selectedSubjectForQuestion)?.name}</span>
+                            <ChevronDown className={`w-4 h-4 transition-transform ${showSubjectDropdown ? 'rotate-180' : ''} text-stone-400`} />
+                          </button>
+                          
+                          <AnimatePresence>
+                            {showSubjectDropdown && (
+                              <>
+                                <div className="fixed inset-0 z-40" onClick={() => setShowSubjectDropdown(false)} />
+                                <motion.div
+                                  initial={{ opacity: 0, y: -10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  className={`absolute left-0 right-0 mt-2 rounded-xl shadow-xl z-50 overflow-hidden border ${
+                                    darkMode ? 'bg-stone-800 border-stone-700' : 'bg-white border-stone-200'
+                                  }`}
+                                >
+                                  <div className="max-h-60 overflow-y-auto">
+                                    <button
+                                      onClick={() => { setSelectedSubjectForQuestion('geral'); setShowSubjectDropdown(false); }}
+                                      className={`w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
+                                        selectedSubjectForQuestion === 'geral' 
+                                          ? 'bg-purple-600 text-white' 
+                                          : darkMode ? 'hover:bg-stone-700 text-stone-200' : 'hover:bg-stone-50 text-stone-700'
+                                      }`}
+                                    >
+                                      Todas as Matérias
+                                    </button>
+                                    {subjects.map(s => (
+                                      <button
+                                        key={s.id}
+                                        onClick={() => { setSelectedSubjectForQuestion(s.id); setShowSubjectDropdown(false); }}
+                                        className={`w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
+                                          selectedSubjectForQuestion === s.id 
+                                            ? 'bg-purple-600 text-white' 
+                                            : darkMode ? 'hover:bg-stone-700 text-stone-200' : 'hover:bg-stone-50 text-stone-700'
+                                        }`}
+                                      >
+                                        {s.name}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              </>
+                            )}
+                          </AnimatePresence>
                         </div>
 
                         <button 
@@ -2036,44 +2078,105 @@ export default function App() {
                       /* Filter Mode */
                       <>
                         <div className="grid grid-cols-2 gap-3">
+                          {/* Custom Institution Dropdown */}
                           <div className="relative">
-                            <select 
-                              value={filterInstitution}
-                              onChange={(e) => setFilterInstitution(e.target.value)}
-                              className={`w-full pl-3 pr-10 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
+                            <button
+                              onClick={() => setShowInstitutionDropdown(!showInstitutionDropdown)}
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors flex items-center justify-between ${
                                 darkMode 
-                                  ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
-                                  : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
+                                  ? 'bg-stone-800 text-stone-200' 
+                                  : 'bg-stone-100 text-stone-700'
                               }`}
                             >
-                              <option value="">Instituição</option>
-                              <option value="ENEM">ENEM</option>
-                              <option value="FUVEST">FUVEST</option>
-                              <option value="UNICAMP">UNICAMP</option>
-                            </select>
-                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                              <ChevronDown className="w-4 h-4 text-stone-400" />
-                            </div>
+                              <span className="truncate">{filterInstitution || 'Instituição'}</span>
+                              <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform ${showInstitutionDropdown ? 'rotate-180' : ''} text-stone-400`} />
+                            </button>
+                            
+                            <AnimatePresence>
+                              {showInstitutionDropdown && (
+                                <>
+                                  <div className="fixed inset-0 z-40" onClick={() => setShowInstitutionDropdown(false)} />
+                                  <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className={`absolute left-0 right-0 mt-2 rounded-xl shadow-xl z-50 overflow-hidden border ${
+                                      darkMode ? 'bg-stone-800 border-stone-700' : 'bg-white border-stone-200'
+                                    }`}
+                                  >
+                                    {['', 'ENEM', 'FUVEST', 'UNICAMP'].map(inst => (
+                                      <button
+                                        key={inst}
+                                        onClick={() => { setFilterInstitution(inst); setShowInstitutionDropdown(false); }}
+                                        className={`w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
+                                          filterInstitution === inst 
+                                            ? 'bg-purple-600 text-white' 
+                                            : darkMode ? 'hover:bg-stone-700 text-stone-200' : 'hover:bg-stone-50 text-stone-700'
+                                        }`}
+                                      >
+                                        {inst || 'Todas'}
+                                      </button>
+                                    ))}
+                                  </motion.div>
+                                </>
+                              )}
+                            </AnimatePresence>
                           </div>
+
+                          {/* Custom Discipline Dropdown */}
                           <div className="relative">
-                            <select 
-                              value={filterDiscipline}
-                              onChange={(e) => setFilterDiscipline(e.target.value)}
-                              className={`w-full pl-3 pr-10 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
+                            <button
+                              onClick={() => setShowDisciplineDropdown(!showDisciplineDropdown)}
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors flex items-center justify-between ${
                                 darkMode 
-                                  ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
-                                  : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
+                                  ? 'bg-stone-800 text-stone-200' 
+                                  : 'bg-stone-100 text-stone-700'
                               }`}
                             >
-                              <option value="">Disciplina</option>
-                              <option value="mat">Matemática</option>
-                              <option value="por">Linguagens</option>
-                              <option value="his">Ciências Humanas</option>
-                              <option value="bio">Ciências da Natureza</option>
-                            </select>
-                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                              <ChevronDown className="w-4 h-4 text-stone-400" />
-                            </div>
+                              <span className="truncate">
+                                {filterDiscipline === 'mat' ? 'Matemática' : 
+                                 filterDiscipline === 'por' ? 'Linguagens' : 
+                                 filterDiscipline === 'his' ? 'Humanas' : 
+                                 filterDiscipline === 'bio' ? 'Natureza' : 'Disciplina'}
+                              </span>
+                              <ChevronDown className={`w-4 h-4 flex-shrink-0 transition-transform ${showDisciplineDropdown ? 'rotate-180' : ''} text-stone-400`} />
+                            </button>
+                            
+                            <AnimatePresence>
+                              {showDisciplineDropdown && (
+                                <>
+                                  <div className="fixed inset-0 z-40" onClick={() => setShowDisciplineDropdown(false)} />
+                                  <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className={`absolute left-0 right-0 mt-2 rounded-xl shadow-xl z-50 overflow-hidden border ${
+                                      darkMode ? 'bg-stone-800 border-stone-700' : 'bg-white border-stone-200'
+                                    }`}
+                                  >
+                                    {[
+                                      { id: '', label: 'Todas' },
+                                      { id: 'mat', label: 'Matemática' },
+                                      { id: 'por', label: 'Linguagens' },
+                                      { id: 'his', label: 'Humanas' },
+                                      { id: 'bio', label: 'Natureza' }
+                                    ].map(disc => (
+                                      <button
+                                        key={disc.id}
+                                        onClick={() => { setFilterDiscipline(disc.id); setShowDisciplineDropdown(false); }}
+                                        className={`w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
+                                          filterDiscipline === disc.id 
+                                            ? 'bg-purple-600 text-white' 
+                                            : darkMode ? 'hover:bg-stone-700 text-stone-200' : 'hover:bg-stone-50 text-stone-700'
+                                        }`}
+                                      >
+                                        {disc.label}
+                                      </button>
+                                    ))}
+                                  </motion.div>
+                                </>
+                              )}
+                            </AnimatePresence>
                           </div>
                         </div>
 
@@ -2498,10 +2601,25 @@ export default function App() {
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <button
                           onClick={() => {
-                            setTasks(prev => prev.map(t => 
+                            const newTasks = tasks.map(t => 
                               t.id === task.id ? { ...t, completed: !t.completed } : t
-                            ));
-                            if (!task.completed) addXP(25);
+                            );
+                            setTasks(newTasks);
+                            localStorage.setItem('enem_tasks', JSON.stringify(newTasks));
+                            
+                            if (!task.completed) {
+                              addXP(25);
+                              // Feedback de tarefa concluída
+                              const toast = document.createElement('div');
+                              toast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold text-xs flex items-center gap-2';
+                              toast.innerHTML = '<span>Tarefa concluída!</span> <span>✨</span>';
+                              document.body.appendChild(toast);
+                              setTimeout(() => {
+                                toast.style.transition = 'opacity 0.5s';
+                                toast.style.opacity = '0';
+                                setTimeout(() => toast.remove(), 500);
+                              }, 2000);
+                            }
                           }}
                           className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                             task.completed 
