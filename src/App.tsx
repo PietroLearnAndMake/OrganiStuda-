@@ -2008,7 +2008,7 @@ export default function App() {
                               <option value="UNICAMP">UNICAMP</option>
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-400" />
-                          </div>>
+                          </div>
                           <div className="relative">
                             <select 
                               value={filterDiscipline}
@@ -2026,7 +2026,7 @@ export default function App() {
                               <option value="bio">Ciências da Natureza</option>
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-400" />
-                          </div>>
+                          </div>
                         </div>
 
                         <div className="relative">
