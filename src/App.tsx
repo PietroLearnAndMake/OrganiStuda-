@@ -80,7 +80,7 @@ interface Attempt {
   date: string;
   selectedOption: number;
   isCorrect: boolean;
-  difficulty?: 'Muito Fácil' | 'Fácil' | 'Médio' | 'Difícil' | 'Muito Difícil';
+  difficulty?: string;
 }
 
 interface SavedQuestion {
@@ -104,7 +104,7 @@ interface UserProfile {
   totalXp: number;
   streak: number;
   bestStreak: number;
-  lastStudyDate: string | null; // Data do último ganho de XP (YYYY-MM-DD)
+  lastStudyDate: string | null;
   weeklyGoal: number;
   weeklyProgress: number;
 }
@@ -143,6 +143,47 @@ const IconComponent = ({ name, className }: { name: string, className?: string }
 
 // --- SUB-COMPONENTS ---
 
+const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: { streak: number, bestStreak: number, darkMode: boolean }) => {
+  const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  const today = new Date().getDay();
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Flame className="w-5 h-5 text-orange-500" />
+          <h3 className="font-black text-sm uppercase tracking-widest">Sequência</h3>
+        </div>
+        <div className="text-xs font-black text-orange-500">Recorde: {bestStreak}</div>
+      </div>
+      <div className="flex items-end gap-3 mb-4">
+        <span className="text-5xl font-black text-orange-500 leading-none">{streak}</span>
+        <span className="text-xs font-bold text-stone-500 mb-1 uppercase tracking-widest">Dias Seguidos</span>
+      </div>
+      <div className="flex justify-between gap-1">
+        {days.map((day, idx) => {
+          const isToday = idx === today;
+          // Lógica simplificada: Se tem streak e é hoje ou dias anteriores dentro do streak
+          const isActive = isToday && streak > 0;
+          return (
+            <div key={idx} className="flex flex-col items-center gap-1 flex-1">
+              <div className={`w-full aspect-square rounded-xl flex items-center justify-center text-[10px] font-black transition-all ${
+                isToday ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' :
+                darkMode ? 'bg-stone-800 text-stone-600' : 'bg-stone-100 text-stone-400'
+              }`}>
+                {isActive ? '🔥' : day}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+});
+
 const QConcursosStats = React.memo(({ savedQuestions, darkMode }: { savedQuestions: SavedQuestion[], darkMode: boolean }) => {
   const stats = useMemo(() => {
     const attempts = savedQuestions.flatMap(q => q.attempts);
@@ -171,43 +212,38 @@ const QConcursosStats = React.memo(({ savedQuestions, darkMode }: { savedQuestio
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className={`p-6 rounded-[32px] border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
-    >
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="flex-1 flex flex-col items-center">
-          <div className="relative w-48 h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={pieData} innerRadius={60} outerRadius={80} paddingAngle={2} dataKey="value" startAngle={90} endAngle={450}>
-                  {pieData.map((entry, index) => <Cell key={index} fill={entry.color} stroke="none" />)}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-2xl font-black">{stats.total}</span>
-              <span className="text-[10px] font-bold text-stone-500 uppercase leading-none">Questões<br/>resolvidas</span>
-            </div>
-          </div>
-          <div className="mt-4 flex gap-4 text-[10px] font-bold uppercase tracking-widest">
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-blue-500" /><span className="text-blue-500">{stats.accuracy}% {stats.correct} acertos</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-500" /><span className="text-red-500">{100 - stats.accuracy}% {stats.errors} erros</span></div>
+    <div className="space-y-6">
+      <div className="flex flex-col items-center">
+        <div className="relative w-48 h-48">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={pieData} innerRadius={60} outerRadius={80} paddingAngle={2} dataKey="value" startAngle={90} endAngle={450}>
+                {pieData.map((entry, index) => <Cell key={index} fill={entry.color} stroke="none" />)}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span className="text-2xl font-black">{stats.total}</span>
+            <span className="text-[10px] font-bold text-stone-500 uppercase leading-none">Questões<br/>resolvidas</span>
           </div>
         </div>
-        <div className="flex-1 space-y-4">
-          <h4 className="text-xs font-black uppercase tracking-widest text-stone-500 mb-2">Dificuldade das questões</h4>
-          {stats.difficultyStats.map((d, idx) => (
-            <div key={idx} className="space-y-1">
-              <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter"><span>{d.name}</span></div>
-              <div className="h-2 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
-                <motion.div initial={{ width: 0 }} animate={{ width: `${d.percent}%` }} className="h-full bg-blue-500 rounded-full" />
-              </div>
-            </div>
-          ))}
+        <div className="mt-4 flex gap-4 text-[10px] font-bold uppercase tracking-widest">
+          <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-blue-500" /><span className="text-blue-500">{stats.accuracy}% {stats.correct} acertos</span></div>
+          <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-500" /><span className="text-red-500">{100 - stats.accuracy}% {stats.errors} erros</span></div>
         </div>
       </div>
-    </motion.div>
+      <div className="space-y-4">
+        <h4 className="text-xs font-black uppercase tracking-widest text-stone-500 mb-2">Dificuldade das questões</h4>
+        {stats.difficultyStats.map((d, idx) => (
+          <div key={idx} className="space-y-1">
+            <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter"><span>{d.name}</span></div>
+            <div className="h-2 w-full bg-stone-100 dark:bg-stone-800 rounded-full overflow-hidden">
+              <motion.div initial={{ width: 0 }} animate={{ width: `${d.percent}%` }} className="h-full bg-blue-500 rounded-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 });
 
@@ -246,7 +282,19 @@ export default function App() {
   const [tasks, setTasks] = useState<{ id: string, text: string, completed: boolean }[]>([]);
   const [newTaskText, setNewTaskText] = useState('');
 
-  // --- HELPERS ---
+  // --- LOGIC: XP & LEVEL ---
+  const calculateLevelData = useCallback((totalXp: number) => {
+    let level = 1;
+    let xpInCurrentLevel = totalXp;
+    let nextLevelXp = BASE_LEVEL_XP;
+    while (xpInCurrentLevel >= nextLevelXp) {
+      xpInCurrentLevel -= nextLevelXp;
+      level++;
+      nextLevelXp = Math.floor(nextLevelXp * XP_MULTIPLIER);
+    }
+    return { level, xpInCurrentLevel, nextLevelXp };
+  }, []);
+
   const showToast = (title: string, message: string, icon: string = '🏆', color: string = 'bg-indigo-600') => {
     const toast = document.createElement('div');
     toast.className = `fixed top-10 left-6 right-6 p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 text-white transition-all duration-500 transform translate-y-0 ${color}`;
@@ -259,41 +307,19 @@ export default function App() {
     }, 3000);
   };
 
-  const calculateLevelData = useCallback((totalXp: number) => {
-    let level = 1;
-    let xpInCurrentLevel = totalXp;
-    let nextLevelXp = BASE_LEVEL_XP;
-
-    while (xpInCurrentLevel >= nextLevelXp) {
-      xpInCurrentLevel -= nextLevelXp;
-      level++;
-      nextLevelXp = Math.floor(nextLevelXp * XP_MULTIPLIER);
-    }
-
-    return { level, xpInCurrentLevel, nextLevelXp };
-  }, []);
-
-  // --- LOGIC: STREAK & XP (BLINDADO) ---
-  
   const updateXp = useCallback((amount: number) => {
     setProfile(prev => {
       const today = new Date().toISOString().split('T')[0];
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-      
       let newStreak = prev.streak;
       let newBestStreak = prev.bestStreak;
       let newLastStudyDate = prev.lastStudyDate;
 
-      // Só incrementa ofensiva se for um ganho de XP positivo
       if (amount > 0) {
-        if (!prev.lastStudyDate) {
-          newStreak = 1;
-          newLastStudyDate = today;
-        } else if (prev.lastStudyDate === yesterday) {
-          newStreak += 1;
+        if (!prev.lastStudyDate || prev.lastStudyDate === yesterday) {
+          newStreak = (prev.lastStudyDate === yesterday) ? prev.streak + 1 : 1;
           newLastStudyDate = today;
         } else if (prev.lastStudyDate !== today) {
-          // Se não foi ontem nem hoje, resetou a ofensiva antes, mas agora começa uma nova
           newStreak = 1;
           newLastStudyDate = today;
         }
@@ -309,43 +335,29 @@ export default function App() {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5000);
       } else if (newData.level < oldData.level) {
-        showToast('LEVEL DOWN', `Você voltou para o nível ${newData.level} 📉`, '⚠️', 'bg-red-600');
+        showToast('LEVEL DOWN', `Nível ${newData.level} 📉`, '⚠️', 'bg-red-600');
       }
 
-      return {
-        ...prev,
-        totalXp: newTotalXp,
-        level: newData.level,
-        xp: newData.xpInCurrentLevel,
-        streak: newStreak,
-        bestStreak: newBestStreak,
-        lastStudyDate: newLastStudyDate,
-        weeklyProgress: Math.max(0, prev.weeklyProgress + amount)
-      };
+      return { ...prev, totalXp: newTotalXp, level: newData.level, xp: newData.xpInCurrentLevel, streak: newStreak, bestStreak: newBestStreak, lastStudyDate: newLastStudyDate, weeklyProgress: Math.max(0, prev.weeklyProgress + amount) };
     });
   }, [calculateLevelData]);
 
-  // --- PERSISTENCE & STREAK CHECK ---
+  // --- PERSISTENCE ---
   useEffect(() => {
     async function loadData() {
       try {
-        const { value } = await Preferences.get({ key: 'organistuda_data_v384_final' });
+        const { value } = await Preferences.get({ key: 'organistuda_data_v385' });
         if (value) {
           const parsed = JSON.parse(value);
-          let loadedProfile = parsed.profile;
-          
-          // Verificar se a ofensiva expirou (mais de 24h sem estudar)
-          if (loadedProfile.lastStudyDate) {
+          if (parsed.profile) {
+            let loadedProfile = parsed.profile;
             const today = new Date().toISOString().split('T')[0];
             const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-            
-            if (loadedProfile.lastStudyDate !== today && loadedProfile.lastStudyDate !== yesterday) {
+            if (loadedProfile.lastStudyDate && loadedProfile.lastStudyDate !== today && loadedProfile.lastStudyDate !== yesterday) {
               loadedProfile.streak = 0;
-              showToast('Ofensiva Perdida', 'Sua sequência de dias foi resetada. Volte a estudar! 🔥', '💔', 'bg-stone-700');
             }
+            setProfile(loadedProfile);
           }
-
-          if (loadedProfile) setProfile(loadedProfile);
           if (parsed.subjects) setSubjects(parsed.subjects);
           if (parsed.savedQuestions) setSavedQuestions(parsed.savedQuestions);
           if (parsed.tasks) setTasks(parsed.tasks);
@@ -358,52 +370,22 @@ export default function App() {
 
   useEffect(() => {
     if (!isInitialized) return;
-    Preferences.set({ key: 'organistuda_data_v384_final', value: JSON.stringify({ profile, subjects, savedQuestions, tasks, darkMode }) });
+    Preferences.set({ key: 'organistuda_data_v385', value: JSON.stringify({ profile, subjects, savedQuestions, tasks, darkMode }) });
   }, [profile, subjects, savedQuestions, tasks, darkMode, isInitialized]);
 
   // --- ACTIONS ---
-  const toggleTopic = useCallback((subjectId: string, topicId: string) => {
-    setSubjects(prev => prev.map(s => {
-      if (s.id === subjectId) {
-        return {
-          ...s,
-          topics: s.topics.map(t => {
-            if (t.id === topicId) {
-              const becomingCompleted = !t.completed;
-              updateXp(becomingCompleted ? XP_PER_TOPIC : -XP_PER_TOPIC);
-              return { ...t, completed: becomingCompleted };
-            }
-            return t;
-          })
-        };
-      }
-      return s;
-    }));
-  }, [updateXp]);
-
-  const handleToggleTask = useCallback((id: string) => {
-    setTasks(prev => prev.map(t => {
-      if (t.id === id) {
-        const becomingCompleted = !t.completed;
-        updateXp(becomingCompleted ? 25 : -25);
-        return { ...t, completed: becomingCompleted };
-      }
-      return t;
-    }));
-  }, [updateXp]);
-
   const generateBankQuestion = useCallback(() => {
     setLoadingQuestion(true);
     setTimeout(() => {
       const difficulties: SavedQuestion['difficulty'][] = ['Muito Fácil', 'Fácil', 'Médio', 'Difícil', 'Muito Difícil'];
       const newQ: SavedQuestion = {
         id: Math.random().toString(36).substr(2, 9),
-        text: "Qual destas é uma característica do realismo?",
-        options: ["Foco no subjetivismo", "Análise objetiva da realidade", "Uso excessivo de metáforas", "Foco no futuro"],
-        correctOption: 1,
-        explanation: "O realismo busca retratar a sociedade e o homem de forma objetiva e crua.",
+        text: "Exemplo de questão original do banco.",
+        options: ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"],
+        correctOption: 0,
+        explanation: "Explicação original.",
         institution: "ENEM",
-        discipline: "Linguagens",
+        discipline: "Geral",
         difficulty: difficulties[Math.floor(Math.random() * difficulties.length)],
         attempts: []
       };
@@ -439,12 +421,9 @@ export default function App() {
           </div>
           <button onClick={() => setDarkMode(!darkMode)} className="p-3 rounded-2xl bg-stone-900/50">{darkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5" />}</button>
         </div>
-        
         <div className="flex items-center gap-4">
-          <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-stone-900 border-2 border-indigo-500 overflow-hidden">
-              {profile.photo ? <img src={profile.photo} className="w-full h-full object-cover" /> : <User className="w-full h-full p-2 text-stone-700" />}
-            </div>
+          <div className="w-12 h-12 rounded-full bg-stone-900 border-2 border-indigo-500 overflow-hidden">
+            {profile.photo ? <img src={profile.photo} className="w-full h-full object-cover" /> : <User className="w-full h-full p-2 text-stone-700" />}
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-end mb-1">
@@ -452,12 +431,8 @@ export default function App() {
               <span className="text-[10px] font-bold text-stone-500">{profile.xp} / {nextLevelXp} XP</span>
             </div>
             <div className="h-2 w-full bg-stone-800 rounded-full overflow-hidden">
-              <motion.div animate={{ width: `${(profile.xp / nextLevelXp) * 100}%` }} className="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
+              <motion.div animate={{ width: `${(profile.xp / nextLevelXp) * 100}%` }} className="h-full bg-indigo-500" />
             </div>
-          </div>
-          <div className="text-right">
-            <div className="text-2xl font-black text-orange-500">🔥 {profile.streak}</div>
-            <div className="text-[8px] font-bold uppercase text-stone-500">Ofensiva</div>
           </div>
         </div>
       </header>
@@ -466,12 +441,21 @@ export default function App() {
         <AnimatePresence mode="wait">
           {currentTab === 'home' ? (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-              <QConcursosStats savedQuestions={savedQuestions} darkMode={darkMode} />
+              <StreakWidget streak={profile.streak} bestStreak={profile.bestStreak} darkMode={darkMode} />
+              
+              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-black text-sm uppercase tracking-widest text-stone-500">Progresso Semanal</h3>
+                  <span className="text-xs font-bold text-indigo-500">{profile.weeklyProgress} / {profile.weeklyGoal} XP</span>
+                </div>
+                <div className="h-3 w-full bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] transition-all duration-1000" style={{ width: `${Math.min(100, (profile.weeklyProgress / profile.weeklyGoal) * 100)}%` }} />
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 gap-4">
                 {subjects.map(s => {
-                  const completed = s.topics.filter(t => t.completed).length;
-                  const total = s.topics.length;
-                  const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+                  const percent = Math.round((s.topics.filter(t => t.completed).length / s.topics.length) * 100);
                   return (
                     <button key={s.id} onClick={() => { setSelectedSubjectId(s.id); setCurrentTab('subjects'); }} className={`p-6 rounded-[32px] border flex items-center gap-5 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
                       <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ backgroundColor: `${s.color.replace('bg-', '')}20`, color: s.color.replace('bg-', 'text-') }}>
@@ -498,7 +482,10 @@ export default function App() {
                 <div className="space-y-3">
                   {subjects.find(s => s.id === selectedSubjectId)?.topics.map(t => (
                     <div key={t.id} className={`flex items-center gap-3 p-4 rounded-2xl border ${t.completed ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-stone-800 border-stone-700'}`}>
-                      <button onClick={() => toggleTopic(selectedSubjectId, t.id)} className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${t.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-stone-600'}`}>
+                      <button onClick={() => {
+                        setSubjects(prev => prev.map(s => s.id === selectedSubjectId ? { ...s, topics: s.topics.map(topic => topic.id === t.id ? { ...topic, completed: !topic.completed } : topic) } : s));
+                        updateXp(!t.completed ? XP_PER_TOPIC : -XP_PER_TOPIC);
+                      }} className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${t.completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-stone-600'}`}>
                         {t.completed && <Check className="w-4 h-4" />}
                       </button>
                       <span className={`flex-1 font-bold text-sm ${t.completed ? 'line-through text-stone-500' : ''}`}>{t.title}</span>
@@ -517,27 +504,13 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                {questionMode === 'random' && <button onClick={generateBankQuestion} className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black">GERAR QUESTÃO</button>}
+                {questionMode === 'random' && <button onClick={generateBankQuestion} className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black shadow-lg">GERAR QUESTÃO</button>}
                 {questionMode === 'filter' && (
                   <div className="space-y-4">
-                    <div className="relative"><Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" /><input value={filterQuery} onChange={(e) => setFilterQuery(e.target.value)} placeholder="Buscar..." className="w-full pl-12 p-4 rounded-xl bg-stone-800 border border-stone-700 outline-none text-sm" /></div>
+                    <div className="relative"><Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-500" /><input value={filterQuery} onChange={(e) => setFilterQuery(e.target.value)} placeholder="Buscar matéria ou instituição..." className="w-full pl-12 p-4 rounded-xl bg-stone-800 border border-stone-700 outline-none text-sm" /></div>
                   </div>
                 )}
-                {questionMode === 'history' && (
-                  <div className="space-y-3">
-                    {savedQuestions.length === 0 ? <p className="text-center py-8 text-stone-500">Nenhum histórico.</p> : savedQuestions.map(q => (
-                      <div key={q.id} className="p-4 rounded-xl bg-stone-800/50 border border-stone-800 flex justify-between items-center">
-                        <div className="truncate flex-1">
-                          <p className="text-sm font-bold truncate">{q.text}</p>
-                          <span className="text-[10px] text-stone-500 uppercase">{q.institution} • {q.difficulty}</span>
-                        </div>
-                        <div className={q.attempts[q.attempts.length-1]?.isCorrect ? 'text-emerald-500' : 'text-red-500'}>
-                          {q.attempts[q.attempts.length-1]?.isCorrect ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                {questionMode === 'history' && <QConcursosStats savedQuestions={savedQuestions} darkMode={darkMode} />}
               </div>
               {activeQuestionId && (
                 <div className="p-6 rounded-3xl border-2 border-indigo-500/30 bg-stone-900 space-y-6">
@@ -563,16 +536,6 @@ export default function App() {
                 </div>
               )}
             </motion.div>
-          ) : currentTab === 'pomodoro' ? (
-            <motion.div key="pomodoro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-              <div className="p-10 rounded-[40px] border border-stone-800 bg-stone-900 text-center">
-                <Clock className="w-12 h-12 text-indigo-500 mx-auto mb-6" />
-                <h2 className="text-7xl font-black mb-10 tracking-tighter">{Math.floor(pomodoroTime / 60)}:{(pomodoroTime % 60).toString().padStart(2, '0')}</h2>
-                <button onClick={() => setPomodoroActive(!pomodoroActive)} className={`w-full py-5 rounded-3xl font-black text-lg transition-all ${pomodoroActive ? 'bg-stone-800 text-stone-400' : 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20'}`}>
-                  {pomodoroActive ? 'PAUSAR' : 'COMEÇAR FOCO'}
-                </button>
-              </div>
-            </motion.div>
           ) : currentTab === 'tasks' ? (
             <motion.div key="tasks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
               <div className="p-6 rounded-3xl bg-stone-900 border border-stone-800">
@@ -584,7 +547,10 @@ export default function App() {
                 <div className="space-y-3">
                   {tasks.map(t => (
                     <div key={t.id} className={`flex items-center gap-3 p-4 rounded-2xl border ${t.completed ? 'opacity-50 bg-stone-800/50' : 'bg-stone-800'}`}>
-                      <button onClick={() => handleToggleTask(t.id)}>{t.completed ? <CheckCircle2 className="w-6 h-6 text-emerald-500" /> : <div className="w-6 h-6 border-2 border-stone-600 rounded-full" />}</button>
+                      <button onClick={() => {
+                        setTasks(prev => prev.map(task => task.id === t.id ? { ...task, completed: !task.completed } : task));
+                        updateXp(!t.completed ? 25 : -25);
+                      }}>{t.completed ? <CheckCircle2 className="w-6 h-6 text-emerald-500" /> : <div className="w-6 h-6 border-2 border-stone-600 rounded-full" />}</button>
                       <span className={`flex-1 font-bold ${t.completed ? 'line-through' : ''}`}>{t.text}</span>
                       <button onClick={() => setTasks(prev => prev.filter(task => task.id !== t.id))}><Trash2 className="w-4 h-4 text-stone-500" /></button>
                     </div>
