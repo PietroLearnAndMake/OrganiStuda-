@@ -1,30 +1,30 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { 
-  LayoutDashboard, 
-  BrainCircuit, 
-  Trophy, 
-  Target, 
-  List, 
-  Plus, 
-  Check, 
-  X, 
-  ChevronRight, 
-  Clock, 
-  Flame, 
-  Star, 
-  BookOpen, 
-  Search, 
-  Settings, 
-  Moon, 
-  Sun, 
-  CheckCircle2, 
-  XCircle, 
-  Play, 
-  Lightbulb, 
-  Loader2, 
-  ChevronDown, 
-  Trash2, 
-  Share2, 
+import {
+  LayoutDashboard,
+  BrainCircuit,
+  Trophy,
+  Target,
+  List,
+  Plus,
+  Check,
+  X,
+  ChevronRight,
+  Clock,
+  Flame,
+  Star,
+  BookOpen,
+  Search,
+  Settings,
+  Moon,
+  Sun,
+  CheckCircle2,
+  XCircle,
+  Play,
+  Lightbulb,
+  Loader2,
+  ChevronDown,
+  Trash2,
+  Share2,
   Bookmark,
   Calendar,
   BarChart3,
@@ -40,17 +40,18 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Preferences } from '@capacitor/preferences';
-import { 
-  PieChart, 
-  Pie, 
-  Cell, 
-  ResponsiveContainer, 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip 
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip
 } from 'recharts';
+import Confetti from 'react-confetti';
 
 // --- DATA ---
 import { ENEM_DATA } from './data/enemData';
@@ -100,6 +101,8 @@ interface UserProfile {
   lastLogin: string | null;
   weeklyGoal: number;
   weeklyProgress: number;
+  xpCombo: number;
+  lastXpGain: number;
 }
 
 interface Achievement {
@@ -135,7 +138,7 @@ const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: { streak: num
   const today = new Date().getDay();
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
     >
@@ -157,8 +160,8 @@ const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: { streak: num
           return (
             <div key={idx} className="flex flex-col items-center gap-1 flex-1">
               <div className={`w-full aspect-square rounded-xl flex items-center justify-center text-[10px] font-black transition-all ${
-                isToday ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 
-                isActive ? 'bg-orange-500/20 text-orange-500' : 
+                isToday ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' :
+                isActive ? 'bg-orange-500/20 text-orange-500' :
                 darkMode ? 'bg-stone-800 text-stone-600' : 'bg-stone-100 text-stone-400'
               }`}>
                 {isActive ? '🔥' : day}
@@ -185,7 +188,7 @@ const StatsWidget = React.memo(({ savedQuestions, darkMode }: { savedQuestions: 
   ];
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
     >
@@ -220,7 +223,7 @@ const StatsWidget = React.memo(({ savedQuestions, darkMode }: { savedQuestions: 
 
 const AchievementCard = React.memo(({ achievement, darkMode }: { achievement: Achievement, darkMode: boolean }) => (
   <div className={`p-4 rounded-2xl border flex items-center gap-4 transition-all ${
-    achievement.unlocked 
+    achievement.unlocked
       ? darkMode ? 'bg-stone-800/50 border-stone-700' : 'bg-white border-stone-200 shadow-sm'
       : 'opacity-50 grayscale bg-stone-100 dark:bg-stone-900 border-transparent'
   }`}>
@@ -233,8 +236,8 @@ const AchievementCard = React.memo(({ achievement, darkMode }: { achievement: Ac
       <h4 className={`text-sm font-bold ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{achievement.title}</h4>
       <p className={`text-[10px] ${darkMode ? 'text-stone-500' : 'text-stone-500'}`}>{achievement.description}</p>
       <div className="mt-2 h-1.5 w-full bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
-        <div 
-          className="h-full bg-yellow-500 transition-all duration-500" 
+        <div
+          className="h-full bg-yellow-500 transition-all duration-500"
           style={{ width: `${Math.min(100, (achievement.progress / achievement.goal) * 100)}%` }}
         />
       </div>
@@ -249,6 +252,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [currentTab, setCurrentTab] = useState('home');
   const [isInitialized, setIsInitialized] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // State: Profile & Progress
   const [profile, setProfile] = useState<UserProfile>({
@@ -261,7 +265,9 @@ export default function App() {
     bestStreak: 0,
     lastLogin: null,
     weeklyGoal: 500,
-    weeklyProgress: 0
+    weeklyProgress: 0,
+    xpCombo: 0,
+    lastXpGain: 0,
   });
 
   // State: Subjects & Topics
@@ -287,15 +293,15 @@ export default function App() {
   const [pomodoroMode, setPomodoroMode] = useState<'work' | 'break'>('work');
 
   // State: Tasks
-  const [tasks, setTasks] = useState<{id: string, text: string, completed: boolean}[]>([]);
+  const [tasks, setTasks] = useState<{ id: string, text: string, completed: boolean }[]>([]);
   const [newTaskText, setNewTaskText] = useState('');
 
   // --- AUDIO HELPERS ---
   const playSound = (url: string) => {
     try {
       const audio = new Audio(url);
-      audio.play().catch(() => {});
-    } catch (e) {}
+      audio.play().catch(() => { });
+    } catch (e) { }
   };
 
   const showToast = (title: string, message: string, icon: string = '🏆', color: string = 'bg-indigo-600') => {
@@ -315,18 +321,18 @@ export default function App() {
   useEffect(() => {
     async function loadData() {
       try {
-        const { value: storedData } = await Preferences.get({ key: 'organistuda_data_v381' });
+        const { value: storedData } = await Preferences.get({ key: 'organistuda_data_v382' });
         if (storedData) {
           const parsed = JSON.parse(storedData);
           if (parsed.profile) {
             const today = new Date().toISOString().split('T')[0];
             const last = parsed.profile.lastLogin;
-            
+
             if (last !== today) {
               const yesterday = new Date();
               yesterday.setDate(yesterday.getDate() - 1);
               const yesterdayStr = yesterday.toISOString().split('T')[0];
-              
+
               if (last === yesterdayStr) {
                 parsed.profile.streak += 1;
                 if (parsed.profile.streak > parsed.profile.bestStreak) {
@@ -358,7 +364,7 @@ export default function App() {
     if (!isInitialized) return;
     async function saveData() {
       const data = { profile, subjects, savedQuestions, tasks, darkMode };
-      await Preferences.set({ key: 'organistuda_data_v381', value: JSON.stringify(data) });
+      await Preferences.set({ key: 'organistuda_data_v382', value: JSON.stringify(data) });
     }
     saveData();
   }, [profile, subjects, savedQuestions, tasks, darkMode, isInitialized]);
@@ -370,6 +376,17 @@ export default function App() {
       let newXp = prev.xp + amount;
       let newLevel = prev.level;
       let newNextLevelXp = prev.nextLevelXp;
+      let xpCombo = prev.xpCombo;
+
+      // Combo de XP: se ganhou XP recentemente, aumenta o combo
+      const now = Date.now();
+      if (now - prev.lastXpGain < 5 * 60 * 1000) { // 5 minutos
+        xpCombo += 1;
+      } else {
+        xpCombo = 0;
+      }
+
+      const finalAmount = amount + (xpCombo * 5); // +5 XP por combo
 
       if (newXp >= newNextLevelXp) {
         newXp -= newNextLevelXp;
@@ -377,6 +394,8 @@ export default function App() {
         newNextLevelXp = Math.floor(newNextLevelXp * 1.2);
         playSound('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
         showToast('Nível Subiu!', `Parabéns! Você agora é Nível ${newLevel} 🚀`, '🎊', 'bg-indigo-600');
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
       }
 
       return {
@@ -384,7 +403,9 @@ export default function App() {
         xp: newXp,
         level: newLevel,
         nextLevelXp: newNextLevelXp,
-        weeklyProgress: prev.weeklyProgress + amount
+        weeklyProgress: prev.weeklyProgress + finalAmount,
+        xpCombo: xpCombo,
+        lastXpGain: now,
       };
     });
   }, []);
@@ -498,7 +519,12 @@ export default function App() {
   const handleToggleTask = useCallback((id: string) => {
     setTasks(prev => prev.map(t => {
       if (t.id === id) {
-        if (!t.completed) addXP(25);
+        if (!t.completed) {
+          addXP(25);
+          showToast('Tarefa Concluída!', `Você completou "${t.text}"! 🎉`, '✅', 'bg-emerald-500');
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 3000);
+        }
         return { ...t, completed: !t.completed };
       }
       return t;
@@ -524,6 +550,8 @@ export default function App() {
         setPomodoroMode('break');
         setPomodoroTime(5 * 60);
         setPomodoroInitialTime(5 * 60);
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
       } else {
         setPomodoroMode('work');
         setPomodoroTime(25 * 60);
@@ -535,9 +563,9 @@ export default function App() {
 
   // --- RENDER HELPERS ---
 
-  const selectedSubject = useMemo(() => 
-    subjects.find(s => s.id === selectedSubjectId), 
-  [subjects, selectedSubjectId]);
+  const selectedSubject = useMemo(() =>
+    subjects.find(s => s.id === selectedSubjectId),
+    [subjects, selectedSubjectId]);
 
   const achievements = useMemo(() => [
     { id: '1', title: 'Primeiros Passos', description: 'Complete seu primeiro tópico de estudo.', icon: <Zap />, unlocked: subjects.some(s => s.topics.some(t => t.completed)), progress: subjects.reduce((acc, s) => acc + s.topics.filter(t => t.completed).length, 0), goal: 1 },
@@ -555,7 +583,8 @@ export default function App() {
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'}`}>
-      
+      {showConfetti && <Confetti recycle={false} numberOfPieces={200} gravity={0.1} tweenDuration={5000} />} 
+
       {/* ── HEADER & PROFILE ─────────────────────────────────────────── */}
       <header className="flex-shrink-0 p-6 safe-top">
         <div className="flex items-center justify-between mb-6">
@@ -565,7 +594,7 @@ export default function App() {
             </div>
             <h1 className="text-xl font-black tracking-tighter leading-none">OrganiStuda</h1>
           </div>
-          <button 
+          <button
             onClick={() => setDarkMode(!darkMode)}
             className={`p-3 rounded-2xl transition-all active:scale-90 ${darkMode ? 'bg-stone-900 text-yellow-400' : 'bg-white text-stone-400 shadow-sm border border-stone-100'}`}
           >
@@ -589,7 +618,7 @@ export default function App() {
               </div>
             </div>
             <div>
-              <input 
+              <input
                 type="text" value={profile.name} onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
                 className="text-xl font-black bg-transparent outline-none w-32 tracking-tight"
               />
@@ -621,7 +650,7 @@ export default function App() {
                     <StreakWidget streak={profile.streak} bestStreak={profile.bestStreak} darkMode={darkMode} />
                     <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
                   </div>
-                  
+
                   <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-black text-sm uppercase tracking-widest text-stone-500">Progresso Semanal</h3>
@@ -639,7 +668,7 @@ export default function App() {
                       const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
 
                       return (
-                        <button 
+                        <button
                           key={subject.id} onClick={() => setSelectedSubjectId(subject.id)}
                           className={`p-6 rounded-[32px] border text-left transition-all active:scale-[0.98] flex items-center gap-5 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
                         >
@@ -685,7 +714,7 @@ export default function App() {
                       ))}
                     </div>
                     <div className="mt-6 flex gap-2">
-                      <input 
+                      <input
                         value={newTopicTitle} onChange={(e) => setNewTopicTitle(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && addTopic(selectedSubject!.id)}
                         placeholder="Novo tópico..." className={`flex-1 p-4 rounded-2xl border outline-none text-sm ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'}`}
                       />
@@ -813,7 +842,7 @@ export default function App() {
                 <h2 className="font-black text-lg mb-6 flex items-center gap-2"><List className="w-5 h-5 text-indigo-600" /> Suas Tarefas</h2>
                 <div className="flex items-center gap-2 mb-6 w-full">
                   <div className="flex-1 relative">
-                    <input 
+                    <input
                       value={newTaskText} onChange={(e) => setNewTaskText(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
                       placeholder="O que vamos estudar?" className={`w-full p-4 rounded-2xl border outline-none text-sm pr-12 ${darkMode ? 'bg-stone-800 border-stone-700 text-white' : 'bg-stone-50 border-stone-200'}`}
                     />
@@ -848,7 +877,7 @@ export default function App() {
           { id: 'pomodoro', icon: <Target />, label: 'Foco' },
           { id: 'tasks', icon: <List />, label: 'Tarefas' }
         ].map(tab => (
-          <button 
+          <button
             key={tab.id} onClick={() => setCurrentTab(tab.id)}
             className={`flex flex-col items-center gap-1 transition-all ${currentTab === tab.id ? 'text-indigo-600 scale-110' : 'text-stone-400 opacity-60'}`}
           >
