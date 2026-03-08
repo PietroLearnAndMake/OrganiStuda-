@@ -511,15 +511,17 @@ export default function App() {
 
   // ─── Função para salvar metas semanais ──────────────────────────────────────
   const handleSaveWeeklyGoals = () => {
-    const newProfile = {
-      ...profile,
-      weeklyGoals: {
-        questions: Math.max(1, editGoalsQuestions),
-        studyTime: Math.max(1, editGoalsStudyTime)
-      }
-    };
-    setProfile(newProfile);
-    localStorage.setItem('organistuda_profile', JSON.stringify(newProfile));
+    setProfile(prev => {
+      const newProfile = {
+        ...prev,
+        weeklyGoals: {
+          questions: Math.max(1, editGoalsQuestions),
+          studyTime: Math.max(1, editGoalsStudyTime)
+        }
+      };
+      localStorage.setItem('organistuda_profile', JSON.stringify(newProfile));
+      return newProfile;
+    });
     setIsEditingGoals(false);
   };
 
@@ -540,10 +542,27 @@ export default function App() {
       localStorage.setItem('enem_saved_questions', JSON.stringify(savedQuestions));
       localStorage.setItem('enem_tasks', JSON.stringify(tasks));
     }
-    // ── Sincronizar com widget Android ──────────────────────────────────
+    // ── Sincronizar com widget Android e atualizar estatísticas ──────────
     if (isInitialized) {
       const total = savedQuestions.filter(q => q.attempts.length > 0).length;
       const correct = savedQuestions.filter(q => q.attempts.some(a => a.isCorrect)).length;
+      
+      // Atualizar estatísticas no perfil se mudarem
+      if (profile.stats?.totalQuestions !== total || profile.stats?.correctQuestions !== correct) {
+        setProfile(prev => {
+          const newProfile = {
+            ...prev,
+            stats: {
+              ...prev.stats,
+              totalQuestions: total,
+              correctQuestions: correct
+            }
+          };
+          localStorage.setItem('organistuda_profile', JSON.stringify(newProfile));
+          return newProfile;
+        });
+      }
+
       syncWidgetData({
         streak: profile.streak || 0,
         bestStreak: profile.bestStreak || 0,
@@ -553,7 +572,7 @@ export default function App() {
         darkMode: darkMode,
       });
     }
-  }, [subjects, profile, isInitialized, darkMode, savedQuestions, tasks]);
+  }, [subjects, profile.stats, profile.streak, profile.bestStreak, profile.lastLogin, isInitialized, darkMode, savedQuestions, tasks]);
 
   // ─── Pomodoro Timer Logic ─────────────────────────────────────────────────
   useEffect(() => {
@@ -823,17 +842,25 @@ export default function App() {
    * Calcula o nível do usuário baseado no XP total.
    * Fórmula: Nível = floor(sqrt(XP / 100)) + 1
    */
-  const calculateLevel = useCallback((xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1, []);
+  const calculateLevel = useCallback((xp: number) => {
+    if (xp <= 0) return 1;
+    return Math.floor(Math.sqrt(xp / 100)) + 1;
+  }, []);
   
   /**
-   * Retorna o XP necessário para atingir um determinado nível.
+   * Calcula o XP necessário para um determinado nível
    */
-  const xpForLevel = useCallback((level: number) => Math.pow(level - 1, 2) * 100, []);
-  
+  const xpForLevel = useCallback((level: number) => {
+    if (level <= 1) return 0;
+    return Math.pow(level - 1, 2) * 100;
+  }, []);
+
   /**
-   * Retorna o XP necessário para o próximo nível.
+   * Calcula o XP necessário para o próximo nível
    */
-  const xpForNextLevel = useCallback((level: number) => Math.pow(level, 2) * 100, []);
+  const xpForNextLevel = useCallback((level: number) => {
+    return Math.pow(level, 2) * 100;
+  }, []);
 
   /**
    * Adiciona XP ao perfil do usuário e gerencia subida de nível.
@@ -846,10 +873,12 @@ export default function App() {
       const newXP = Math.max(0, currentXP + amount);
       const newLevel = calculateLevel(newXP);
       
-      if (amount > 0) {
+      if (amount !== 0) {
+        const isPositive = amount > 0;
         const xpToast = document.createElement('div');
-        xpToast.className = 'fixed left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2'; xpToast.style.bottom = 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)';
-        xpToast.innerHTML = `<span>+${amount} XP</span> <span class="text-xs">✨</span>`;
+        xpToast.className = `fixed left-1/2 -translate-x-1/2 ${isPositive ? 'bg-indigo-600' : 'bg-red-600'} text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2`; 
+        xpToast.style.bottom = 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)';
+        xpToast.innerHTML = `<span>${isPositive ? '+' : ''}${amount} XP</span> <span class="text-xs">${isPositive ? '✨' : '📉'}</span>`;
         document.body.appendChild(xpToast);
         setTimeout(() => {
           xpToast.style.transition = 'opacity 0.5s';
@@ -871,6 +900,19 @@ export default function App() {
             <div class="text-xl font-bold">NÍVEL ${newLevel}</div>
             <p class="text-purple-100">Você está evoluindo rápido! Continue assim rumo à aprovação. 🚀</p>
             <button class="mt-2 bg-white text-purple-600 px-6 py-2 rounded-xl font-bold shadow-lg active:scale-95 transition-transform" onclick="this.parentElement.parentElement.remove()">INCRÍVEL!</button>
+          </div>
+        `;
+        document.body.appendChild(notification);
+      } else if (newLevel < currentLevel) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed inset-0 flex items-center justify-center z-[100] bg-black/60 backdrop-blur-sm p-6';
+        notification.innerHTML = `
+          <div class="bg-amber-600 text-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border-4 border-amber-400 max-w-xs w-full text-center">
+            <div class="text-6xl">📉</div>
+            <div class="text-3xl font-black italic tracking-tighter">OPS!</div>
+            <div class="text-xl font-bold">NÍVEL ${newLevel}</div>
+            <p class="text-amber-100">Você perdeu um pouco de XP e voltou de nível. Não desanime, recupere logo! 💪</p>
+            <button class="mt-2 bg-white text-amber-600 px-6 py-2 rounded-xl font-bold shadow-lg active:scale-95 transition-transform" onclick="this.parentElement.parentElement.remove()">VOU RECUPERAR!</button>
           </div>
         `;
         document.body.appendChild(notification);
@@ -1694,6 +1736,8 @@ export default function App() {
                         fill="#6366f1" 
                         radius={[4, 4, 0, 0]} 
                         barSize={20}
+                        activeBar={false}
+                        isAnimationActive={false}
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -1708,7 +1752,7 @@ export default function App() {
                 <div className={`p-6 rounded-3xl border transition-all ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
                   <h3 className="font-black text-lg mb-4 flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-purple-500" />
-                    Jornada de Níveis
+                    Jornada do Nível {profile.level + 1}
                   </h3>
                   <div className="flex justify-between items-center gap-2 overflow-x-auto pb-2">
                     {[1, 5, 10, 20, 50].map((lvl) => (
@@ -1996,7 +2040,7 @@ export default function App() {
                             <select 
                               value={filterInstitution}
                               onChange={(e) => setFilterInstitution(e.target.value)}
-                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
+                              className={`w-full pl-3 pr-10 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
                                 darkMode 
                                   ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
                                   : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
@@ -2007,13 +2051,15 @@ export default function App() {
                               <option value="FUVEST">FUVEST</option>
                               <option value="UNICAMP">UNICAMP</option>
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-400" />
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                              <ChevronDown className="w-4 h-4 text-stone-400" />
+                            </div>
                           </div>
                           <div className="relative">
                             <select 
                               value={filterDiscipline}
                               onChange={(e) => setFilterDiscipline(e.target.value)}
-                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
+                              className={`w-full pl-3 pr-10 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
                                 darkMode 
                                   ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
                                   : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
@@ -2025,7 +2071,9 @@ export default function App() {
                               <option value="his">Ciências Humanas</option>
                               <option value="bio">Ciências da Natureza</option>
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-400" />
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                              <ChevronDown className="w-4 h-4 text-stone-400" />
+                            </div>
                           </div>
                         </div>
 
