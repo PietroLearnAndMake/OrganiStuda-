@@ -3,90 +3,85 @@
   Widget de Streak — Modo CLARO
   Fundo: branco | Detalhes: roxo | Texto: escuro
 -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/widget_bg_light"
-    android:padding="16dp"
-    android:gravity="center_vertical">
+    android:padding="12dp">
 
-    <!-- Linha superior: emoji + título -->
+    <!-- Container centralizado para o conteúdo -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="8dp">
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center">
 
+        <!-- Texto fixo superior -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sua sequência está a"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:alpha="0.9"
+            android:layout_marginBottom="2dp" />
+
+        <!-- Contador dinâmico (X Dias) -->
+        <TextView
+            android:id="@+id/widget_streak_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Dias"
+            android:textColor="#000000"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Emoji de Olhinho (👀) estilo iPhone -->
         <TextView
             android:id="@+id/widget_fire_emoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="🔥"
-            android:textSize="22sp"
-            android:layout_marginEnd="8dp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sequência de Estudos"
-            android:textColor="#666666"
-            android:textSize="11sp"
-            android:textAllCaps="true"
-            android:letterSpacing="0.08" />
+            android:text="👀"
+            android:textSize="40sp" />
 
     </LinearLayout>
 
-    <!-- Contador principal de streak -->
-    <TextView
-        android:id="@+id/widget_streak_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 dias"
-        android:textColor="#1A1A1A"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="2dp" />
-
-    <!-- Recorde -->
-    <TextView
-        android:id="@+id/widget_best_streak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recorde: 0 dias"
-        android:textColor="#6C2CFF"
-        android:textSize="12sp"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Divisor -->
-    <View
+    <!-- Informações secundárias discretas no rodapé -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E0E0E0"
-        android:layout_marginBottom="8dp" />
-
-    <!-- Questões e acerto -->
-    <TextView
-        android:id="@+id/widget_questions"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 questões · 0% acerto"
-        android:textColor="#888888"
-        android:textSize="11sp"
-        android:layout_marginBottom="4dp" />
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-    <!-- Mensagem motivacional -->
-    <TextView
-        android:id="@+id/widget_motivation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Comece hoje!"
-        android:textColor="#6C2CFF"
-        android:textSize="12sp"
-        android:textStyle="italic" />
+        <TextView
+            android:id="@+id/widget_best_streak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recorde: 0"
+            android:textColor="#6C2CFF"
+            android:textSize="10sp"
+            android:layout_marginEnd="8dp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/widget_questions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 questões"
+            android:textColor="#666666"
+            android:textSize="10sp" />
+            
+        <!-- TextView oculto para compatibilidade com o Provider -->
+        <TextView
+            android:id="@+id/widget_motivation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</RelativeLayout>

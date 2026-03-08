@@ -71,12 +71,12 @@ public class StreakWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
 
         // ── Streak principal ──────────────────────────────────────────
-        String streakText = streak + (streak == 1 ? " dia" : " dias");
+        String streakText = streak + (streak == 1 ? " Dia" : " Dias");
         views.setTextViewText(R.id.widget_streak_count, streakText);
 
         // ── Emoji de fogo baseado no streak ──────────────────────────
         String fireEmoji = getFireEmoji(streak);
-        views.setTextViewText(R.id.widget_fire_emoji, fireEmoji);
+        views.setTextViewText(R.id.widget_fire_emoji, "👀");
 
         // ── Recorde ───────────────────────────────────────────────────
         views.setTextViewText(R.id.widget_best_streak,
