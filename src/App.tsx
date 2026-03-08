@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { registerPlugin } from '@capacitor/core';
-import { LocalNotifications } from '@capacitor/local-notifications';
+// LocalNotifications removed
 import { 
   PieChart, 
   Pie, 
@@ -328,21 +328,8 @@ export default function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // ─── Solicitar Permissões e Carregar Dados ──────────────────────────────
+  // ─── Carregar Dados ──────────────────────────────────────────────
   useEffect(() => {
-    const requestPermissions = async () => {
-      try {
-        const perm = await LocalNotifications.checkPermissions();
-        if (perm.display !== 'granted') {
-          await LocalNotifications.requestPermissions();
-        }
-      } catch (e) {
-        console.error('Falha ao solicitar permissões', e);
-      }
-    };
-
-    requestPermissions();
-
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -550,17 +537,7 @@ export default function App() {
         const audio = new Audio('/sounds/pomodoro.mp3');
         audio.play().catch(() => {});
 
-        LocalNotifications.schedule({
-          notifications: [
-            {
-              title: "Pomodoro Finalizado! ⏰",
-              body: `Fim da sessão de foco! +${earnedXP} XP. Hora de descansar ${breakMins} min.`,
-              id: 1,
-              schedule: { at: new Date(Date.now() + 100) },
-              sound: 'pomodoro.mp3'
-            }
-          ]
-        }).catch(() => {});
+        // LocalNotifications removed for stability
 
         const toast = document.createElement('div');
         toast.className = 'fixed right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3'; toast.style.top = 'max(env(safe-area-inset-top, 0px), 2.5rem)';
