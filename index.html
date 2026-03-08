@@ -12,6 +12,12 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // Mock global aistudio to prevent runtime errors
+      window.aistudio = {
+        hasSelectedApiKey: () => Promise.resolve(false),
+        openSelectKey: () => Promise.resolve()
+      };
+
       // Registrar Service Worker para funcionamento offline
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

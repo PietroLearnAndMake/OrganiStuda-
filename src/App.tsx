@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { registerPlugin } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { 
@@ -93,7 +95,7 @@ import {
   BarChart2,
   Star
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+// motion imports moved to top
 import { Subject, Topic, UserProfile, Question, SavedQuestion, Attempt } from './types';
 import { ENEM_DATA } from './data/enemData';
 
