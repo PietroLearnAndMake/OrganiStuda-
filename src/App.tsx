@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { 
   LayoutDashboard, 
   BrainCircuit, 
@@ -33,7 +33,11 @@ import {
   Calculator,
   Globe,
   FlaskConical,
-  PenTool
+  PenTool,
+  User,
+  Camera,
+  Circle,
+  BarChart2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Preferences } from '@capacitor/preferences';
@@ -57,6 +61,12 @@ interface Subject {
   topics: Topic[];
 }
 
+interface Attempt {
+  date: string;
+  selectedOption: number;
+  isCorrect: boolean;
+}
+
 interface SavedQuestion {
   id: string;
   text: string;
@@ -66,11 +76,20 @@ interface SavedQuestion {
   institution?: string;
   discipline?: string;
   year?: string;
-  attempts: {
-    date: string;
-    selectedOption: number;
-    isCorrect: boolean;
-  }[];
+  attempts: Attempt[];
+}
+
+interface UserProfile {
+  name: string;
+  photo: string | null;
+  level: number;
+  xp: number;
+  nextLevelXp: number;
+  streak: number;
+  bestStreak: number;
+  lastLogin: string | null;
+  weeklyGoal: number;
+  weeklyProgress: number;
 }
 
 interface Achievement {
@@ -99,12 +118,50 @@ const IconComponent = ({ name, className }: { name: string, className?: string }
   return <Icon className={className} />;
 };
 
-// --- SUB-COMPONENTS (MEMOIZED) ---
+// --- SUB-COMPONENTS ---
+
+const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: { streak: number, bestStreak: number, darkMode: boolean }) => {
+  const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  const today = new Date().getDay();
+
+  return (
+    <div className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Flame className="w-5 h-5 text-orange-500" />
+          <h3 className="font-black text-sm uppercase tracking-widest">Sequência</h3>
+        </div>
+        <div className="text-xs font-black text-orange-500">Recorde: {bestStreak}</div>
+      </div>
+      <div className="flex items-end gap-3 mb-4">
+        <span className="text-5xl font-black text-orange-500 leading-none">{streak}</span>
+        <span className="text-xs font-bold text-stone-500 mb-1 uppercase tracking-widest">Dias Seguidos</span>
+      </div>
+      <div className="flex justify-between gap-1">
+        {days.map((day, idx) => {
+          const isToday = idx === today;
+          const isActive = isToday || (streak > 0 && idx < today && idx >= today - streak);
+          return (
+            <div key={idx} className="flex flex-col items-center gap-1 flex-1">
+              <div className={`w-full aspect-square rounded-xl flex items-center justify-center text-[10px] font-black transition-all ${
+                isToday ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 
+                isActive ? 'bg-orange-500/20 text-orange-500' : 
+                darkMode ? 'bg-stone-800 text-stone-600' : 'bg-stone-100 text-stone-400'
+              }`}>
+                {isActive ? '🔥' : day}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+});
 
 const AchievementCard = React.memo(({ achievement, darkMode }: { achievement: Achievement, darkMode: boolean }) => (
   <div className={`p-4 rounded-2xl border flex items-center gap-4 transition-all ${
     achievement.unlocked 
-      ? darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'
+      ? darkMode ? 'bg-stone-800/50 border-stone-700' : 'bg-white border-stone-200 shadow-sm'
       : 'opacity-50 grayscale bg-stone-100 dark:bg-stone-900 border-transparent'
   }`}>
     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${
@@ -125,246 +182,6 @@ const AchievementCard = React.memo(({ achievement, darkMode }: { achievement: Ac
   </div>
 ));
 
-const AchievementsTab = React.memo(({ profile, savedQuestions, darkMode, achievements }: any) => {
-  const stats = useMemo(() => {
-    const total = savedQuestions.length;
-    const correct = savedQuestions.filter((q: any) => q.attempts[q.attempts.length - 1]?.isCorrect).length;
-    return { total, correct, accuracy: total > 0 ? Math.round((correct / total) * 100) : 0 };
-  }, [savedQuestions]);
-
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-          <div className="text-3xl font-black text-blue-500 mb-1">{stats.correct}</div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Acertos Totais</div>
-        </div>
-        <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-          <div className="text-3xl font-black text-purple-500 mb-1">{stats.accuracy}%</div>
-          <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Taxa de Acerto</div>
-        </div>
-      </div>
-
-      <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-        <h3 className="font-black text-lg mb-6 flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
-          Suas Conquistas
-        </h3>
-        <div className="space-y-4">
-          {achievements.map((a: Achievement) => (
-            <AchievementCard key={a.id} achievement={a} darkMode={darkMode} />
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-});
-
-const QuestionsTab = React.memo(({ 
-  savedQuestions, darkMode, questionMode, setQuestionMode, 
-  selectedSubjectForQuestion, setSelectedSubjectForQuestion, 
-  loadingQuestion, activeQuestionId, selectedOption, 
-  handleAnswerQuestion, redoQuestion, subjects, 
-  generateBankQuestion, filterInstitution, setFilterInstitution,
-  filterDiscipline, setFilterDiscipline, searchBankQuestions,
-  setSelectedOption, setShowExplanation, showExplanation,
-  setActiveQuestionId
-}: any) => {
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 pb-20">
-      <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-        <div className="flex p-1 bg-stone-100 dark:bg-stone-800 rounded-2xl mb-6">
-          <button 
-            onClick={() => setQuestionMode('random')}
-            className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${questionMode === 'random' ? 'bg-white dark:bg-stone-700 shadow-sm text-indigo-600' : 'text-stone-500'}`}
-          >
-            Aleatória
-          </button>
-          <button 
-            onClick={() => setQuestionMode('filter')}
-            className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${questionMode === 'filter' ? 'bg-white dark:bg-stone-700 shadow-sm text-indigo-600' : 'text-stone-500'}`}
-          >
-            Filtrar
-          </button>
-          <button 
-            onClick={() => setQuestionMode('history')}
-            className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${questionMode === 'history' ? 'bg-white dark:bg-stone-700 shadow-sm text-indigo-600' : 'text-stone-500'}`}
-          >
-            Histórico
-          </button>
-        </div>
-
-        {questionMode === 'random' && (
-          <div className="space-y-4">
-            <select 
-              value={selectedSubjectForQuestion}
-              onChange={(e) => setSelectedSubjectForQuestion(e.target.value)}
-              className={`w-full p-4 rounded-xl outline-none font-bold ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'} border`}
-            >
-              <option value="geral">Todas as Matérias</option>
-              {subjects.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
-            <button 
-              onClick={generateBankQuestion}
-              disabled={loadingQuestion}
-              className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black shadow-lg active:scale-95 transition-all disabled:opacity-50"
-            >
-              {loadingQuestion ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : 'GERAR QUESTÃO'}
-            </button>
-          </div>
-        )}
-
-        {questionMode === 'filter' && (
-          <div className="space-y-4">
-            <input 
-              type="text" placeholder="Instituição (ex: ENEM)" value={filterInstitution}
-              onChange={(e) => setFilterInstitution(e.target.value)}
-              className={`w-full p-4 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'}`}
-            />
-            <input 
-              type="text" placeholder="Disciplina (ex: Matemática)" value={filterDiscipline}
-              onChange={(e) => setFilterDiscipline(e.target.value)}
-              className={`w-full p-4 rounded-xl border ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'}`}
-            />
-            <button 
-              onClick={searchBankQuestions}
-              className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black shadow-lg"
-            >
-              FILTRAR
-            </button>
-          </div>
-        )}
-
-        {questionMode === 'history' && (
-          <div className="space-y-3">
-            {savedQuestions.length === 0 ? (
-              <p className="text-center py-8 text-stone-500">Nenhuma questão resolvida.</p>
-            ) : (
-              savedQuestions.map((q: any) => (
-                <div key={q.id} className={`p-4 rounded-xl border flex items-center justify-between ${darkMode ? 'bg-stone-800/50 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
-                  <div className="flex-1 truncate mr-4">
-                    <p className={`text-sm font-bold truncate ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{q.text}</p>
-                    <span className="text-[10px] text-stone-500 uppercase font-black">{q.institution || 'Geral'}</span>
-                  </div>
-                  <button onClick={() => redoQuestion(q.id)} className="p-2 text-indigo-600"><Play className="w-4 h-4" /></button>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {activeQuestionId && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className={`p-6 rounded-3xl border-2 ${darkMode ? 'bg-stone-900 border-indigo-500/30' : 'bg-white border-indigo-100 shadow-xl'}`}>
-            {(() => {
-              const q = savedQuestions.find((sq: any) => sq.id === activeQuestionId);
-              if (!q) return null;
-              const lastAttempt = q.attempts[q.attempts.length - 1];
-              const answered = lastAttempt !== undefined;
-
-              return (
-                <div className="space-y-6">
-                  <div className="flex justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">{q.institution}</span>
-                    <button onClick={() => setActiveQuestionId(null)}><X className="w-5 h-5" /></button>
-                  </div>
-                  <p className="font-bold leading-relaxed">{q.text}</p>
-                  <div className="space-y-3">
-                    {q.options.map((opt: string, idx: number) => (
-                      <button 
-                        key={idx} disabled={answered} onClick={() => setSelectedOption(idx)}
-                        className={`w-full p-4 rounded-xl border-2 text-left text-sm font-bold transition-all ${
-                          answered 
-                            ? idx === q.correctOption ? 'bg-emerald-500 border-emerald-500 text-white' : idx === lastAttempt.selectedOption ? 'bg-red-500 border-red-500 text-white' : 'opacity-40'
-                            : selectedOption === idx ? 'bg-indigo-600 border-indigo-600 text-white' : darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'
-                        }`}
-                      >
-                        {opt}
-                      </button>
-                    ))}
-                  </div>
-                  {answered ? (
-                    <div className="space-y-4">
-                      <div className={`p-4 rounded-xl font-bold text-sm ${lastAttempt.isCorrect ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
-                        {lastAttempt.isCorrect ? 'Correto! +50 XP' : 'Incorreto. Tente novamente mais tarde!'}
-                      </div>
-                      <button onClick={() => setShowExplanation(!showExplanation)} className="text-xs font-bold text-stone-500 underline">Ver Explicação</button>
-                      {showExplanation && <p className="text-xs leading-relaxed text-stone-500 p-4 bg-stone-100 dark:bg-stone-800 rounded-xl">{q.explanation}</p>}
-                    </div>
-                  ) : (
-                    <button onClick={() => handleAnswerQuestion(q.id)} disabled={selectedOption === null} className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black disabled:opacity-50">CONFIRMAR</button>
-                  )}
-                </div>
-              );
-            })()}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-});
-
-const PomodoroTab = React.memo(({ 
-  darkMode, pomodoroTime, pomodoroActive, setPomodoroActive, 
-  pomodoroMode, setPomodoroMode, setPomodoroTime, setPomodoroInitialTime, pomodoroInitialTime
-}: any) => (
-  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-    <div className={`p-10 rounded-[40px] border text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-      <div className={`inline-flex p-4 rounded-3xl mb-6 ${pomodoroMode === 'work' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
-        <Clock className="w-8 h-8" />
-      </div>
-      <h2 className="text-7xl font-black mb-2 tracking-tighter">
-        {Math.floor(pomodoroTime / 60)}:{(pomodoroTime % 60).toString().padStart(2, '0')}
-      </h2>
-      <p className={`text-xs font-black uppercase tracking-[0.2em] mb-10 ${pomodoroMode === 'work' ? 'text-indigo-500' : 'text-emerald-500'}`}>
-        {pomodoroMode === 'work' ? 'Modo Foco' : 'Descanso'}
-      </p>
-      <div className="flex gap-4 justify-center">
-        <button onClick={() => setPomodoroActive(!pomodoroActive)} className={`px-10 py-5 rounded-3xl font-black text-lg transition-all active:scale-95 ${pomodoroActive ? 'bg-stone-200 text-stone-600' : 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20'}`}>
-          {pomodoroActive ? 'Pausar' : 'Começar'}
-        </button>
-        <button onClick={() => { setPomodoroActive(false); setPomodoroTime(pomodoroInitialTime); }} className="p-5 rounded-3xl border border-stone-200 dark:border-stone-800"><Loader2 className="w-6 h-6 text-stone-400" /></button>
-      </div>
-    </div>
-  </motion.div>
-));
-
-const TasksTab = React.memo(({ 
-  darkMode, tasks, newTaskText, setNewTaskText, 
-  handleAddTask, handleToggleTask, handleDeleteTask 
-}: any) => (
-  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-    <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-      <h2 className="font-black text-lg mb-6 flex items-center gap-2"><List className="w-5 h-5 text-indigo-600" /> Suas Tarefas</h2>
-      <div className="flex gap-2 mb-6">
-        <input 
-          value={newTaskText} onChange={(e) => setNewTaskText(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
-          placeholder="O que vamos estudar?" className={`flex-1 p-4 rounded-2xl border outline-none ${darkMode ? 'bg-stone-800 border-stone-700 text-white' : 'bg-stone-50 border-stone-200'}`}
-        />
-        <button onClick={handleAddTask} className="bg-indigo-600 text-white p-4 rounded-2xl"><Plus className="w-6 h-6" /></button>
-      </div>
-      <div className="space-y-3">
-        {tasks.map((task: any) => (
-          <div key={task.id} className={`flex items-center gap-3 p-4 rounded-2xl border ${task.completed ? 'opacity-50' : ''} ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-white border-stone-200 shadow-sm'}`}>
-            <button onClick={() => handleToggleTask(task.id)} className={task.completed ? 'text-emerald-500' : 'text-stone-300'}>
-              {task.completed ? <CheckCircle2 className="w-6 h-6" /> : <Circle className="w-6 h-6" />}
-            </button>
-            <span className={`flex-1 font-bold ${task.completed ? 'line-through' : ''}`}>{task.text}</span>
-            <button onClick={() => handleDeleteTask(task.id)} className="text-stone-400"><Trash2 className="w-5 h-5" /></button>
-          </div>
-        ))}
-      </div>
-    </div>
-  </motion.div>
-));
-
-const Circle = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-  </svg>
-);
-
 // --- MAIN APP COMPONENT ---
 
 export default function App() {
@@ -374,13 +191,15 @@ export default function App() {
   const [isInitialized, setIsInitialized] = useState(false);
 
   // State: Profile & Progress
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<UserProfile>({
     name: 'Estudante',
+    photo: null,
     level: 1,
     xp: 0,
     nextLevelXp: 1000,
     streak: 0,
-    totalQuestions: 0,
+    bestStreak: 0,
+    lastLogin: null,
     weeklyGoal: 500,
     weeklyProgress: 0
   });
@@ -406,22 +225,49 @@ export default function App() {
   const [pomodoroInitialTime, setPomodoroInitialTime] = useState(25 * 60);
   const [pomodoroActive, setPomodoroActive] = useState(false);
   const [pomodoroMode, setPomodoroMode] = useState<'work' | 'break'>('work');
-  const [customTimeInput] = useState('25');
-  const [customBreakInput] = useState('5');
 
   // State: Tasks
   const [tasks, setTasks] = useState<{id: string, text: string, completed: boolean}[]>([]);
   const [newTaskText, setNewTaskText] = useState('');
 
-  // --- PERSISTENCE (CAPACITOR PREFERENCES) ---
+  // --- AUDIO HELPERS ---
+  const playSound = (url: string) => {
+    try {
+      const audio = new Audio(url);
+      audio.play().catch(() => {});
+    } catch (e) {}
+  };
+
+  // --- PERSISTENCE ---
 
   useEffect(() => {
     async function loadData() {
       try {
-        const { value: storedData } = await Preferences.get({ key: 'organistuda_data' });
+        const { value: storedData } = await Preferences.get({ key: 'organistuda_data_v380' });
         if (storedData) {
           const parsed = JSON.parse(storedData);
-          if (parsed.profile) setProfile(parsed.profile);
+          if (parsed.profile) {
+            // Lógica de Streak ao carregar
+            const today = new Date().toISOString().split('T')[0];
+            const last = parsed.profile.lastLogin;
+            
+            if (last !== today) {
+              const yesterday = new Date();
+              yesterday.setDate(yesterday.getDate() - 1);
+              const yesterdayStr = yesterday.toISOString().split('T')[0];
+              
+              if (last === yesterdayStr) {
+                parsed.profile.streak += 1;
+                if (parsed.profile.streak > parsed.profile.bestStreak) {
+                  parsed.profile.bestStreak = parsed.profile.streak;
+                }
+              } else if (last !== null) {
+                parsed.profile.streak = 0;
+              }
+              parsed.profile.lastLogin = today;
+            }
+            setProfile(parsed.profile);
+          }
           if (parsed.subjects) setSubjects(parsed.subjects);
           if (parsed.savedQuestions) setSavedQuestions(parsed.savedQuestions);
           if (parsed.tasks) setTasks(parsed.tasks);
@@ -440,7 +286,7 @@ export default function App() {
     if (!isInitialized) return;
     async function saveData() {
       const data = { profile, subjects, savedQuestions, tasks, darkMode };
-      await Preferences.set({ key: 'organistuda_data', value: JSON.stringify(data) });
+      await Preferences.set({ key: 'organistuda_data_v380', value: JSON.stringify(data) });
     }
     saveData();
   }, [profile, subjects, savedQuestions, tasks, darkMode, isInitialized]);
@@ -453,10 +299,11 @@ export default function App() {
       let newLevel = prev.level;
       let newNextLevelXp = prev.nextLevelXp;
 
-      while (newXp >= newNextLevelXp) {
+      if (newXp >= newNextLevelXp) {
         newXp -= newNextLevelXp;
         newLevel += 1;
         newNextLevelXp = Math.floor(newNextLevelXp * 1.2);
+        playSound('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
       }
 
       return {
@@ -469,13 +316,27 @@ export default function App() {
     });
   }, []);
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile(prev => ({ ...prev, photo: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAnswerQuestion = useCallback((id: string) => {
     if (selectedOption === null) return;
     const q = savedQuestions.find(sq => sq.id === id);
     if (!q) return;
 
     const isCorrect = selectedOption === q.correctOption;
-    if (isCorrect) addXP(50);
+    if (isCorrect) {
+      addXP(50);
+      playSound('https://actions.google.com/sounds/v1/cartoon/pop.ogg');
+    }
 
     setSavedQuestions(prev => prev.map(sq => {
       if (sq.id === id) {
@@ -505,19 +366,12 @@ export default function App() {
         discipline: "Linguagens",
         attempts: []
       };
-      setSavedQuestions(prev => [...prev, newQ]);
+      setSavedQuestions(prev => [newQ, ...prev]);
       setActiveQuestionId(newQ.id);
       setSelectedOption(null);
       setShowExplanation(false);
       setLoadingQuestion(false);
-    }, 1000);
-  }, []);
-
-  const redoQuestion = useCallback((id: string) => {
-    setActiveQuestionId(id);
-    setSelectedOption(null);
-    setShowExplanation(false);
-    setQuestionMode('random');
+    }, 800);
   }, []);
 
   const toggleTopic = useCallback((subjectId: string, topicId: string) => {
@@ -621,37 +475,70 @@ export default function App() {
 
   return (
     <div className={`flex flex-col h-screen overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'}`}>
-      {/* Header */}
-      <header className="flex-shrink-0 p-6 flex items-center justify-between safe-top">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Flame className="text-white w-6 h-6" />
+      
+      {/* ── HEADER & PROFILE ─────────────────────────────────────────── */}
+      <header className="flex-shrink-0 p-6 safe-top">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <Flame className="text-white w-6 h-6" />
+            </div>
+            <h1 className="text-xl font-black tracking-tighter leading-none">OrganiStuda</h1>
           </div>
-          <div>
-            <h1 className="text-lg font-black tracking-tighter leading-none">OrganiStuda</h1>
-            <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Nível {profile.level}</span>
-              <div className="w-16 h-1 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
-                <div className="h-full bg-indigo-500" style={{ width: `${(profile.xp / profile.nextLevelXp) * 100}%` }} />
+          <button 
+            onClick={() => setDarkMode(!darkMode)}
+            className={`p-3 rounded-2xl transition-all active:scale-90 ${darkMode ? 'bg-stone-900 text-yellow-400' : 'bg-white text-stone-400 shadow-sm border border-stone-100'}`}
+          >
+            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <label htmlFor="photo-upload" className={`w-16 h-16 rounded-full border-2 overflow-hidden flex items-center justify-center cursor-pointer transition-all ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                {profile.photo ? (
+                  <img src={profile.photo} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User className={`w-8 h-8 ${darkMode ? 'text-stone-700' : 'text-stone-300'}`} />
+                )}
+              </label>
+              <input id="photo-upload" type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+              <div className="absolute -bottom-1 -right-1 bg-indigo-600 text-white p-1 rounded-full border-2 border-stone-950">
+                <Camera className="w-3 h-3" />
+              </div>
+            </div>
+            <div>
+              <input 
+                type="text" value={profile.name} onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
+                className="text-xl font-black bg-transparent outline-none w-32 tracking-tight"
+              />
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">Nível {profile.level}</span>
+                <div className="w-20 h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-indigo-500" style={{ width: `${(profile.xp / profile.nextLevelXp) * 100}%` }} />
+                </div>
               </div>
             </div>
           </div>
+          <div className="text-right">
+            <div className="text-2xl font-black text-orange-500 flex items-center gap-1 justify-end">
+              🔥 {profile.streak}
+            </div>
+            <div className="text-[9px] font-bold uppercase tracking-widest text-stone-500">Ofensiva</div>
+          </div>
         </div>
-        <button 
-          onClick={() => setDarkMode(!darkMode)}
-          className={`p-3 rounded-2xl transition-all active:scale-90 ${darkMode ? 'bg-stone-900 text-yellow-400' : 'bg-white text-stone-400 shadow-sm border border-stone-100'}`}
-        >
-          {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
       </header>
 
-      {/* Main Content */}
+      {/* ── MAIN CONTENT ────────────────────────────────────────────── */}
       <main className="flex-1 overflow-y-auto px-6 pb-24 scroll-smooth">
         <AnimatePresence mode="wait">
           {currentTab === 'home' ? (
             <motion.div key="home" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
               {!selectedSubjectId ? (
                 <>
+                  <StreakWidget streak={profile.streak} bestStreak={profile.bestStreak} darkMode={darkMode} />
+                  
                   <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-black text-sm uppercase tracking-widest text-stone-500">Progresso Semanal</h3>
@@ -670,8 +557,7 @@ export default function App() {
 
                       return (
                         <button 
-                          key={subject.id}
-                          onClick={() => setSelectedSubjectId(subject.id)}
+                          key={subject.id} onClick={() => setSelectedSubjectId(subject.id)}
                           className={`p-6 rounded-[32px] border text-left transition-all active:scale-[0.98] flex items-center gap-5 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
                         >
                           <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner`} style={{ backgroundColor: `${subject.color.replace('bg-', '')}20`, color: subject.color.includes('bg-') ? '' : subject.color }}>
@@ -720,41 +606,157 @@ export default function App() {
                         value={newTopicTitle} onChange={(e) => setNewTopicTitle(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && addTopic(selectedSubject!.id)}
                         placeholder="Novo tópico..." className={`flex-1 p-4 rounded-2xl border outline-none text-sm ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'}`}
                       />
-                      <button onClick={() => addTopic(selectedSubject!.id)} className="bg-indigo-600 text-white p-4 rounded-2xl"><Plus className="w-6 h-6" /></button>
+                      <button onClick={() => addTopic(selectedSubject!.id)} className="bg-indigo-600 text-white p-4 rounded-2xl flex-shrink-0"><Plus className="w-6 h-6" /></button>
                     </div>
                   </div>
                 </div>
               )}
             </motion.div>
           ) : currentTab === 'achievements' ? (
-            <AchievementsTab profile={profile} savedQuestions={savedQuestions} darkMode={darkMode} achievements={achievements} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                  <div className="text-3xl font-black text-blue-500 mb-1">{savedQuestions.filter(q => q.attempts[q.attempts.length - 1]?.isCorrect).length}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Acertos Totais</div>
+                </div>
+                <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                  <div className="text-3xl font-black text-purple-500 mb-1">{profile.bestStreak}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-stone-500">Maior Streak</div>
+                </div>
+              </div>
+              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                <h3 className="font-black text-lg mb-6 flex items-center gap-2"><Trophy className="w-5 h-5 text-yellow-500" /> Suas Conquistas</h3>
+                <div className="space-y-4">
+                  {achievements.map((a: Achievement) => (
+                    <AchievementCard key={a.id} achievement={a} darkMode={darkMode} />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
           ) : currentTab === 'questions' ? (
-            <QuestionsTab 
-              savedQuestions={savedQuestions} darkMode={darkMode} questionMode={questionMode} setQuestionMode={setQuestionMode}
-              selectedSubjectForQuestion={selectedSubjectForQuestion} setSelectedSubjectForQuestion={setSelectedSubjectForQuestion}
-              loadingQuestion={loadingQuestion} activeQuestionId={activeQuestionId} selectedOption={selectedOption}
-              handleAnswerQuestion={handleAnswerQuestion} redoQuestion={redoQuestion} subjects={subjects}
-              generateBankQuestion={generateBankQuestion} filterInstitution={filterInstitution} setFilterInstitution={setFilterInstitution}
-              filterDiscipline={filterDiscipline} setFilterDiscipline={setFilterDiscipline} searchBankQuestions={generateBankQuestion}
-              setSelectedOption={setSelectedOption} setShowExplanation={setShowExplanation} showExplanation={showExplanation}
-              setActiveQuestionId={setActiveQuestionId}
-            />
+            <div className="space-y-6 pb-20">
+              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                <div className="flex p-1 bg-stone-100 dark:bg-stone-800 rounded-2xl mb-6">
+                  {['random', 'filter', 'history'].map(mode => (
+                    <button key={mode} onClick={() => setQuestionMode(mode as any)} className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${questionMode === mode ? 'bg-white dark:bg-stone-700 shadow-sm text-indigo-600' : 'text-stone-500'}`}>
+                      {mode === 'random' ? 'Aleatória' : mode === 'filter' ? 'Filtrar' : 'Histórico'}
+                    </button>
+                  ))}
+                </div>
+                {questionMode === 'random' && (
+                  <div className="space-y-4">
+                    <select value={selectedSubjectForQuestion} onChange={(e) => setSelectedSubjectForQuestion(e.target.value)} className={`w-full p-4 rounded-xl outline-none font-bold ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'} border`}>
+                      <option value="geral">Todas as Matérias</option>
+                      {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                    </select>
+                    <button onClick={generateBankQuestion} disabled={loadingQuestion} className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black shadow-lg active:scale-95 transition-all">
+                      {loadingQuestion ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : 'GERAR QUESTÃO'}
+                    </button>
+                  </div>
+                )}
+                {questionMode === 'history' && (
+                  <div className="space-y-3">
+                    {savedQuestions.length === 0 ? <p className="text-center py-8 text-stone-500">Nenhuma questão resolvida.</p> : savedQuestions.map(q => (
+                      <div key={q.id} className={`p-4 rounded-xl border flex items-center justify-between ${darkMode ? 'bg-stone-800/50 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
+                        <div className="flex-1 truncate mr-4">
+                          <p className={`text-sm font-bold truncate ${darkMode ? 'text-stone-200' : 'text-stone-800'}`}>{q.text}</p>
+                          <span className="text-[10px] text-stone-500 uppercase font-black">{q.institution || 'Geral'}</span>
+                        </div>
+                        <button onClick={() => { setActiveQuestionId(q.id); setSelectedOption(null); setQuestionMode('random'); }} className="p-2 text-indigo-600"><Play className="w-4 h-4" /></button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <AnimatePresence>
+                {activeQuestionId && (
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className={`p-6 rounded-3xl border-2 ${darkMode ? 'bg-stone-900 border-indigo-500/30' : 'bg-white border-indigo-100 shadow-xl'}`}>
+                    {(() => {
+                      const q = savedQuestions.find(sq => sq.id === activeQuestionId);
+                      if (!q) return null;
+                      const lastAttempt = q.attempts[q.attempts.length - 1];
+                      const answered = lastAttempt !== undefined;
+                      return (
+                        <div className="space-y-6">
+                          <div className="flex justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-500">{q.institution}</span>
+                            <button onClick={() => setActiveQuestionId(null)}><X className="w-5 h-5" /></button>
+                          </div>
+                          <p className="font-bold leading-relaxed">{q.text}</p>
+                          <div className="space-y-3">
+                            {q.options.map((opt, idx) => (
+                              <button key={idx} disabled={answered} onClick={() => setSelectedOption(idx)} className={`w-full p-4 rounded-xl border-2 text-left text-sm font-bold transition-all ${answered ? idx === q.correctOption ? 'bg-emerald-500 border-emerald-500 text-white' : idx === lastAttempt.selectedOption ? 'bg-red-500 border-red-500 text-white' : 'opacity-40' : selectedOption === idx ? 'bg-indigo-600 border-indigo-600 text-white' : darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'}`}>
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                          {answered ? (
+                            <div className="space-y-4">
+                              <div className={`p-4 rounded-xl font-bold text-sm ${lastAttempt.isCorrect ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'}`}>
+                                {lastAttempt.isCorrect ? 'Correto! +50 XP' : 'Incorreto. Tente novamente!'}
+                              </div>
+                              <button onClick={() => setShowExplanation(!showExplanation)} className="text-xs font-bold text-stone-500 underline">Ver Explicação</button>
+                              {showExplanation && <p className="text-xs leading-relaxed text-stone-500 p-4 bg-stone-100 dark:bg-stone-800 rounded-xl">{q.explanation}</p>}
+                            </div>
+                          ) : (
+                            <button onClick={() => handleAnswerQuestion(q.id)} disabled={selectedOption === null} className="w-full py-4 rounded-xl bg-indigo-600 text-white font-black disabled:opacity-50">CONFIRMAR</button>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ) : currentTab === 'pomodoro' ? (
-            <PomodoroTab 
-              darkMode={darkMode} pomodoroTime={pomodoroTime} pomodoroActive={pomodoroActive} setPomodoroActive={setPomodoroActive}
-              pomodoroMode={pomodoroMode} setPomodoroMode={setPomodoroMode} setPomodoroTime={setPomodoroTime}
-              setPomodoroInitialTime={setPomodoroInitialTime} pomodoroInitialTime={pomodoroInitialTime}
-            />
+            <div className="space-y-6">
+              <div className={`p-10 rounded-[40px] border text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                <div className={`inline-flex p-4 rounded-3xl mb-6 ${pomodoroMode === 'work' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                  <Clock className="w-8 h-8" />
+                </div>
+                <h2 className="text-7xl font-black mb-2 tracking-tighter">{Math.floor(pomodoroTime / 60)}:{(pomodoroTime % 60).toString().padStart(2, '0')}</h2>
+                <p className={`text-xs font-black uppercase tracking-[0.2em] mb-10 ${pomodoroMode === 'work' ? 'text-indigo-500' : 'text-emerald-500'}`}>{pomodoroMode === 'work' ? 'Modo Foco' : 'Descanso'}</p>
+                <div className="flex gap-4 justify-center">
+                  <button onClick={() => setPomodoroActive(!pomodoroActive)} className={`px-10 py-5 rounded-3xl font-black text-lg transition-all active:scale-95 ${pomodoroActive ? 'bg-stone-200 text-stone-600' : 'bg-indigo-600 text-white shadow-xl shadow-indigo-500/20'}`}>
+                    {pomodoroActive ? 'Pausar' : 'Começar'}
+                  </button>
+                  <button onClick={() => { setPomodoroActive(false); setPomodoroTime(pomodoroInitialTime); }} className="p-5 rounded-3xl border border-stone-200 dark:border-stone-800"><Loader2 className="w-6 h-6 text-stone-400" /></button>
+                </div>
+              </div>
+            </div>
           ) : currentTab === 'tasks' ? (
-            <TasksTab 
-              darkMode={darkMode} tasks={tasks} newTaskText={newTaskText} setNewTaskText={setNewTaskText}
-              handleAddTask={handleAddTask} handleToggleTask={handleToggleTask} handleDeleteTask={handleDeleteTask}
-            />
+            <div className="space-y-6">
+              <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+                <h2 className="font-black text-lg mb-6 flex items-center gap-2"><List className="w-5 h-5 text-indigo-600" /> Suas Tarefas</h2>
+                <div className="flex items-center gap-2 mb-6 w-full">
+                  <div className="flex-1 relative">
+                    <input 
+                      value={newTaskText} onChange={(e) => setNewTaskText(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleAddTask()}
+                      placeholder="O que vamos estudar?" className={`w-full p-4 rounded-2xl border outline-none text-sm pr-12 ${darkMode ? 'bg-stone-800 border-stone-700 text-white' : 'bg-stone-50 border-stone-200'}`}
+                    />
+                  </div>
+                  <button onClick={handleAddTask} className="bg-indigo-600 text-white p-4 rounded-2xl flex-shrink-0 shadow-lg shadow-indigo-500/30 active:scale-90 transition-all">
+                    <Plus className="w-6 h-6" />
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {tasks.map(task => (
+                    <div key={task.id} className={`flex items-center gap-3 p-4 rounded-2xl border ${task.completed ? 'opacity-50' : ''} ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-white border-stone-200 shadow-sm'}`}>
+                      <button onClick={() => handleToggleTask(task.id)} className={task.completed ? 'text-emerald-500' : 'text-stone-300'}>
+                        {task.completed ? <CheckCircle2 className="w-6 h-6" /> : <div className="w-6 h-6 border-2 border-current rounded-full" />}
+                      </button>
+                      <span className={`flex-1 font-bold ${task.completed ? 'line-through' : ''}`}>{task.text}</span>
+                      <button onClick={() => handleDeleteTask(task.id)} className="text-stone-400"><Trash2 className="w-5 h-5" /></button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           ) : null}
         </AnimatePresence>
       </main>
 
-      {/* Navigation */}
+      {/* ── NAVIGATION ──────────────────────────────────────────────── */}
       <nav className={`flex-shrink-0 border-t p-4 safe-bottom flex justify-around items-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
         {[
           { id: 'home', icon: <LayoutDashboard />, label: 'Início' },
