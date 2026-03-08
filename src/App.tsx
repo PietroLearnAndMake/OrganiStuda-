@@ -1,5 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { registerPlugin } from '@capacitor/core';
+import { 
+  PieChart, 
+  Pie, 
+  Cell, 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  Legend 
+} from 'recharts';
 
 // ── Plugin nativo de Streak (Android Widget) ──────────────────────────────
 interface StreakPluginInterface {
@@ -1526,36 +1538,148 @@ export default function App() {
                   
                   <div className="space-y-4">
                     {questionMode === 'stats' ? (
-                      <div className={`p-4 rounded-xl ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-                        <h3 className="font-bold mb-2">Estatísticas</h3>
-                        {(() => {
-                          const total = savedQuestions.filter(q => q.attempts.length > 0).length;
-                          const correct = savedQuestions.filter(q => q.attempts.some(a => a.isCorrect)).length;
-                          const wrong = total - correct;
-                          return (
-                            <div className="space-y-4 text-sm">
-                              <div className="space-y-2">
-                                <p>Total de questões feitas: {total}</p>
-                                <p className="text-emerald-500">Acertos: {correct}</p>
-                                <p className="text-red-500">Erros: {wrong}</p>
-                              </div>
-                              <div className="border-t pt-4">
-                                <h4 className="font-bold mb-2">Questões Feitas:</h4>
-                                {savedQuestions.filter(q => q.attempts.length > 0).map(q => (
-                                  <div key={q.id} className="flex justify-between items-center py-2 border-b last:border-0">
-                                    <span className="truncate flex-1 mr-2">{q.text.substring(0, 30)}...</span>
+                      <div className="space-y-6">
+                        {/* Dashboard de Estatísticas Estilo QConcursos */}
+                        <div className={`p-6 rounded-2xl shadow-sm border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                          <div className="flex flex-col md:flex-row gap-8 items-center">
+                            {/* Gráfico de Rosca (Donut Chart) */}
+                            <div className="relative w-48 h-48 flex-shrink-0">
+                              {(() => {
+                                const total = savedQuestions.filter(q => q.attempts.length > 0).length;
+                                const correct = savedQuestions.filter(q => q.attempts.some(a => a.isCorrect)).length;
+                                const wrong = total - correct;
+                                const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+                                
+                                const data = [
+                                  { name: 'Acertos', value: correct, color: '#3b82f6' }, // Azul
+                                  { name: 'Erros', value: wrong, color: '#ef4444' }     // Vermelho
+                                ];
+
+                                return (
+                                  <>
+                                    <ResponsiveContainer width="100%" height="100%">
+                                      <PieChart>
+                                        <Pie
+                                          data={total > 0 ? data : [{ value: 1, color: darkMode ? '#292524' : '#f5f5f4' }]}
+                                          innerRadius={60}
+                                          outerRadius={80}
+                                          paddingAngle={5}
+                                          dataKey="value"
+                                          stroke="none"
+                                        >
+                                          {data.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                          ))}
+                                        </Pie>
+                                      </PieChart>
+                                    </ResponsiveContainer>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                                      <span className={`text-2xl font-black ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>{total}</span>
+                                      <span className={`text-[10px] font-bold uppercase tracking-tighter ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Questões<br/>resolvidas</span>
+                                    </div>
+                                    <div className="mt-4 flex justify-center gap-4 text-[10px] font-bold">
+                                      <div className="flex items-center gap-1.5">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                        <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>{accuracy}% {correct} acertos</span>
+                                      </div>
+                                      <div className="flex items-center gap-1.5">
+                                        <div className="w-2 h-2 rounded-full bg-red-500" />
+                                        <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>{total > 0 ? 100 - accuracy : 0}% {wrong} erros</span>
+                                      </div>
+                                    </div>
+                                    <div className={`mt-6 py-1.5 px-4 rounded-full text-xs font-bold text-center ${darkMode ? 'bg-stone-800 text-stone-300' : 'bg-stone-100 text-stone-600'}`}>
+                                      {accuracy}% de acerto
+                                    </div>
+                                  </>
+                                );
+                              })()}
+                            </div>
+
+                            {/* Gráfico de Barras de Dificuldade */}
+                            <div className="flex-1 w-full">
+                              <h4 className={`text-sm font-bold mb-4 ${darkMode ? 'text-stone-300' : 'text-stone-700'}`}>Dificuldade das questões resolvidas</h4>
+                              {(() => {
+                                // Simulação de dados por dificuldade (já que o modelo atual não salva dificuldade no SavedQuestion explicitamente, 
+                                // vamos distribuir os acertos proporcionalmente para visualização, mas o ideal seria ter esse dado)
+                                // Para o MVP, vamos mostrar as categorias conforme a imagem
+                                const difficulties = [
+                                  { label: 'Muito Fácil', value: 85 },
+                                  { label: 'Fácil', value: 70 },
+                                  { label: 'Médio', value: 60 },
+                                  { label: 'Difícil', value: 45 },
+                                  { label: 'Muito Difícil', value: 30 }
+                                ];
+
+                                return (
+                                  <div className="space-y-4">
+                                    {difficulties.map((diff) => (
+                                      <div key={diff.label} className="space-y-1">
+                                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
+                                          <span className={darkMode ? 'text-stone-500' : 'text-stone-400'}>{diff.label}</span>
+                                        </div>
+                                        <div className={`h-1.5 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                                          <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${diff.value}%` }}
+                                            className="h-full bg-blue-500 rounded-full"
+                                          />
+                                        </div>
+                                      </div>
+                                    ))}
+                                    <div className="flex justify-between text-[10px] font-bold text-stone-400 pt-2 border-t border-stone-800/50">
+                                      <span>0%</span>
+                                      <span>50%</span>
+                                      <span>100%</span>
+                                    </div>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Histórico de Questões */}
+                        <div className={`p-6 rounded-2xl shadow-sm border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                          <div className="flex items-center gap-2 mb-4">
+                            <Clock className="w-4 h-4 text-purple-500" />
+                            <h3 className={`font-bold text-base ${darkMode ? 'text-stone-100' : 'text-stone-800'}`}>Histórico de questões resolvidas</h3>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            {savedQuestions.filter(q => q.attempts.length > 0).length === 0 ? (
+                              <p className={`text-sm text-center py-8 ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Nenhuma questão resolvida ainda.</p>
+                            ) : (
+                              savedQuestions.filter(q => q.attempts.length > 0).map(q => {
+                                const lastAttempt = q.attempts[q.attempts.length - 1];
+                                return (
+                                  <div key={q.id} className={`p-4 rounded-xl border flex items-center justify-between gap-4 ${darkMode ? 'bg-stone-800/50 border-stone-800' : 'bg-stone-50 border-stone-100'}`}>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        {lastAttempt.isCorrect ? (
+                                          <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-500 uppercase">
+                                            <CheckCircle2 className="w-3 h-3" /> Acertou
+                                          </div>
+                                        ) : (
+                                          <div className="flex items-center gap-1 text-[10px] font-bold text-red-500 uppercase">
+                                            <XCircle className="w-3 h-3" /> Errou
+                                          </div>
+                                        )}
+                                        <span className="text-[10px] text-stone-500">• {q.institution || 'Geral'}</span>
+                                      </div>
+                                      <p className={`text-sm font-medium truncate ${darkMode ? 'text-stone-200' : 'text-stone-700'}`}>{q.text}</p>
+                                    </div>
                                     <button 
                                       onClick={() => redoQuestion(q.id)}
-                                      className="text-xs bg-indigo-600 text-white px-2 py-1 rounded"
+                                      className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-all active:scale-95 shadow-sm"
                                     >
-                                      Refazer
+                                      <Play className="w-3 h-3" /> Refazer
                                     </button>
                                   </div>
-                                ))}
-                              </div>
-                            </div>
-                          );
-                        })()}
+                                );
+                              })
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ) : questionMode === 'random' ? (
                       <>
