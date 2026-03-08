@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   LayoutDashboard, 
   BrainCircuit, 
@@ -36,11 +36,21 @@ import {
   PenTool,
   User,
   Camera,
-  Circle,
   BarChart2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Preferences } from '@capacitor/preferences';
+import { 
+  PieChart, 
+  Pie, 
+  Cell, 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip 
+} from 'recharts';
 
 // --- DATA ---
 import { ENEM_DATA } from './data/enemData';
@@ -125,7 +135,10 @@ const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: { streak: num
   const today = new Date().getDay();
 
   return (
-    <div className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
+    >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Flame className="w-5 h-5 text-orange-500" />
@@ -154,7 +167,54 @@ const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: { streak: num
           );
         })}
       </div>
-    </div>
+    </motion.div>
+  );
+});
+
+const StatsWidget = React.memo(({ savedQuestions, darkMode }: { savedQuestions: SavedQuestion[], darkMode: boolean }) => {
+  const stats = useMemo(() => {
+    const total = savedQuestions.filter(q => q.attempts.length > 0).length;
+    const correct = savedQuestions.filter(q => q.attempts[q.attempts.length - 1]?.isCorrect).length;
+    const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+    return { total, correct, accuracy };
+  }, [savedQuestions]);
+
+  const chartData = [
+    { name: 'Acertos', value: stats.correct, color: '#10b981' },
+    { name: 'Erros', value: stats.total - stats.correct, color: '#ef4444' }
+  ];
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className={`p-5 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <BarChart2 className="w-5 h-5 text-indigo-500" />
+        <h3 className="font-black text-sm uppercase tracking-widest">Desempenho</h3>
+      </div>
+      <div className="flex items-center gap-6">
+        <div className="w-24 h-24">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={chartData} innerRadius={30} outerRadius={45} paddingAngle={5} dataKey="value">
+                {chartData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="flex-1 grid grid-cols-2 gap-2">
+          <div className="text-center p-2 rounded-2xl bg-stone-100 dark:bg-stone-800">
+            <div className="text-lg font-black">{stats.total}</div>
+            <div className="text-[8px] font-bold uppercase text-stone-500">Feitas</div>
+          </div>
+          <div className="text-center p-2 rounded-2xl bg-indigo-500/10">
+            <div className="text-lg font-black text-indigo-500">{stats.accuracy}%</div>
+            <div className="text-[8px] font-bold uppercase text-indigo-500">Taxa</div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 });
 
@@ -238,16 +298,27 @@ export default function App() {
     } catch (e) {}
   };
 
+  const showToast = (title: string, message: string, icon: string = '🏆', color: string = 'bg-indigo-600') => {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-10 left-6 right-6 p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 text-white transition-all duration-500 transform translate-y-0 ${color}`;
+    toast.innerHTML = `<div class="text-2xl">${icon}</div><div><div class="font-black">${title}</div><div class="text-xs opacity-90">${message}</div></div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-20px)';
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
+  };
+
   // --- PERSISTENCE ---
 
   useEffect(() => {
     async function loadData() {
       try {
-        const { value: storedData } = await Preferences.get({ key: 'organistuda_data_v380' });
+        const { value: storedData } = await Preferences.get({ key: 'organistuda_data_v381' });
         if (storedData) {
           const parsed = JSON.parse(storedData);
           if (parsed.profile) {
-            // Lógica de Streak ao carregar
             const today = new Date().toISOString().split('T')[0];
             const last = parsed.profile.lastLogin;
             
@@ -261,8 +332,9 @@ export default function App() {
                 if (parsed.profile.streak > parsed.profile.bestStreak) {
                   parsed.profile.bestStreak = parsed.profile.streak;
                 }
+                showToast('Ofensiva Mantida!', `Você está há ${parsed.profile.streak} dias estudando! 🔥`, '🔥', 'bg-orange-500');
               } else if (last !== null) {
-                parsed.profile.streak = 0;
+                parsed.profile.streak = 1;
               }
               parsed.profile.lastLogin = today;
             }
@@ -286,7 +358,7 @@ export default function App() {
     if (!isInitialized) return;
     async function saveData() {
       const data = { profile, subjects, savedQuestions, tasks, darkMode };
-      await Preferences.set({ key: 'organistuda_data_v380', value: JSON.stringify(data) });
+      await Preferences.set({ key: 'organistuda_data_v381', value: JSON.stringify(data) });
     }
     saveData();
   }, [profile, subjects, savedQuestions, tasks, darkMode, isInitialized]);
@@ -304,6 +376,7 @@ export default function App() {
         newLevel += 1;
         newNextLevelXp = Math.floor(newNextLevelXp * 1.2);
         playSound('https://actions.google.com/sounds/v1/notifications/achievement_sound.ogg');
+        showToast('Nível Subiu!', `Parabéns! Você agora é Nível ${newLevel} 🚀`, '🎊', 'bg-indigo-600');
       }
 
       return {
@@ -381,8 +454,9 @@ export default function App() {
           ...s,
           topics: s.topics.map(t => {
             if (t.id === topicId) {
-              if (!t.completed) addXP(100);
-              return { ...t, completed: !t.completed };
+              const newState = !t.completed;
+              if (newState) addXP(100);
+              return { ...t, completed: newState };
             }
             return t;
           })
@@ -444,14 +518,20 @@ export default function App() {
     } else if (pomodoroTime === 0) {
       setPomodoroActive(false);
       if (pomodoroMode === 'work') {
-        addXP(200);
-        alert('Sessão de Foco concluída! +200 XP');
+        const earnedXP = Math.round((pomodoroInitialTime / 1500) * 100);
+        addXP(earnedXP);
+        showToast('Foco Concluído!', `Sessão finalizada! +${earnedXP} XP ⏰`, '⏰', 'bg-emerald-500');
+        setPomodoroMode('break');
+        setPomodoroTime(5 * 60);
+        setPomodoroInitialTime(5 * 60);
       } else {
-        alert('Descanso concluído! Hora de voltar ao foco.');
+        setPomodoroMode('work');
+        setPomodoroTime(25 * 60);
+        setPomodoroInitialTime(25 * 60);
       }
     }
     return () => clearInterval(interval);
-  }, [pomodoroActive, pomodoroTime, pomodoroMode, addXP]);
+  }, [pomodoroActive, pomodoroTime, pomodoroMode, addXP, pomodoroInitialTime]);
 
   // --- RENDER HELPERS ---
 
@@ -537,7 +617,10 @@ export default function App() {
             <motion.div key="home" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
               {!selectedSubjectId ? (
                 <>
-                  <StreakWidget streak={profile.streak} bestStreak={profile.bestStreak} darkMode={darkMode} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <StreakWidget streak={profile.streak} bestStreak={profile.bestStreak} darkMode={darkMode} />
+                    <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
+                  </div>
                   
                   <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
                     <div className="flex items-center justify-between mb-4">
@@ -606,7 +689,7 @@ export default function App() {
                         value={newTopicTitle} onChange={(e) => setNewTopicTitle(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && addTopic(selectedSubject!.id)}
                         placeholder="Novo tópico..." className={`flex-1 p-4 rounded-2xl border outline-none text-sm ${darkMode ? 'bg-stone-800 border-stone-700' : 'bg-stone-50 border-stone-200'}`}
                       />
-                      <button onClick={() => addTopic(selectedSubject!.id)} className="bg-indigo-600 text-white p-4 rounded-2xl flex-shrink-0"><Plus className="w-6 h-6" /></button>
+                      <button onClick={() => addTopic(selectedSubject!.id)} className="bg-indigo-600 text-white p-4 rounded-2xl flex-shrink-0 shadow-lg shadow-indigo-500/30 active:scale-90 transition-all"><Plus className="w-6 h-6" /></button>
                     </div>
                   </div>
                 </div>
