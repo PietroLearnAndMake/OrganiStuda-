@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { 
   LayoutDashboard, 
   BrainCircuit, 
@@ -29,10 +29,13 @@ import {
   Calendar,
   BarChart3,
   Award,
-  Zap
+  Zap,
+  Calculator,
+  Globe,
+  FlaskConical,
+  PenTool
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { Preferences } from '@capacitor/preferences';
 
 // --- DATA ---
@@ -80,12 +83,28 @@ interface Achievement {
   goal: number;
 }
 
+// --- ICON MAPPER ---
+const IconComponent = ({ name, className }: { name: string, className?: string }) => {
+  const icons: Record<string, any> = {
+    Calculator,
+    BookOpen,
+    Globe,
+    FlaskConical,
+    PenTool,
+    Zap,
+    BrainCircuit,
+    Target
+  };
+  const Icon = icons[name] || BookOpen;
+  return <Icon className={className} />;
+};
+
 // --- SUB-COMPONENTS (MEMOIZED) ---
 
 const AchievementCard = React.memo(({ achievement, darkMode }: { achievement: Achievement, darkMode: boolean }) => (
   <div className={`p-4 rounded-2xl border flex items-center gap-4 transition-all ${
     achievement.unlocked 
-      ? darkMode ? 'bg-stone-800/50 border-stone-700' : 'bg-white border-stone-200 shadow-sm'
+      ? darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'
       : 'opacity-50 grayscale bg-stone-100 dark:bg-stone-900 border-transparent'
   }`}>
     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${
@@ -288,9 +307,7 @@ const QuestionsTab = React.memo(({
 
 const PomodoroTab = React.memo(({ 
   darkMode, pomodoroTime, pomodoroActive, setPomodoroActive, 
-  pomodoroMode, setPomodoroMode, isEditingTime, setIsEditingTime, 
-  customTimeInput, setCustomTimeInput, customBreakInput, 
-  setCustomBreakInput, handleSaveCustomTime, setPomodoroTime, setPomodoroInitialTime, pomodoroInitialTime
+  pomodoroMode, setPomodoroMode, setPomodoroTime, setPomodoroInitialTime, pomodoroInitialTime
 }: any) => (
   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
     <div className={`p-10 rounded-[40px] border text-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
@@ -314,7 +331,7 @@ const PomodoroTab = React.memo(({
 ));
 
 const TasksTab = React.memo(({ 
-  darkMode, tasks, setTasks, newTaskText, setNewTaskText, 
+  darkMode, tasks, newTaskText, setNewTaskText, 
   handleAddTask, handleToggleTask, handleDeleteTask 
 }: any) => (
   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
@@ -372,7 +389,6 @@ export default function App() {
   const [subjects, setSubjects] = useState<Subject[]>(ENEM_DATA);
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const [newTopicTitle, setNewTopicTitle] = useState('');
-  const [showSubjectMenu, setShowSubjectMenu] = useState(false);
 
   // State: Questions
   const [savedQuestions, setSavedQuestions] = useState<SavedQuestion[]>([]);
@@ -390,9 +406,8 @@ export default function App() {
   const [pomodoroInitialTime, setPomodoroInitialTime] = useState(25 * 60);
   const [pomodoroActive, setPomodoroActive] = useState(false);
   const [pomodoroMode, setPomodoroMode] = useState<'work' | 'break'>('work');
-  const [isEditingTime, setIsEditingTime] = useState(false);
-  const [customTimeInput, setCustomTimeInput] = useState('25');
-  const [customBreakInput, setCustomBreakInput] = useState('5');
+  const [customTimeInput] = useState('25');
+  const [customBreakInput] = useState('5');
 
   // State: Tasks
   const [tasks, setTasks] = useState<{id: string, text: string, completed: boolean}[]>([]);
@@ -480,7 +495,6 @@ export default function App() {
   const generateBankQuestion = useCallback(() => {
     setLoadingQuestion(true);
     setTimeout(() => {
-      // Simulação de busca de questão
       const newQ: SavedQuestion = {
         id: Math.random().toString(36).substr(2, 9),
         text: "Qual a principal característica do Humanismo no Brasil?",
@@ -567,14 +581,6 @@ export default function App() {
     setTasks(prev => prev.filter(t => t.id !== id));
   }, []);
 
-  const handleSaveCustomTime = useCallback(() => {
-    const work = parseInt(customTimeInput) * 60;
-    const rest = parseInt(customBreakInput) * 60;
-    setPomodoroTime(pomodoroMode === 'work' ? work : rest);
-    setPomodoroInitialTime(pomodoroMode === 'work' ? work : rest);
-    setIsEditingTime(false);
-  }, [customTimeInput, customBreakInput, pomodoroMode]);
-
   // --- POMODORO TIMER ---
 
   useEffect(() => {
@@ -616,7 +622,7 @@ export default function App() {
   return (
     <div className={`flex flex-col h-screen overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'}`}>
       {/* Header */}
-      <header className="flex-shrink-0 p-6 flex items-center justify-between">
+      <header className="flex-shrink-0 p-6 flex items-center justify-between safe-top">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
             <Flame className="text-white w-6 h-6" />
@@ -666,16 +672,16 @@ export default function App() {
                         <button 
                           key={subject.id}
                           onClick={() => setSelectedSubjectId(subject.id)}
-                          className={`p-5 rounded-3xl border text-left transition-all active:scale-[0.98] flex items-center gap-4 ${darkMode ? 'bg-stone-900 border-stone-800 hover:border-stone-700' : 'bg-white border-stone-200 shadow-sm hover:shadow-md'}`}
+                          className={`p-6 rounded-[32px] border text-left transition-all active:scale-[0.98] flex items-center gap-5 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}
                         >
-                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner`} style={{ backgroundColor: `${subject.color}20`, color: subject.color }}>
-                            {subject.icon}
+                          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-inner`} style={{ backgroundColor: `${subject.color.replace('bg-', '')}20`, color: subject.color.includes('bg-') ? '' : subject.color }}>
+                            <IconComponent name={subject.icon} className={`w-8 h-8 ${subject.color.replace('bg-', 'text-')}`} />
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-black text-base">{subject.name}</h4>
+                            <h4 className="font-black text-lg">{subject.name}</h4>
                             <div className="flex items-center gap-2 mt-1">
                               <div className="flex-1 h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
-                                <div className="h-full transition-all duration-500" style={{ width: `${percent}%`, backgroundColor: subject.color }} />
+                                <div className={`h-full transition-all duration-500 ${subject.color}`} style={{ width: `${percent}%` }} />
                               </div>
                               <span className="text-[10px] font-bold text-stone-500">{percent}%</span>
                             </div>
@@ -693,8 +699,8 @@ export default function App() {
                   </button>
                   <div className={`p-6 rounded-3xl border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl" style={{ backgroundColor: `${selectedSubject?.color}20`, color: selectedSubject?.color }}>
-                        {selectedSubject?.icon}
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl bg-indigo-500/10 text-indigo-500">
+                        <IconComponent name={selectedSubject?.icon || ''} className="w-6 h-6" />
                       </div>
                       <h2 className="text-2xl font-black">{selectedSubject?.name}</h2>
                     </div>
@@ -736,14 +742,12 @@ export default function App() {
           ) : currentTab === 'pomodoro' ? (
             <PomodoroTab 
               darkMode={darkMode} pomodoroTime={pomodoroTime} pomodoroActive={pomodoroActive} setPomodoroActive={setPomodoroActive}
-              pomodoroMode={pomodoroMode} setPomodoroMode={setPomodoroMode} isEditingTime={isEditingTime} setIsEditingTime={setIsEditingTime}
-              customTimeInput={customTimeInput} setCustomTimeInput={setCustomTimeInput} customBreakInput={customBreakInput}
-              setCustomBreakInput={setCustomBreakInput} handleSaveCustomTime={handleSaveCustomTime} setPomodoroTime={setPomodoroTime}
+              pomodoroMode={pomodoroMode} setPomodoroMode={setPomodoroMode} setPomodoroTime={setPomodoroTime}
               setPomodoroInitialTime={setPomodoroInitialTime} pomodoroInitialTime={pomodoroInitialTime}
             />
           ) : currentTab === 'tasks' ? (
             <TasksTab 
-              darkMode={darkMode} tasks={tasks} setTasks={setTasks} newTaskText={newTaskText} setNewTaskText={setNewTaskText}
+              darkMode={darkMode} tasks={tasks} newTaskText={newTaskText} setNewTaskText={setNewTaskText}
               handleAddTask={handleAddTask} handleToggleTask={handleToggleTask} handleDeleteTask={handleDeleteTask}
             />
           ) : null}
@@ -751,7 +755,7 @@ export default function App() {
       </main>
 
       {/* Navigation */}
-      <nav className={`flex-shrink-0 border-t p-4 pb-8 flex justify-around items-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+      <nav className={`flex-shrink-0 border-t p-4 safe-bottom flex justify-around items-center ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
         {[
           { id: 'home', icon: <LayoutDashboard />, label: 'Início' },
           { id: 'questions', icon: <BrainCircuit />, label: 'Questões' },
