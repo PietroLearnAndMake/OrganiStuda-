@@ -1235,17 +1235,18 @@ export default function App() {
       </header>
 
       {/* ── Main Content ────────────────────────────────────────────────────── */}
-      <main className="flex-1 overflow-y-auto px-6 py-6" style={{ paddingBottom: 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)' }}>
-        <AnimatePresence mode="wait">
+      <main className={`flex-1 overflow-y-auto px-6 py-6 ${darkMode ? 'bg-stone-950' : 'bg-stone-50'}`} style={{ paddingBottom: 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)' }}>
+        <AnimatePresence initial={false}>
 
           {/* ── HOME TAB ──────────────────────────────────────────────────── */}
           {currentTab === 'home' ? (
             !selectedSubjectId ? (
               <motion.div 
                 key="dashboard"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
                 className="space-y-6"
               >
                 {/* ── Streak Widget ──────────────────────────────────────── */}
@@ -1341,9 +1342,10 @@ export default function App() {
               /* ── Subject Detail ──────────────────────────────────────────── */
               <motion.div 
                 key="subject-detail"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
                 <button 
                   onClick={() => setSelectedSubjectId(null)}
@@ -1562,9 +1564,10 @@ export default function App() {
           ) : currentTab === 'achievements' ? (
             <motion.div 
               key="achievements"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="space-y-6"
             >
               <div className="flex items-center gap-2 mb-2">
@@ -1805,9 +1808,10 @@ export default function App() {
           ) : currentTab === 'questions' ? (
             <motion.div 
               key="questions"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="space-y-6"
             >
               <div className="flex flex-col gap-4 mb-2">
@@ -2393,9 +2397,10 @@ export default function App() {
           ) : currentTab === 'pomodoro' ? (
             <motion.div 
               key="pomodoro"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="h-full flex flex-col items-center justify-center space-y-12 py-10"
             >
               <div className="text-center space-y-2">
@@ -2533,9 +2538,10 @@ export default function App() {
           ) : currentTab === 'tasks' ? (
             <motion.div 
               key="tasks"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="space-y-6"
             >
               <div className="flex items-center gap-2 mb-2">
