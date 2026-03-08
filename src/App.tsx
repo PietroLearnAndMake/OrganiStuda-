@@ -484,7 +484,6 @@ export default function App() {
     try {
       setIsInitialized(true);
     } catch (err) {
-      console.error('Erro fatal na inicialização:', err);
       setInitializationError(String(err));
     }
 
@@ -562,7 +561,7 @@ export default function App() {
       }
     }
     return () => clearInterval(interval);
-  }, [pomodoroActive, pomodoroTime, pomodoroMode, isInitialized, pomodoroInitialTime, customBreakInput, customTimeInput, addXP]);
+  }, [pomodoroActive, pomodoroTime, pomodoroMode, isInitialized, pomodoroInitialTime, customBreakInput, customTimeInput]);
 
   // ─── Memos ────────────────────────────────────────────────────────────────
   const totalTopics = useMemo(() => 
@@ -769,6 +768,7 @@ export default function App() {
   // ─── XP & Level System ───────────────────────────────────────────────────
   const calculateLevel = useCallback((xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1, []);
   const xpForLevel = useCallback((level: number) => Math.pow(level - 1, 2) * 100, []);
+  // ─── Funções de XP ───────────────────────────────────────────────────────────
   const xpForNextLevel = useCallback((level: number) => Math.pow(level, 2) * 100, []);
 
   const addXP = useCallback((amount: number) => {
