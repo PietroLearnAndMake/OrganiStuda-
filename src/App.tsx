@@ -214,7 +214,7 @@ const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: StreakWidgetP
       )}
     </motion.div>
   );
-}
+});
 
 // ─── Stats Widget Component ──────────────────────────────────────────────────
 interface StatsWidgetProps {
@@ -276,7 +276,7 @@ const StatsWidget = React.memo(({ savedQuestions, darkMode }: StatsWidgetProps) 
       )}
     </motion.div>
   );
-}
+});
 
 export default function App() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
