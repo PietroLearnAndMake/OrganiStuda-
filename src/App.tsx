@@ -121,7 +121,7 @@ interface StreakWidgetProps {
   darkMode: boolean;
 }
 
-function StreakWidget({ streak, bestStreak, darkMode }: StreakWidgetProps) {
+const StreakWidget = React.memo(({ streak, bestStreak, darkMode }: StreakWidgetProps) => {
   const days = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
   const today = new Date().getDay(); // 0 = domingo
 
@@ -222,7 +222,7 @@ interface StatsWidgetProps {
   darkMode: boolean;
 }
 
-function StatsWidget({ savedQuestions, darkMode }: StatsWidgetProps) {
+const StatsWidget = React.memo(({ savedQuestions, darkMode }: StatsWidgetProps) => {
   const total = savedQuestions.filter(q => q.attempts.length > 0).length;
   const correct = savedQuestions.filter(q => {
     const last = q.attempts[q.attempts.length - 1];
@@ -299,10 +299,12 @@ export default function App() {
   
   // Pomodoro & Tasks State
   const [pomodoroTime, setPomodoroTime] = useState(25 * 60);
+  const [pomodoroInitialTime, setPomodoroInitialTime] = useState(25 * 60);
   const [pomodoroActive, setPomodoroActive] = useState(false);
   const [pomodoroMode, setPomodoroMode] = useState<'work' | 'break'>('work');
   const [isEditingTime, setIsEditingTime] = useState(false);
   const [customTimeInput, setCustomTimeInput] = useState('25');
+  const [customBreakInput, setCustomBreakInput] = useState('5');
   const [tasks, setTasks] = useState<{id: string, text: string, completed: boolean}[]>([]);
   const [newTaskText, setNewTaskText] = useState('');
   
@@ -499,36 +501,37 @@ export default function App() {
       interval = setInterval(() => {
         setPomodoroTime((time) => time - 1);
       }, 1000);
-    } else if (pomodoroTime === 0) {
+    } else if (pomodoroTime === 0 && isInitialized) {
       setPomodoroActive(false);
       if (pomodoroMode === 'work') {
-        addXP(50); // XP por completar uma sessão Pomodoro
+        // Balanceamento de XP: 100 XP para 25 min (1500s), proporcional para outros tempos
+        const earnedXP = Math.round((pomodoroInitialTime / 1500) * 100);
+        addXP(earnedXP);
+
         setPomodoroMode('break');
-        setPomodoroTime(5 * 60);
+        const breakMins = parseInt(customBreakInput) || 5;
+        const breakTime = breakMins * 60;
+        setPomodoroTime(breakTime);
+        setPomodoroInitialTime(breakTime);
         
-        // Som de Pomodoro
         const audio = new Audio('/sounds/pomodoro.mp3');
         audio.play().catch(() => {});
 
-        // Notificação Nativa (para quando o app está em segundo plano)
         LocalNotifications.schedule({
           notifications: [
             {
               title: "Pomodoro Finalizado! ⏰",
-              body: pomodoroMode === 'work' ? "Hora de descansar um pouco! +50 XP" : "Hora de voltar ao foco!",
+              body: `Fim da sessão de foco! +${earnedXP} XP. Hora de descansar ${breakMins} min.`,
               id: 1,
               schedule: { at: new Date(Date.now() + 100) },
-              sound: 'pomodoro.mp3',
-              actionTypeId: "",
-              extra: null
+              sound: 'pomodoro.mp3'
             }
           ]
         }).catch(() => {});
 
-        // Notificação Interna (Popup/Toast)
         const toast = document.createElement('div');
         toast.className = 'fixed right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3'; toast.style.top = 'max(env(safe-area-inset-top, 0px), 2.5rem)';
-        toast.innerHTML = `<div class="text-2xl">⏰</div><div><div class="font-black">Sessão concluída!</div><div class="text-sm text-emerald-100">+50 XP • Hora de descansar 5 min</div></div>`;
+        toast.innerHTML = `<div class="text-2xl">⏰</div><div><div class="font-black">Sessão concluída!</div><div class="text-sm text-emerald-100">+${earnedXP} XP • Hora de descansar</div></div>`;
         document.body.appendChild(toast);
         setTimeout(() => {
           toast.style.transition = 'opacity 0.5s';
@@ -537,11 +540,14 @@ export default function App() {
         }, 3000);
       } else {
         setPomodoroMode('work');
-        setPomodoroTime(25 * 60);
+        const workMins = parseInt(customTimeInput) || 25;
+        const workTime = workMins * 60;
+        setPomodoroTime(workTime);
+        setPomodoroInitialTime(workTime);
       }
     }
     return () => clearInterval(interval);
-  }, [pomodoroActive, pomodoroTime, pomodoroMode]);
+  }, [pomodoroActive, pomodoroTime, pomodoroMode, isInitialized, pomodoroInitialTime, customBreakInput, customTimeInput, addXP]);
 
   // ─── Memos ────────────────────────────────────────────────────────────────
   const totalTopics = useMemo(() => 
@@ -746,18 +752,17 @@ export default function App() {
   };
 
   // ─── XP & Level System ───────────────────────────────────────────────────
-  const calculateLevel = (xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1;
-  const xpForLevel = (level: number) => Math.pow(level - 1, 2) * 100;
-  const xpForNextLevel = (level: number) => Math.pow(level, 2) * 100;
+  const calculateLevel = useCallback((xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1, []);
+  const xpForLevel = useCallback((level: number) => Math.pow(level - 1, 2) * 100, []);
+  const xpForNextLevel = useCallback((level: number) => Math.pow(level, 2) * 100, []);
 
-  const addXP = (amount: number) => {
+  const addXP = useCallback((amount: number) => {
     setProfile(prev => {
       const currentXP = prev.xp || 0;
       const currentLevel = prev.level || 1;
       const newXP = Math.max(0, currentXP + amount);
       const newLevel = calculateLevel(newXP);
       
-      // Apenas mostrar Toast se o XP estiver aumentando
       if (amount > 0) {
         const xpToast = document.createElement('div');
         xpToast.className = 'fixed left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2'; xpToast.style.bottom = 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)';
@@ -770,7 +775,6 @@ export default function App() {
         }, 2000);
       }
 
-      // Se subiu de nível, mostrar popup de celebração
       if (newLevel > currentLevel) {
         const audio = new Audio('/sounds/achievement.mp3');
         audio.play().catch(() => {});
@@ -789,12 +793,9 @@ export default function App() {
         document.body.appendChild(notification);
       }
       
-      // Se desceu de nível (ao desmarcar disciplina), apenas atualiza o estado sem popup
-      // O nível é totalmente vinculado ao XP (calculado pela função calculateLevel)
-      
       return { ...prev, xp: newXP, level: newLevel };
     });
-  };
+  }, [calculateLevel]);
 
   // ─── Answer Handling ──────────────────────────────────────────────────────
   const handleAnswer = (optionIdx: number) => {
