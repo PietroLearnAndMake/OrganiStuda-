@@ -12,6 +12,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
+    "check": "tsc --noEmit",
+    "test": "vitest",
     "cap:sync": "cap sync android",
     "cap:build": "vite build && cap sync android"
   },

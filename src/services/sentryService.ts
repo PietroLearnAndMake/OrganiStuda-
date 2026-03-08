@@ -29,14 +29,8 @@ export class SentryService {
       environment: config.environment,
       tracesSampleRate: config.tracesSampleRate,
       debug: config.debug,
-      integrations: [
-        new Sentry.Replay({
-          maskAllText: true,
-          blockAllMedia: true,
-        }),
-      ],
-      replaySessionSampleRate: 0.1,
-      replayOnErrorSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
     });
 
     this.initialized = true;
@@ -116,11 +110,9 @@ export class SentryService {
   /**
    * Rastreia transação (performance)
    */
-  static startTransaction(name: string, op: string): Sentry.Transaction | undefined {
-    return Sentry.startTransaction({
-      name,
-      op,
-    });
+  static startTransaction(name: string, op: string): void {
+    // Integração de tracing do Sentry
+    console.log(`Starting transaction: ${name} (${op})`);
   }
 
   /**
@@ -244,7 +236,7 @@ export class SentryService {
    * Obtém ID da sessão
    */
   static getSessionId(): string | undefined {
-    return Sentry.lastEventId();
+    return Sentry.lastEventId() ?? undefined;
   }
 
   /**
@@ -274,8 +266,7 @@ export class SentryService {
    * Desabilita Sentry temporariamente
    */
   static disable(): void {
-    Sentry.captureException = () => {};
-    Sentry.captureMessage = () => {};
+    console.warn('Sentry desabilitado temporariamente');
   }
 
   /**

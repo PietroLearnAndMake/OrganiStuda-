@@ -298,8 +298,8 @@ export class NotificationService {
    */
   clearAll(): void {
     this.notifications.clear();
-    Array.from(localStorage.keys()).forEach((key) => {
-      if (key.startsWith('notification_')) {
+    Array.from(localStorage.keys()).forEach((key: string) => {
+      if (key && typeof key === 'string' && key.startsWith('notification_')) {
         localStorage.removeItem(key);
       }
     });
