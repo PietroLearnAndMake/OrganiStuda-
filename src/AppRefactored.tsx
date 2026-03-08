@@ -2,49 +2,11 @@ import React, { useEffect } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { errorService } from './services/errorService';
 import { storageService } from './services/storageService';
-
-// Telas (a serem implementadas)
-function HomeScreen() {
-  const { profile, darkMode } = useApp();
-  return (
-    <div className={`p-6 ${darkMode ? 'bg-stone-900 text-white' : 'bg-white text-black'}`}>
-      <h1 className="text-2xl font-bold">Bem-vindo, {profile.name}!</h1>
-      <p>XP: {profile.xp} | Nível: {profile.level}</p>
-    </div>
-  );
-}
-
-function QuestionsScreen() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Questões</h1>
-    </div>
-  );
-}
-
-function PomodoroScreen() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Pomodoro</h1>
-    </div>
-  );
-}
-
-function TasksScreen() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Tarefas</h1>
-    </div>
-  );
-}
-
-function AchievementsScreen() {
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Conquistas</h1>
-    </div>
-  );
-}
+import { HomeScreen } from './screens/HomeScreen';
+import { QuestionsScreen } from './screens/QuestionsScreen';
+import { PomodoroScreen } from './screens/PomodoroScreen';
+import { TasksScreen } from './screens/TasksScreen';
+import { AchievementsScreen } from './screens/AchievementsScreen';
 
 /**
  * Componente principal do aplicativo
@@ -62,9 +24,11 @@ function AppContent() {
 
   if (!isInitialized) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className={`flex items-center justify-center h-screen ${darkMode ? 'bg-stone-950' : 'bg-stone-50'}`}>
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Carregando...</h1>
+          <h1 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-stone-900'}`}>
+            Carregando...
+          </h1>
           {initializationError && (
             <p className="text-red-500">{initializationError}</p>
           )}
