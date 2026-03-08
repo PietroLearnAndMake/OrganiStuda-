@@ -1236,19 +1236,12 @@ export default function App() {
 
       {/* ── Main Content ────────────────────────────────────────────────────── */}
       <main className={`flex-1 overflow-y-auto px-6 py-6 touch-pan-y overscroll-none ${darkMode ? 'bg-stone-950' : 'bg-stone-50'}`} style={{ paddingBottom: 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)' }}>
-        <AnimatePresence initial={false}>
+        <div className="w-full h-full">
 
           {/* ── HOME TAB ──────────────────────────────────────────────────── */}
           {currentTab === 'home' ? (
             !selectedSubjectId ? (
-              <motion.div 
-                key="dashboard"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-6"
-              >
+              <div className="space-y-6">
                 {/* ── Streak Widget ──────────────────────────────────────── */}
                 <StreakWidget 
                   streak={profile.streak || 0} 
@@ -1307,46 +1300,36 @@ export default function App() {
                           </button>
                         </div>
                       
-                        <div className="space-y-3 text-center">
+                <div className="space-y-3 text-center">
                           <div className="text-xs font-black uppercase tracking-widest text-indigo-500">
                             {percent}% Concluído
                           </div>
                           <div className={`h-3 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              animate={{ width: `${percent}%` }}
-                              className={`h-full ${subject.color} rounded-full`}
+                            <div 
+                              style={{ width: `${percent}%` }}
+                              className={`h-full ${subject.color} rounded-full transition-all duration-500`}
                             />
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </div>
 
                 {overallPercentage === 100 && subjects.length > 0 && (
-                  <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className={`p-6 rounded-2xl text-center border ${
+                  <div className={`p-6 rounded-2xl text-center border ${
                       darkMode ? 'bg-emerald-950/20 border-emerald-900 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-800'
                     }`}
                   >
                     <Trophy className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
                     <h3 className="font-bold text-lg">Incrível!</h3>
                     <p className="text-sm opacity-80">Você completou 100% dos estudos. O ENEM é seu!</p>
-                  </motion.div>
+                  </div>
                 )}
-              </motion.div>
+              </div>
             ) : (
               /* ── Subject Detail ──────────────────────────────────────────── */
-              <motion.div 
-                key="subject-detail"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
+              <div className="w-full">
                 <button 
                   onClick={() => setSelectedSubjectId(null)}
                   className={`flex items-center gap-2 mb-6 transition-colors ${darkMode ? 'text-stone-500 hover:text-stone-300' : 'text-stone-500 hover:text-stone-800'}`}
@@ -1557,19 +1540,11 @@ export default function App() {
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
-              </motion.div>
+              </div>
             )
-
           /* ── ACHIEVEMENTS TAB ─────────────────────────────────────────── */
           ) : currentTab === 'achievements' ? (
-            <motion.div 
-              key="achievements"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6">
               <div className="flex items-center gap-2 mb-2">
                 <Trophy className="w-5 h-5 text-indigo-600" />
                 <h2 className="font-bold text-lg">Minhas Conquistas</h2>
@@ -1803,17 +1778,9 @@ export default function App() {
                   </div>
                 ))}
               </div>
-            </motion.div>
-
+            </div>
           ) : currentTab === 'questions' ? (
-            <motion.div 
-              key="questions"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6">
               <div className="flex flex-col gap-4 mb-2">
                 {/* Question Bank Mode */}
                 <div className={`p-6 rounded-xl shadow-sm border ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
@@ -2391,18 +2358,10 @@ export default function App() {
                   <p className={`text-sm mt-1 ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>Tente outros filtros</p>
                 </div>
               )}
-            </motion.div>
-
+            </div>
           /* ── POMODORO TAB ─────────────────────────────────────────────── */
           ) : currentTab === 'pomodoro' ? (
-            <motion.div 
-              key="pomodoro"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="h-full flex flex-col items-center justify-center space-y-12 py-10"
-            >
+            <div className="h-full flex flex-col items-center justify-center space-y-12 py-10">
               <div className="text-center space-y-2">
                 <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] ${
                   pomodoroMode === 'work' 
@@ -2530,20 +2489,12 @@ export default function App() {
                   <li>• A cada 4 Pomodoros, faça uma pausa longa (15-30 min)</li>
                   <li>• Elimine distrações durante a sessão de foco</li>
                   <li>• Ganhe +50 XP ao completar cada sessão!</li>
-                </ul>
+                 </ul>
               </div>
-            </motion.div>
-
+            </div>
           /* ── TASKS TAB ────────────────────────────────────────────────── */
           ) : currentTab === 'tasks' ? (
-            <motion.div 
-              key="tasks"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="space-y-6"
-            >
+            <div className="space-y-6">
               <div className="flex items-center gap-2 mb-2">
                 <List className="w-5 h-5 text-indigo-600" />
                 <h2 className="font-bold text-lg">Lista de Tarefas</h2>
@@ -2655,9 +2606,9 @@ export default function App() {
                   ))
                 )}
               </div>
-            </motion.div>
+            </div>
           ) : null}
-        </AnimatePresence>
+        </div>
       </main>
 
       {/* ── Bottom Navigation ───────────────────────────────────────────────── */}
