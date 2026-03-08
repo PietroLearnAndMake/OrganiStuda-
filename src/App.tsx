@@ -544,6 +544,12 @@ export default function App() {
               const newState = !t.completed;
               if (newState) {
                 addXP(100);
+              } else {
+                // Remover XP ao desmarcar para evitar XP infinito
+                setProfile(p => ({
+                  ...p,
+                  xp: Math.max(0, p.xp - 100)
+                }));
               }
               return { ...t, completed: newState };
             }
@@ -727,19 +733,21 @@ export default function App() {
     setProfile(prev => {
       const currentXP = prev.xp || 0;
       const currentLevel = prev.level || 1;
-      const newXP = currentXP + amount;
+      const newXP = Math.max(0, currentXP + amount);
       const newLevel = calculateLevel(newXP);
       
-      // Toast de XP
-      const xpToast = document.createElement('div');
-      xpToast.className = 'fixed left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2'; xpToast.style.bottom = 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)';
-      xpToast.innerHTML = `<span>+${amount} XP</span> <span class="text-xs">✨</span>`;
-      document.body.appendChild(xpToast);
-      setTimeout(() => {
-        xpToast.style.transition = 'opacity 0.5s';
-        xpToast.style.opacity = '0';
-        setTimeout(() => xpToast.remove(), 500);
-      }, 2000);
+      // Apenas mostrar Toast se o XP estiver aumentando
+      if (amount > 0) {
+        const xpToast = document.createElement('div');
+        xpToast.className = 'fixed left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold flex items-center gap-2'; xpToast.style.bottom = 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)';
+        xpToast.innerHTML = `<span>+${amount} XP</span> <span class="text-xs">✨</span>`;
+        document.body.appendChild(xpToast);
+        setTimeout(() => {
+          xpToast.style.transition = 'opacity 0.5s';
+          xpToast.style.opacity = '0';
+          setTimeout(() => xpToast.remove(), 500);
+        }, 2000);
+      }
 
       if (newLevel > currentLevel) {
         const notification = document.createElement('div');
@@ -1758,12 +1766,8 @@ export default function App() {
                               <option value="">Disciplina</option>
                               <option value="mat">Matemática</option>
                               <option value="por">Linguagens</option>
-                              <option value="his">C. Humanas</option>
-                              <option value="bio">C. Natureza</option>
-                              <option value="fis">Física</option>
-                              <option value="qui">Química</option>
-                              <option value="geo">Geografia</option>
-                              <option value="red">Redação</option>
+                              <option value="his">Ciências Humanas</option>
+                              <option value="bio">Ciências da Natureza</option>
                             </select>
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                               <ChevronDown className={`w-3 h-3 ${darkMode ? 'text-stone-400' : 'text-stone-400'}`} />
