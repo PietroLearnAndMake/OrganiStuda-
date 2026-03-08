@@ -519,6 +519,7 @@ export default function App() {
       }
     };
     setProfile(newProfile);
+    localStorage.setItem('organistuda_profile', JSON.stringify(newProfile));
     setIsEditingGoals(false);
   };
 
@@ -1995,7 +1996,7 @@ export default function App() {
                             <select 
                               value={filterInstitution}
                               onChange={(e) => setFilterInstitution(e.target.value)}
-                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors ${
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
                                 darkMode 
                                   ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
                                   : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
@@ -2006,13 +2007,13 @@ export default function App() {
                               <option value="FUVEST">FUVEST</option>
                               <option value="UNICAMP">UNICAMP</option>
                             </select>
-
-                          </div>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-400" />
+                          </div>>
                           <div className="relative">
                             <select 
                               value={filterDiscipline}
                               onChange={(e) => setFilterDiscipline(e.target.value)}
-                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors ${
+                              className={`w-full pl-3 pr-8 py-3 rounded-xl outline-none text-sm font-medium transition-colors appearance-none ${
                                 darkMode 
                                   ? 'bg-stone-800 text-stone-200 focus:ring-2 focus:ring-purple-500/50' 
                                   : 'bg-stone-100 text-stone-700 focus:ring-2 focus:ring-purple-500/20'
@@ -2024,8 +2025,8 @@ export default function App() {
                               <option value="his">Ciências Humanas</option>
                               <option value="bio">Ciências da Natureza</option>
                             </select>
-
-                          </div>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-stone-400" />
+                          </div>>
                         </div>
 
                         <div className="relative">
