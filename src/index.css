@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Variáveis de Safe Area ─────────────────────────────────────────────── */
+:root {
+  /* Fallbacks para quando env() não estiver disponível */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+
+  /* Alturas mínimas garantidas */
+  --header-safe-top: max(var(--sat), 44px);
+  --nav-safe-bottom: max(var(--sab), 8px);
+}
+
+@layer base {
+  /* ── Reset base ──────────────────────────────────────────────────────── */
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    /* Garante que o viewport cobre toda a tela incluindo notch */
+    height: 100dvh;
+  }
+
+  body {
+    @apply antialiased selection:bg-indigo-100 selection:text-indigo-900;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+    /* Comportamentos de App Nativo */
+    touch-action: pan-y; /* Permite scroll vertical mas evita gestos do navegador */
+    -webkit-text-size-adjust: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none; /* Desabilita menu de contexto ao segurar */
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none; /* Desabilita o "bounce" de scroll do navegador */
+  }
+
+  /* ── Temas ───────────────────────────────────────────────────────────── */
+  @media (prefers-color-scheme: dark) {
+    body { @apply bg-stone-950 text-stone-100; }
+  }
+  @media (prefers-color-scheme: light) {
+    body { @apply bg-white text-stone-900; }
+  }
+
+  /* ── Container raiz ──────────────────────────────────────────────────── */
+  #root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Safe areas aplicadas aqui — o conteúdo nunca fica atrás das barras */
+    padding-top: 0;    /* O header cuida do topo */
+    padding-bottom: 0; /* O nav cuida do fundo */
+    padding-left: var(--sal);
+    padding-right: var(--sar);
+  }
+
+  /* ── Ocultar scrollbars ──────────────────────────────────────────────── */
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+}
+
+/* ── Utilitários de Safe Area ───────────────────────────────────────────── */
+@layer utilities {
+
+  /* Header: padding-top = safe-area-inset-top (status bar / notch) */
+  .safe-top {
+    padding-top: max(var(--sat), 0px);
+  }
+
+  /* Nav bottom: padding-bottom = safe-area-inset-bottom (home indicator) */
+  .safe-bottom {
+    padding-bottom: max(var(--sab), 0px);
+  }
+
+  /* Conteúdo principal: margem para não ficar atrás do nav */
+  .safe-scroll-bottom {
+    padding-bottom: max(calc(var(--sab) + 4rem), 5rem);
+  }
+
+  /* Smooth transitions - Otimizado para Mobile */
+  .transition-all, .transition-colors { @apply transition-colors duration-200; }
+
+  /* Sem animação para quem prefere */
+  @media (prefers-reduced-motion: reduce) {
+    * { @apply !transition-none !duration-0; }
+  }
+
+  /* Evitar zoom em inputs */
+  input, select, textarea { 
+    font-size: 16px !important; 
+    -webkit-user-select: text; /* Permite seleção apenas em campos de texto */
+    user-select: text;
+  }
+
+  /* Toque sem highlight */
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+  }
+
+  /* Scrolláveis sem barra */
+  .overflow-y-auto, .overflow-auto, [class*="overflow"] {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .overflow-y-auto::-webkit-scrollbar,
+  .overflow-auto::-webkit-scrollbar,
+  [class*="overflow"]::-webkit-scrollbar { display: none; }
+}
+
+/* ── Ajustes de orientação ──────────────────────────────────────────────── */
+@media (orientation: landscape) {
+  :root {
+    --header-safe-top: max(var(--sat), 0px);
+  }
+}
+
+/* ── Telas muito pequenas ───────────────────────────────────────────────── */
+@media (max-height: 500px) {
+  body { font-size: 14px; }
+}
