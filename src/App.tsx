@@ -2662,11 +2662,11 @@ export default function App() {
 
       {/* ── Bottom Navigation ───────────────────────────────────────────────── */}
       <nav 
-        className={`flex-shrink-0 border-t px-6 pt-3 flex justify-around items-center gap-2 transition-colors ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}
+        className={`flex-shrink-0 border-t px-2 pt-2 flex justify-around items-stretch gap-1 transition-colors relative z-[100] ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}
         style={{
           paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)',
-          paddingLeft: 'max(env(safe-area-inset-left, 0px), 1rem)',
-          paddingRight: 'max(env(safe-area-inset-right, 0px), 1rem)'
+          paddingLeft: 'max(env(safe-area-inset-left, 0px), 0.5rem)',
+          paddingRight: 'max(env(safe-area-inset-right, 0px), 0.5rem)'
         }}
       >
         <button 
@@ -2675,10 +2675,10 @@ export default function App() {
             setSelectedSubjectId(null);
             window.location.hash = 'home';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'home' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all active:scale-90 ${currentTab === 'home' ? 'text-indigo-600 bg-indigo-500/5' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <LayoutDashboard className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Início</span>
+          <span className="text-[9px] font-black uppercase tracking-tighter">Início</span>
         </button>
         
         <button 
@@ -2686,10 +2686,10 @@ export default function App() {
             setCurrentTab('questions');
             window.location.hash = 'questions';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'questions' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all active:scale-90 ${currentTab === 'questions' ? 'text-indigo-600 bg-indigo-500/5' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <BrainCircuit className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Questões</span>
+          <span className="text-[9px] font-black uppercase tracking-tighter">Questões</span>
         </button>
 
         <button 
@@ -2697,10 +2697,10 @@ export default function App() {
             setCurrentTab('achievements');
             window.location.hash = 'achievements';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'achievements' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all active:scale-90 ${currentTab === 'achievements' ? 'text-indigo-600 bg-indigo-500/5' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <Trophy className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Conquistas</span>
+          <span className="text-[9px] font-black uppercase tracking-tighter">Conquistas</span>
         </button>
 
         <button 
@@ -2708,10 +2708,10 @@ export default function App() {
             setCurrentTab('pomodoro');
             window.location.hash = 'pomodoro';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'pomodoro' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all active:scale-90 ${currentTab === 'pomodoro' ? 'text-indigo-600 bg-indigo-500/5' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <Target className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Foco</span>
+          <span className="text-[9px] font-black uppercase tracking-tighter">Foco</span>
         </button>
 
         <button 
@@ -2719,10 +2719,10 @@ export default function App() {
             setCurrentTab('tasks');
             window.location.hash = 'tasks';
           }}
-          className={`flex flex-col items-center gap-1 transition-colors ${currentTab === 'tasks' ? 'text-indigo-600' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-all active:scale-90 ${currentTab === 'tasks' ? 'text-indigo-600 bg-indigo-500/5' : darkMode ? 'text-stone-600' : 'text-stone-400'}`}
         >
           <List className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Tarefas</span>
+          <span className="text-[9px] font-black uppercase tracking-tighter">Tarefas</span>
         </button>
       </nav>
     </div>
