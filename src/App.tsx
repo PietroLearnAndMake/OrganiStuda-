@@ -289,6 +289,16 @@ export default function App() {
     lastLogin: null, 
     xp: 0, 
     level: 1,
+    totalStudyTime: 0,
+    weeklyGoals: {
+      questions: 50,
+      studyTime: 300
+    },
+    stats: {
+      totalQuestions: 0,
+      correctQuestions: 0,
+      sessionsCompleted: 0
+    }
   });
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState<'home' | 'achievements' | 'questions' | 'pomodoro' | 'tasks'>('home');
@@ -519,6 +529,22 @@ export default function App() {
   }, [subjects, profile, isInitialized, darkMode, savedQuestions, tasks]);
 
   // ─── Pomodoro Timer Logic ─────────────────────────────────────────────────
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && pomodoroActive) {
+        setPomodoroActive(false);
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-4 py-2 rounded-full shadow-lg z-50 font-bold text-xs';
+        toast.innerHTML = 'Timer pausado automaticamente ⏸';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [pomodoroActive]);
+
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (pomodoroActive && pomodoroTime > 0) {
@@ -766,11 +792,26 @@ export default function App() {
   };
 
   // ─── XP & Level System ───────────────────────────────────────────────────
+  /**
+   * Calcula o nível do usuário baseado no XP total.
+   * Fórmula: Nível = floor(sqrt(XP / 100)) + 1
+   */
   const calculateLevel = useCallback((xp: number) => Math.floor(Math.sqrt(xp / 100)) + 1, []);
+  
+  /**
+   * Retorna o XP necessário para atingir um determinado nível.
+   */
   const xpForLevel = useCallback((level: number) => Math.pow(level - 1, 2) * 100, []);
-  // ─── Funções de XP ───────────────────────────────────────────────────────────
+  
+  /**
+   * Retorna o XP necessário para o próximo nível.
+   */
   const xpForNextLevel = useCallback((level: number) => Math.pow(level, 2) * 100, []);
 
+  /**
+   * Adiciona XP ao perfil do usuário e gerencia subida de nível.
+   * @param amount Quantidade de XP a ser adicionada.
+   */
   const addXP = useCallback((amount: number) => {
     setProfile(prev => {
       const currentXP = prev.xp || 0;
@@ -1050,18 +1091,23 @@ export default function App() {
                 🔥 {profile.streak}
               </div>
             </div>
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-2">
                 <input 
                   type="text"
                   value={profile.name}
                   onChange={(e) => updateProfileName(e.target.value)}
-                  className={`text-xl font-bold tracking-tight bg-transparent border-b border-transparent focus:border-indigo-600 outline-none w-32 ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}
+                  className={`text-xl font-bold tracking-tight bg-transparent border-b border-transparent focus:border-indigo-600 outline-none w-full max-w-[180px] ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}
                   placeholder="Seu nome"
                 />
                 <PenTool className="w-3 h-3 text-stone-400" />
               </div>
-              <p className={`text-sm ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>Rumo à aprovação 🚀</p>
+              <div className="flex items-center gap-2 mt-1">
+                <div className={`text-[10px] font-black px-2 py-0.5 rounded-full ${darkMode ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'}`}>
+                  NÍVEL {profile.level}
+                </div>
+                <p className={`text-xs font-medium ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>Rumo à aprovação 🚀</p>
+              </div>
             </div>
           </div>
           
@@ -1451,6 +1497,49 @@ export default function App() {
                 <h2 className="font-bold text-lg">Minhas Conquistas</h2>
               </div>
 
+              {/* Metas Semanais */}
+              <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Target className="w-5 h-5 text-indigo-500" />
+                    <h3 className="font-black text-base">Metas Semanais</h3>
+                  </div>
+                  <div className={`text-[10px] font-bold px-2 py-1 rounded-full ${darkMode ? 'bg-stone-800 text-stone-400' : 'bg-stone-100 text-stone-500'}`}>
+                    Renova em 3 dias
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>Questões Resolvidas</span>
+                      <span className="font-bold">{profile.stats?.totalQuestions || 0} / {profile.weeklyGoals?.questions || 50}</span>
+                    </div>
+                    <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min(100, ((profile.stats?.totalQuestions || 0) / (profile.weeklyGoals?.questions || 50)) * 100)}%` }}
+                        className="h-full bg-indigo-500 rounded-full"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className={darkMode ? 'text-stone-400' : 'text-stone-600'}>Tempo de Estudo</span>
+                      <span className="font-bold">{profile.totalStudyTime || 0} / {profile.weeklyGoals?.studyTime || 300} min</span>
+                    </div>
+                    <div className={`h-2 w-full rounded-full overflow-hidden ${darkMode ? 'bg-stone-800' : 'bg-stone-100'}`}>
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${Math.min(100, ((profile.totalStudyTime || 0) / (profile.weeklyGoals?.studyTime || 300)) * 100)}%` }}
+                        className="h-full bg-emerald-500 rounded-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Streak Achievement Card */}
               <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
                 <div className="flex items-center gap-2 mb-4">
@@ -1484,10 +1573,102 @@ export default function App() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </d              {/* Stats Widget in Achievements */}
+              <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
+
+              {/* Gráfico de Evolução */}
+              <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <div className="flex items-center gap-2 mb-6">
+                  <BarChart2 className="w-5 h-5 text-purple-500" />
+                  <h3 className="font-black text-base">Evolução Semanal</h3>
+                </div>
+                <div className="h-48 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={[
+                      { day: 'Seg', xp: 120 },
+                      { day: 'Ter', xp: 450 },
+                      { day: 'Qua', xp: 300 },
+                      { day: 'Qui', xp: 600 },
+                      { day: 'Sex', xp: 200 },
+                      { day: 'Sab', xp: 800 },
+                      { day: 'Dom', xp: profile.xp % 1000 }
+                    ]}>
+                      <XAxis 
+                        dataKey="day" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 10, fontWeight: 'bold', fill: darkMode ? '#57534e' : '#a8a29e' }} 
+                      />
+                      <Tooltip 
+                        cursor={{ fill: darkMode ? '#1c1917' : '#f5f5f4' }}
+                        contentStyle={{ 
+                          borderRadius: '12px', 
+                          border: 'none', 
+                          boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                          backgroundColor: darkMode ? '#1c1917' : '#ffffff',
+                          fontSize: '12px',
+                          fontWeight: 'bold'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="xp" 
+                        fill="#6366f1" 
+                        radius={[4, 4, 0, 0]} 
+                        barSize={20}
+                      />
+                    </BarChart>
+                 </div>
 
               {/* Stats Widget in Achievements */}
               <StatsWidget savedQuestions={savedQuestions} darkMode={darkMode} />
+
+              {/* Gráfico de Evolução */}
+              <div className={`p-5 rounded-2xl border shadow-sm ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`}>
+                <div className="flex items-center gap-2 mb-6">
+                  <BarChart2 className="w-5 h-5 text-purple-500" />
+                  <h3 className="font-black text-base">Evolução Semanal</h3>
+                </div>
+                <div className="h-48 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={[
+                      { day: 'Seg', xp: 120 },
+                      { day: 'Ter', xp: 450 },
+                      { day: 'Qua', xp: 300 },
+                      { day: 'Qui', xp: 600 },
+                      { day: 'Sex', xp: 200 },
+                      { day: 'Sab', xp: 800 },
+                      { day: 'Dom', xp: profile.xp % 1000 }
+                    ]}>
+                      <XAxis 
+                        dataKey="day" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 10, fontWeight: 'bold', fill: darkMode ? '#57534e' : '#a8a29e' }} 
+                      />
+                      <Tooltip 
+                        cursor={{ fill: darkMode ? '#1c1917' : '#f5f5f4' }}
+                        contentStyle={{ 
+                          borderRadius: '12px', 
+                          border: 'none', 
+                          boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                          backgroundColor: darkMode ? '#1c1917' : '#ffffff',
+                          fontSize: '12px',
+                          fontWeight: 'bold'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="xp" 
+                        fill="#6366f1" 
+                        radius={[4, 4, 0, 0]} 
+                        barSize={20}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+                <p className={`text-[10px] text-center mt-4 font-bold uppercase tracking-widest ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+                  XP acumulado por dia
+                </p>
+              </div>
 
               <div className="grid grid-cols-1 gap-4">
                 {/* Level Journey */}
@@ -2061,111 +2242,128 @@ export default function App() {
           ) : currentTab === 'pomodoro' ? (
             <motion.div 
               key="pomodoro"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="h-full flex flex-col items-center justify-center space-y-12 py-10"
             >
-              <div className="flex items-center gap-2 mb-2">
-                <Target className="w-5 h-5 text-indigo-600" />
-                <h2 className="font-bold text-lg">Foco Pomodoro</h2>
-              </div>
-
-              <div className={`p-8 rounded-3xl border text-center space-y-6 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200 shadow-sm'}`}>
-                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider ${
+              <div className="text-center space-y-2">
+                <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] ${
                   pomodoroMode === 'work' 
                     ? 'bg-indigo-500/10 text-indigo-500 border border-indigo-500/20' 
                     : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
                 }`}>
-                  {pomodoroMode === 'work' ? '🎯 Sessão de Foco' : '☕ Pausa'}
+                  {pomodoroMode === 'work' ? 'Foco Ativo' : 'Pausa Relaxante'}
                 </div>
+                <h2 className={`text-sm font-bold tracking-tight ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>
+                  {pomodoroMode === 'work' ? 'Concentre-se nos seus estudos' : 'Aproveite seu descanso'}
+                </h2>
+              </div>
 
-                {isEditingTime ? (
-                  <div className="flex items-center justify-center gap-3">
-                    <input
-                      type="number"
-                      value={customTimeInput}
-                      onChange={(e) => setCustomTimeInput(e.target.value)}
-                      className={`text-6xl font-black w-32 text-center bg-transparent outline-none border-b-2 ${darkMode ? 'border-stone-600 text-stone-100' : 'border-stone-300 text-stone-900'}`}
-                      min="1"
-                      max="120"
-                    />
-                    <span className={`text-2xl font-bold ${darkMode ? 'text-stone-500' : 'text-stone-400'}`}>min</span>
+              <div className="relative flex items-center justify-center">
+                {/* Circular Progress Background */}
+                <svg className="w-72 h-72 -rotate-90 transform">
+                  <circle
+                    cx="144"
+                    cy="144"
+                    r="130"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    fill="transparent"
+                    className={darkMode ? 'text-stone-900' : 'text-stone-100'}
+                  />
+                  <motion.circle
+                    cx="144"
+                    cy="144"
+                    r="130"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    fill="transparent"
+                    strokeDasharray="816.8"
+                    animate={{ strokeDashoffset: 816.8 * (1 - pomodoroTime / pomodoroInitialTime) }}
+                    className={pomodoroMode === 'work' ? 'text-indigo-600' : 'text-emerald-500'}
+                    strokeLinecap="round"
+                  />
+                </svg>
+
+                <div className="absolute flex flex-col items-center justify-center">
+                  {isEditingTime ? (
+                    <div className="flex items-center justify-center gap-1">
+                      <input
+                        type="number"
+                        value={customTimeInput}
+                        onChange={(e) => setCustomTimeInput(e.target.value)}
+                        autoFocus
+                        className={`text-6xl font-black w-24 text-center bg-transparent outline-none border-b-4 ${darkMode ? 'border-indigo-500 text-stone-100' : 'border-indigo-600 text-stone-900'}`}
+                        min="1"
+                        max="120"
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        if (!pomodoroActive) {
+                          setIsEditingTime(true);
+                          setCustomTimeInput(String(Math.floor(pomodoroTime / 60)));
+                        }
+                      }}
+                      className={`text-7xl font-black tracking-tighter tabular-nums ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}
+                    >
+                      {String(Math.floor(pomodoroTime / 60)).padStart(2, '0')}:{String(pomodoroTime % 60).padStart(2, '0')}
+                    </button>
+                  )}
+                  <div className={`text-[10px] font-black uppercase tracking-widest mt-2 ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
+                    {isEditingTime ? 'Definir Minutos' : 'Tempo Restante'}
                   </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      if (!pomodoroActive) {
-                        setIsEditingTime(true);
-                        setCustomTimeInput(String(Math.floor(pomodoroTime / 60)));
-                      }
-                    }}
-                    className={`text-7xl font-black tracking-tighter tabular-nums ${darkMode ? 'text-stone-100' : 'text-stone-900'}`}
-                  >
-                    {String(Math.floor(pomodoroTime / 60)).padStart(2, '0')}:{String(pomodoroTime % 60).padStart(2, '0')}
-                  </button>
-                )}
-
-                {isEditingTime && (
-                  <button
-                    onClick={() => {
-                      const mins = parseInt(customTimeInput) || 25;
-                      setPomodoroTime(Math.max(1, Math.min(120, mins)) * 60);
-                      setIsEditingTime(false);
-                    }}
-                    className="text-sm font-bold text-indigo-600 hover:underline"
-                  >
-                    Confirmar
-                  </button>
-                )}
-
-                <div className="flex items-center justify-center gap-4">
-                  <button
-                    onClick={() => {
-                      setPomodoroActive(false);
-                      setPomodoroMode('work');
-                      setPomodoroTime(25 * 60);
-                      setIsEditingTime(false);
-                    }}
-                    className={`p-4 rounded-2xl transition-colors ${darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
-                  >
-                    <XCircle className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (isEditingTime) {
-                        const mins = parseInt(customTimeInput) || 25;
-                        setPomodoroTime(Math.max(1, Math.min(120, mins)) * 60);
-                        setIsEditingTime(false);
-                      }
-                      setPomodoroActive(!pomodoroActive);
-                    }}
-                    className={`p-6 rounded-3xl text-white font-bold transition-all active:scale-95 shadow-lg ${
-                      pomodoroActive 
-                        ? 'bg-red-500 hover:bg-red-600 shadow-red-500/20' 
-                        : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20'
-                    }`}
-                  >
-                    {pomodoroActive ? <XCircle className="w-8 h-8" /> : <Play className="w-8 h-8" />}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setPomodoroMode(pomodoroMode === 'work' ? 'break' : 'work');
-                      setPomodoroTime(pomodoroMode === 'work' ? 5 * 60 : 25 * 60);
-                      setPomodoroActive(false);
-                    }}
-                    className={`p-4 rounded-2xl transition-colors ${darkMode ? 'bg-stone-800 text-stone-400 hover:bg-stone-700' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'}`}
-                  >
-                    <Clock className="w-6 h-6" />
-                  </button>
                 </div>
+              </div>
 
-                <p className={`text-xs font-medium ${darkMode ? 'text-stone-600' : 'text-stone-400'}`}>
-                  {pomodoroMode === 'work' 
-                    ? pomodoroActive ? 'Mantenha o foco! Você consegue! 💪' : 'Toque em ▶ para iniciar a sessão'
-                    : 'Descanse um pouco, você merece! ☕'
-                  }
-                </p>
+              <div className="flex items-center gap-8">
+                <button
+                  onClick={() => {
+                    setPomodoroActive(false);
+                    setPomodoroMode('work');
+                    setPomodoroTime(25 * 60);
+                    setIsEditingTime(false);
+                  }}
+                  className={`p-4 rounded-full transition-all active:scale-90 ${darkMode ? 'bg-stone-900 text-stone-500 hover:text-stone-300' : 'bg-stone-100 text-stone-400 hover:text-stone-600'}`}
+                >
+                  <XCircle className="w-6 h-6" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (isEditingTime) {
+                      const mins = parseInt(customTimeInput) || 25;
+                      const newTime = Math.max(1, Math.min(120, mins)) * 60;
+                      setPomodoroTime(newTime);
+                      setPomodoroInitialTime(newTime);
+                      setIsEditingTime(false);
+                    }
+                    setPomodoroActive(!pomodoroActive);
+                  }}
+                  className={`w-20 h-20 rounded-full flex items-center justify-center text-white transition-all active:scale-95 shadow-2xl ${
+                    pomodoroActive 
+                      ? 'bg-red-500 shadow-red-500/40' 
+                      : 'bg-indigo-600 shadow-indigo-600/40'
+                  }`}
+                >
+                  {pomodoroActive ? <XCircle className="w-10 h-10" /> : <Play className="w-10 h-10 ml-1" />}
+                </button>
+
+                <button
+                  onClick={() => {
+                    const newMode = pomodoroMode === 'work' ? 'break' : 'work';
+                    const newTime = newMode === 'work' ? 25 * 60 : 5 * 60;
+                    setPomodoroMode(newMode);
+                    setPomodoroTime(newTime);
+                    setPomodoroInitialTime(newTime);
+                    setPomodoroActive(false);
+                  }}
+                  className={`p-4 rounded-full transition-all active:scale-90 ${darkMode ? 'bg-stone-900 text-stone-500 hover:text-stone-300' : 'bg-stone-100 text-stone-400 hover:text-stone-600'}`}
+                >
+                  <Clock className="w-6 h-6" />
+                </button>
               </div>
 
               {/* Pomodoro Tips */}

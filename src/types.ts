@@ -22,6 +22,16 @@ export interface UserProfile {
   lastLogin: string | null;
   xp: number;
   level: number;
+  totalStudyTime: number; // em minutos
+  weeklyGoals: {
+    questions: number;
+    studyTime: number;
+  };
+  stats: {
+    totalQuestions: number;
+    correctQuestions: number;
+    sessionsCompleted: number;
+  };
 }
 
 export interface Question {
