@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { registerPlugin } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { 
   PieChart, 
   Pie, 
@@ -509,7 +510,22 @@ export default function App() {
         const audio = new Audio('/sounds/pomodoro.mp3');
         audio.play().catch(() => {});
 
-        // Notificação de sessão concluída
+        // Notificação Nativa (para quando o app está em segundo plano)
+        LocalNotifications.schedule({
+          notifications: [
+            {
+              title: "Pomodoro Finalizado! ⏰",
+              body: pomodoroMode === 'work' ? "Hora de descansar um pouco! +50 XP" : "Hora de voltar ao foco!",
+              id: 1,
+              schedule: { at: new Date(Date.now() + 100) },
+              sound: 'pomodoro.mp3',
+              actionTypeId: "",
+              extra: null
+            }
+          ]
+        }).catch(() => {});
+
+        // Notificação Interna (Popup/Toast)
         const toast = document.createElement('div');
         toast.className = 'fixed right-4 left-4 sm:left-auto sm:w-72 bg-emerald-500 text-white p-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3'; toast.style.top = 'max(env(safe-area-inset-top, 0px), 2.5rem)';
         toast.innerHTML = `<div class="text-2xl">⏰</div><div><div class="font-black">Sessão concluída!</div><div class="text-sm text-emerald-100">+50 XP • Hora de descansar 5 min</div></div>`;
@@ -754,8 +770,8 @@ export default function App() {
         }, 2000);
       }
 
+      // Se subiu de nível, mostrar popup de celebração
       if (newLevel > currentLevel) {
-        // Som de Conquista / Level Up
         const audio = new Audio('/sounds/achievement.mp3');
         audio.play().catch(() => {});
 
@@ -772,6 +788,9 @@ export default function App() {
         `;
         document.body.appendChild(notification);
       }
+      
+      // Se desceu de nível (ao desmarcar disciplina), apenas atualiza o estado sem popup
+      // O nível é totalmente vinculado ao XP (calculado pela função calculateLevel)
       
       return { ...prev, xp: newXP, level: newLevel };
     });
