@@ -1,0 +1,306 @@
+import * as Sentry from '@sentry/react';
+
+/**
+ * Serviço de integração com Sentry para monitoramento em produção
+ * Captura erros, rastreia performance e coleta dados de uso
+ */
+
+export interface SentryConfig {
+  dsn: string;
+  environment: 'development' | 'staging' | 'production';
+  tracesSampleRate: number;
+  debug: boolean;
+}
+
+export class SentryService {
+  private static initialized = false;
+
+  /**
+   * Inicializa Sentry com configurações
+   */
+  static initialize(config: SentryConfig): void {
+    if (this.initialized) {
+      console.warn('Sentry já foi inicializado');
+      return;
+    }
+
+    Sentry.init({
+      dsn: config.dsn,
+      environment: config.environment,
+      tracesSampleRate: config.tracesSampleRate,
+      debug: config.debug,
+      integrations: [
+        new Sentry.Replay({
+          maskAllText: true,
+          blockAllMedia: true,
+        }),
+      ],
+      replaySessionSampleRate: 0.1,
+      replayOnErrorSampleRate: 1.0,
+    });
+
+    this.initialized = true;
+    console.log('✅ Sentry inicializado com sucesso');
+  }
+
+  /**
+   * Captura exceção e envia para Sentry
+   */
+  static captureException(error: Error, context?: Record<string, any>): void {
+    Sentry.captureException(error, {
+      contexts: {
+        error: context || {},
+      },
+    });
+  }
+
+  /**
+   * Captura mensagem e envia para Sentry
+   */
+  static captureMessage(message: string, level: Sentry.SeverityLevel = 'info'): void {
+    Sentry.captureMessage(message, level);
+  }
+
+  /**
+   * Define contexto do usuário
+   */
+  static setUser(userId: string, email?: string, username?: string): void {
+    Sentry.setUser({
+      id: userId,
+      email,
+      username,
+    });
+  }
+
+  /**
+   * Limpa contexto do usuário (logout)
+   */
+  static clearUser(): void {
+    Sentry.setUser(null);
+  }
+
+  /**
+   * Define tag para categorizar eventos
+   */
+  static setTag(key: string, value: string): void {
+    Sentry.setTag(key, value);
+  }
+
+  /**
+   * Define múltiplas tags
+   */
+  static setTags(tags: Record<string, string>): void {
+    Object.entries(tags).forEach(([key, value]) => {
+      Sentry.setTag(key, value);
+    });
+  }
+
+  /**
+   * Adiciona breadcrumb (evento para rastreamento)
+   */
+  static addBreadcrumb(
+    message: string,
+    category: string,
+    level: Sentry.SeverityLevel = 'info',
+    data?: Record<string, any>
+  ): void {
+    Sentry.addBreadcrumb({
+      message,
+      category,
+      level,
+      data,
+      timestamp: Date.now() / 1000,
+    });
+  }
+
+  /**
+   * Rastreia transação (performance)
+   */
+  static startTransaction(name: string, op: string): Sentry.Transaction | undefined {
+    return Sentry.startTransaction({
+      name,
+      op,
+    });
+  }
+
+  /**
+   * Captura erro de performance
+   */
+  static capturePerformanceError(
+    operation: string,
+    duration: number,
+    threshold: number
+  ): void {
+    if (duration > threshold) {
+      this.captureMessage(
+        `Performance issue: ${operation} took ${duration}ms (threshold: ${threshold}ms)`,
+        'warning'
+      );
+    }
+  }
+
+  /**
+   * Rastreia ação do usuário
+   */
+  static trackUserAction(action: string, metadata?: Record<string, any>): void {
+    this.addBreadcrumb(
+      `User action: ${action}`,
+      'user-action',
+      'info',
+      metadata
+    );
+  }
+
+  /**
+   * Rastreia erro de API
+   */
+  static trackAPIError(
+    endpoint: string,
+    statusCode: number,
+    error: string
+  ): void {
+    this.addBreadcrumb(
+      `API Error: ${endpoint}`,
+      'api',
+      'error',
+      {
+        statusCode,
+        error,
+      }
+    );
+  }
+
+  /**
+   * Rastreia carregamento de tela
+   */
+  static trackScreenLoad(screenName: string, duration: number): void {
+    this.addBreadcrumb(
+      `Screen loaded: ${screenName}`,
+      'screen',
+      'info',
+      { duration }
+    );
+  }
+
+  /**
+   * Rastreia crash
+   */
+  static trackCrash(error: Error, context?: Record<string, any>): void {
+    this.captureException(error, {
+      type: 'crash',
+      ...context,
+    });
+  }
+
+  /**
+   * Rastreia erro de validação
+   */
+  static trackValidationError(field: string, error: string): void {
+    this.addBreadcrumb(
+      `Validation error: ${field}`,
+      'validation',
+      'warning',
+      { error }
+    );
+  }
+
+  /**
+   * Rastreia erro de autenticação
+   */
+  static trackAuthError(error: string, details?: Record<string, any>): void {
+    this.addBreadcrumb(
+      `Auth error: ${error}`,
+      'auth',
+      'error',
+      details
+    );
+  }
+
+  /**
+   * Rastreia erro de storage
+   */
+  static trackStorageError(operation: string, error: string): void {
+    this.addBreadcrumb(
+      `Storage error: ${operation}`,
+      'storage',
+      'error',
+      { error }
+    );
+  }
+
+  /**
+   * Rastreia erro de sincronização
+   */
+  static trackSyncError(error: string, details?: Record<string, any>): void {
+    this.addBreadcrumb(
+      `Sync error: ${error}`,
+      'sync',
+      'error',
+      details
+    );
+  }
+
+  /**
+   * Obtém ID da sessão
+   */
+  static getSessionId(): string | undefined {
+    return Sentry.lastEventId();
+  }
+
+  /**
+   * Mostra feedback do usuário
+   */
+  static showFeedbackDialog(): void {
+    Sentry.showReportDialog({
+      title: 'Relatório de Erro',
+      subtitle: 'Nos ajude a melhorar relatando o que aconteceu.',
+      labelComments: 'O que aconteceu?',
+      labelClose: 'Fechar',
+      labelSubmit: 'Enviar',
+      onClose: () => {
+        console.log('Feedback dialog closed');
+      },
+    });
+  }
+
+  /**
+   * Flush eventos pendentes
+   */
+  static async flush(timeout: number = 2000): Promise<boolean> {
+    return Sentry.flush(timeout);
+  }
+
+  /**
+   * Desabilita Sentry temporariamente
+   */
+  static disable(): void {
+    Sentry.captureException = () => {};
+    Sentry.captureMessage = () => {};
+  }
+
+  /**
+   * Reabilita Sentry
+   */
+  static enable(): void {
+    this.initialized = false;
+  }
+}
+
+/**
+ * Hook para usar Sentry em componentes React
+ */
+export function useSentry() {
+  return {
+    captureException: SentryService.captureException.bind(SentryService),
+    captureMessage: SentryService.captureMessage.bind(SentryService),
+    setUser: SentryService.setUser.bind(SentryService),
+    clearUser: SentryService.clearUser.bind(SentryService),
+    setTag: SentryService.setTag.bind(SentryService),
+    addBreadcrumb: SentryService.addBreadcrumb.bind(SentryService),
+    trackUserAction: SentryService.trackUserAction.bind(SentryService),
+    trackAPIError: SentryService.trackAPIError.bind(SentryService),
+    trackScreenLoad: SentryService.trackScreenLoad.bind(SentryService),
+  };
+}
+
+export default SentryService;
