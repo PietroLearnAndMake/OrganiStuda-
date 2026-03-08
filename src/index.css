@@ -96,8 +96,8 @@
     padding-bottom: max(calc(var(--sab) + 4rem), 5rem);
   }
 
-  /* Smooth transitions */
-  * { @apply transition-colors duration-200; }
+  /* Smooth transitions - Otimizado para Mobile */
+  .transition-all, .transition-colors { @apply transition-colors duration-200; }
 
   /* Sem animação para quem prefere */
   @media (prefers-reduced-motion: reduce) {

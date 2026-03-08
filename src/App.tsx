@@ -1121,10 +1121,10 @@ export default function App() {
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className={`h-full w-full flex flex-col overflow-hidden transition-colors duration-300 ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans`}>
+    <div className={`h-full w-full flex flex-col overflow-hidden ${darkMode ? 'bg-stone-950 text-stone-100' : 'bg-stone-50 text-stone-900'} font-sans select-none touch-none`}>
       
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className={`border-b px-6 pb-4 sticky top-0 z-10 transition-colors flex-shrink-0 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)' }}>
+      <header className={`border-b px-6 pb-4 sticky top-0 z-10 flex-shrink-0 ${darkMode ? 'bg-stone-900 border-stone-800' : 'bg-white border-stone-200'}`} style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 1rem)' }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
@@ -1235,7 +1235,7 @@ export default function App() {
       </header>
 
       {/* ── Main Content ────────────────────────────────────────────────────── */}
-      <main className={`flex-1 overflow-y-auto px-6 py-6 ${darkMode ? 'bg-stone-950' : 'bg-stone-50'}`} style={{ paddingBottom: 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)' }}>
+      <main className={`flex-1 overflow-y-auto px-6 py-6 touch-pan-y overscroll-none ${darkMode ? 'bg-stone-950' : 'bg-stone-50'}`} style={{ paddingBottom: 'max(calc(env(safe-area-inset-bottom, 0px) + 5rem), 6rem)' }}>
         <AnimatePresence initial={false}>
 
           {/* ── HOME TAB ──────────────────────────────────────────────────── */}
