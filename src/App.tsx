@@ -792,7 +792,7 @@ export default function App() {
     await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
-      let allPreDefined: SavedQuestion[] = [];
+      const allPreDefined: SavedQuestion[] = [];
       
       Object.entries(QUESTION_BANK).forEach(([subjectId, questions]) => {
         questions.forEach((q, idx) => {
@@ -1031,7 +1031,7 @@ export default function App() {
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    let availableQuestions: SavedQuestion[] = [];
+    const availableQuestions: SavedQuestion[] = [];
     
     const subjectsToSearch = selectedSubjectForQuestion === 'geral' 
       ? Object.keys(QUESTION_BANK)
