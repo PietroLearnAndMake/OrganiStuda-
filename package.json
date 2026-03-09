@@ -11,7 +11,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit",
+    "check": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest",
     "cap:sync": "cap sync android",
     "cap:build": "vite build && cap sync android"
   },
@@ -29,10 +31,17 @@
   },
   "devDependencies": {
     "@capacitor/cli": "~8.2.0",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.14.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "autoprefixer": "^10.4.21",
+    "eslint": "^10.0.3",
+    "eslint-config-expo": "^55.0.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2"

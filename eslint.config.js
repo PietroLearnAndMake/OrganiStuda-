@@ -1,10 +1,28 @@
-// https://docs.expo.dev/guides/using-eslint/
-import { defineConfig } from "eslint/config";
-import expoConfig from "eslint-config-expo/flat.js";
+import js from '@eslint/js';
 
-export default defineConfig([
-  expoConfig,
+export default [
   {
-    ignores: ["dist/*"],
+    ignores: ['dist/*', 'node_modules/*', 'android/*', 'ios/*', '**/*.config.js', '**/*.config.ts'],
   },
-]);
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        React: 'readonly',
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    },
+  },
+];
