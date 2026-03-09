@@ -7,6 +7,7 @@ import { QuestionsScreen } from './screens/QuestionsScreen';
 import { PomodoroScreen } from './screens/PomodoroScreen';
 import { TasksScreen } from './screens/TasksScreen';
 import { AchievementsScreen } from './screens/AchievementsScreen';
+import ErrorBoundary from './components/ErrorBoundary';
 
 /**
  * Componente principal do aplicativo
@@ -96,8 +97,10 @@ function AppContent() {
  */
 export default function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </ErrorBoundary>
   );
 }
