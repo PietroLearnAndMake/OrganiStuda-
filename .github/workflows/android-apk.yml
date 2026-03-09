@@ -25,7 +25,7 @@ jobs:
       # 4️⃣ Build do web app
       - run: pnpm build
 
-      # 5️⃣ **Configurar Java 21** (isso resolve o erro)
+      # 5️⃣ **Configurar Java 21 ANTES de qualquer Gradle** ⭐
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
@@ -34,22 +34,22 @@ jobs:
       # 6️⃣ Instalar Capacitor CLI global
       - run: pnpm add @capacitor/cli --global
 
-      # 7️⃣ Preparar Android
+      # 7️⃣ Preparar Android (Capacitor)
       - run: |
           npx cap add android || echo "Android já adicionado"
           npx cap copy
 
-      # 8️⃣ Build APK Debug
+      # 8️⃣ Build APK Debug (Gradle usa Java 21 agora)
       - run: |
           cd android
           ./gradlew assembleDebug
 
-      # 9️⃣ Build APK Release
+      # 9️⃣ Build APK Release (Gradle usa Java 21 agora)
       - run: |
           cd android
           ./gradlew assembleRelease
 
-      # 🔟 Upload para Releases do GitHub
+      # 🔟 Criar Release no GitHub
       - uses: actions/create-release@v1
         id: create_release
         with:
@@ -60,6 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # 1️⃣1️⃣ Upload Debug APK
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -67,6 +68,7 @@ jobs:
           asset_name: app-debug.apk
           asset_content_type: application/vnd.android.package-archive
 
+      # 1️⃣2️⃣ Upload Release APK
       - uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
