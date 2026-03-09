@@ -19,6 +19,8 @@ export default [
       "scripts/**/*"
     ]
   },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
@@ -51,25 +53,21 @@ export default [
         FormData: "readonly",
         Headers: "readonly",
         Request: "readonly",
-        Response: "readonly",
-        ReadableStream: "readonly",
-        WritableStream: "readonly",
-        TransformStream: "readonly"
+        Response: "readonly"
       }
     },
     rules: {
-      // Desativar todas as regras para permitir o build passar
-      "no-unused-vars": "off",
-      "no-undef": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-require-imports": "off",
       "no-console": "off",
       "no-empty": "off",
       "no-constant-condition": "off",
       "no-sparse-arrays": "off",
       "no-useless-assignment": "off",
-      "preserve-caught-error": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-require-imports": "off"
+      "no-unused-vars": "off",
+      "no-undef": "off",
+      "preserve-caught-error": "off"
     }
   }
 ];
