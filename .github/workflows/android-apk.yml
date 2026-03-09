@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK OrganiStuda
 
 on:
   push:
@@ -11,50 +11,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Puxar código
-      - name: Checkout Repository
+      # 1️⃣ Checar código
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Instalar Node + pnpm
-      - name: Setup Node
+      # 2️⃣ Configurar Node e PNPM
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-      - run: corepack enable
-      - run: corepack prepare pnpm@latest --activate
+
+      - name: Setup PNPM
+        run: npm install -g pnpm
 
       # 3️⃣ Instalar dependências
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install
 
-      # 4️⃣ Build Web
-      - name: Build Web Assets
+      # 4️⃣ Build web assets
+      - name: Build web assets
         run: pnpm build
 
-      # 5️⃣ Setup Java 21 (pra compatibilidade Gradle)
-      - name: Setup Java 21
+      # 5️⃣ Configurar Java 17
+      - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 17
 
-      # 6️⃣ Adicionar plataforma Android no Capacitor
-      - name: Add Android Platform
-        run: npx cap add android
+      # 6️⃣ Adicionar plataforma Android Capacitor
+      - name: Add Capacitor Android
+        run: |
+          npx cap add android
+          npx cap copy
 
-      # 7️⃣ Copiar Web pro Android
-      - name: Copy Web to Android
-        run: npx cap copy
-
-      # 8️⃣ Montar APK Debug
-      - name: Assemble APK
+      # 7️⃣ Build APK debug
+      - name: Build APK Debug
         run: |
           cd android
           ./gradlew assembleDebug
 
-      # 9️⃣ Salvar APK como artifact
-      - name: Upload APK
+      # 8️⃣ Build APK release
+      - name: Build APK Release
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      # 9️⃣ Upload dos APKs
+      - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: organistuda-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: OrganiStuda-APK
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/apk/release/app-release.apk
