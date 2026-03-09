@@ -36,12 +36,26 @@ export interface UserProfile {
 
 export interface Question {
   text: string;
-  options: string[];
-  correctAnswer: number;
-  explanation: string;
+  options?: string[];
+  optionA?: string;
+  optionB?: string;
+  optionC?: string;
+  optionD?: string;
+  optionE?: string;
+  correctAnswer?: number;
+  correct_answer?: string;
+  explanation?: string;
   topic?: string;
   institution?: string;
   year?: number;
+  discipline?: string;
+  subdiscipline?: string;
+  difficulty?: string;
+  exam_type?: string;
+  success_rate?: number;
+  context_text?: string;
+  topics?: string;
+  is_active?: number;
 }
 
 export interface Attempt {
