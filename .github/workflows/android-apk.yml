@@ -11,57 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checar código
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 2️⃣ Configurar Node e PNPM
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      - name: Setup PNPM
+      - name: Install pnpm
         run: npm install -g pnpm
 
-      # 3️⃣ Instalar dependências
       - name: Install dependencies
         run: pnpm install
 
-      # 4️⃣ Build web assets
       - name: Build web assets
         run: pnpm build
 
-      # 5️⃣ Configurar Java 17
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
-      # 6️⃣ Adicionar plataforma Android Capacitor
-      - name: Add Capacitor Android
+      - name: Install Capacitor Android platform
         run: |
           npx cap add android
           npx cap copy
 
-      # 7️⃣ Build APK debug
       - name: Build APK Debug
-        run: |
-          cd android
-          ./gradlew assembleDebug
+        working-directory: android
+        run: ./gradlew assembleDebug
 
-      # 8️⃣ Build APK release
       - name: Build APK Release
-        run: |
-          cd android
-          ./gradlew assembleRelease
+        working-directory: android
+        run: ./gradlew assembleRelease
 
-      # 9️⃣ Upload dos APKs
-      - name: Upload APKs
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: OrganiStuda-APK
-          path: |
-            android/app/build/outputs/apk/debug/app-debug.apk
-            android/app/build/outputs/apk/release/app-release.apk
+          name: organistuda-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: organistuda-release.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
