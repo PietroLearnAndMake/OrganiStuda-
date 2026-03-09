@@ -14,7 +14,7 @@ import * as SecureStore from "expo-secure-store";
 interface SyncConfig {
   databaseName: string;
   encryptionKey?: string;
-  chunkSize?: number; // Tamanho de cada chunk de sincronização
+  chunkSize?: number;
 }
 
 interface SyncProgress {
@@ -26,7 +26,7 @@ interface SyncProgress {
 }
 
 class OfflineSyncService {
-  private sqlite: SQLiteConnection | null = null;
+  private sqlite: any = null;
   private config: SyncConfig;
   private syncProgress: SyncProgress = {
     totalQuestions: 0,
@@ -49,7 +49,6 @@ class OfflineSyncService {
     try {
       this.sqlite = new SQLiteConnection(CapacitorSQLite);
 
-      // Criar ou abrir banco de dados
       const result = await this.sqlite.createConnection(
         this.config.databaseName,
         false,
@@ -60,10 +59,8 @@ class OfflineSyncService {
 
       console.log(`✅ SQLite inicializado: ${this.config.databaseName}`);
 
-      // Criar tabelas se não existirem
       await this.createTables();
 
-      // Ativar criptografia se configurada
       if (this.config.encryptionKey) {
         await this.enableEncryption(this.config.encryptionKey);
       }
@@ -130,9 +127,9 @@ class OfflineSyncService {
     `;
 
     try {
-      await this.sqlite.run(createQuestionsTable);
-      await this.sqlite.run(createStatsTable);
-      await this.sqlite.run(createSyncTable);
+      await (this.sqlite as any).run({ statement: createQuestionsTable });
+      await (this.sqlite as any).run({ statement: createStatsTable });
+      await (this.sqlite as any).run({ statement: createSyncTable });
       console.log("✅ Tabelas criadas com sucesso");
     } catch (error) {
       console.error("❌ Erro ao criar tabelas:", error);
@@ -146,16 +143,15 @@ class OfflineSyncService {
     if (!this.sqlite) throw new Error("SQLite não inicializado");
 
     try {
-      // Armazenar chave de criptografia de forma segura
       await SecureStore.setItemAsync("sqlite_encryption_key", encryptionKey);
 
-      // Aplicar criptografia (SQLCipher)
-      await this.sqlite.execute(`
+      const pragmaSQL = `
         PRAGMA key = '${encryptionKey}';
         PRAGMA cipher_page_size = 4096;
         PRAGMA kdf_iter = 256000;
-      `);
-
+      `;
+      
+      await (this.sqlite as any).run({ statement: pragmaSQL });
       console.log("🔐 Criptografia SQLite ativada");
     } catch (error) {
       console.error("❌ Erro ao ativar criptografia:", error);
@@ -179,19 +175,16 @@ class OfflineSyncService {
     };
 
     try {
-      // Processar em chunks
       const chunkSize = this.config.chunkSize || 100;
 
       for (let i = 0; i < questions.length; i += chunkSize) {
         const chunk = questions.slice(i, i + chunkSize);
 
-        // Inserir chunk
         for (const question of chunk) {
           await this.insertQuestion(question);
           this.syncProgress.syncedQuestions++;
         }
 
-        // Atualizar progresso
         this.syncProgress.percentage = Math.round(
           (this.syncProgress.syncedQuestions / this.syncProgress.totalQuestions) * 100
         );
@@ -205,7 +198,6 @@ class OfflineSyncService {
         );
       }
 
-      // Atualizar metadata de sincronização
       await this.updateSyncMetadata();
 
       this.syncProgress.status = "completed";
@@ -262,7 +254,7 @@ class OfflineSyncService {
     ];
 
     try {
-      await this.sqlite.run(sql, values);
+      await (this.sqlite as any).run({ statement: sql, values });
     } catch (error) {
       console.error(`❌ Erro ao inserir questão ${question.id}:`, error);
     }
@@ -296,7 +288,7 @@ class OfflineSyncService {
     }
 
     try {
-      const result = await this.sqlite.query(sql, values);
+      const result = await (this.sqlite as any).query({ statement: sql, values });
       return result.values || [];
     } catch (error) {
       console.error("❌ Erro ao buscar questões:", error);
@@ -321,7 +313,7 @@ class OfflineSyncService {
     `;
 
     try {
-      await this.sqlite.run(sql, [questionId, userAnswer, isCorrect ? 1 : 0, timeSpent]);
+      await (this.sqlite as any).run({ statement: sql, values: [questionId, userAnswer, isCorrect ? 1 : 0, timeSpent] });
     } catch (error) {
       console.error("❌ Erro ao salvar resposta:", error);
     }
@@ -339,11 +331,14 @@ class OfflineSyncService {
     `;
 
     try {
-      await this.sqlite.run(sql, [
-        new Date().toISOString(),
-        this.syncProgress.totalQuestions,
-        this.syncProgress.syncedQuestions,
-      ]);
+      await (this.sqlite as any).run({
+        statement: sql,
+        values: [
+          new Date().toISOString(),
+          this.syncProgress.totalQuestions,
+          this.syncProgress.syncedQuestions,
+        ],
+      });
     } catch (error) {
       console.error("❌ Erro ao atualizar metadata:", error);
     }
