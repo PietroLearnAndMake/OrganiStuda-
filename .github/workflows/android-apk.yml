@@ -1,10 +1,10 @@
 name: Build Android APK
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   build-android:
@@ -25,13 +25,13 @@ jobs:
       # 4️⃣ Build do web app
       - run: pnpm build
 
-      # 5️⃣ Configurar Java correto (Java 21)
+      # 5️⃣ **Configurar Java 21** (isso resolve o erro)
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 21
 
-      # 6️⃣ Instalar Capacitor CLI
+      # 6️⃣ Instalar Capacitor CLI global
       - run: pnpm add @capacitor/cli --global
 
       # 7️⃣ Preparar Android
@@ -39,17 +39,17 @@ jobs:
           npx cap add android || echo "Android já adicionado"
           npx cap copy
 
-      # 8️⃣ Build Debug APK
+      # 8️⃣ Build APK Debug
       - run: |
           cd android
           ./gradlew assembleDebug
 
-      # 9️⃣ Build Release APK
+      # 9️⃣ Build APK Release
       - run: |
           cd android
           ./gradlew assembleRelease
 
-      # 🔟 Upload para GitHub Release
+      # 🔟 Upload para Releases do GitHub
       - uses: actions/create-release@v1
         id: create_release
         with:
