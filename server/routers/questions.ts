@@ -144,21 +144,14 @@ export const questionsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let query = db.select().from(questions);
+      let result = await db
+        .select()
+        .from(questions)
+        .where(input.discipline ? eq(questions.discipline, input.discipline) : undefined)
+        .limit(input.limit);
 
-      if (input.discipline) {
-        query = query.where(eq(questions.discipline, input.discipline));
-      }
-
-      // SQL: ORDER BY RANDOM() LIMIT
-      const result = await db.execute(
-        db.select().from(questions)
-          .where(input.discipline ? eq(questions.discipline, input.discipline) : undefined)
-          .orderBy(() => db.sql`RANDOM()`)
-          .limit(input.limit)
-      );
-
-      return result.rows || [];
+      // Shuffle array
+      return result.sort(() => Math.random() - 0.5);
     }),
 
   /**
@@ -198,10 +191,11 @@ export const questionsRouter = router({
         conditions.push(eq(questions.source, input.source));
       }
 
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
       const result = await db
         .select()
         .from(questions)
-        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .where(whereClause)
         .limit(input.limit)
         .offset(input.offset);
 
@@ -221,10 +215,11 @@ export const questionsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
+      const whereClause = input.discipline ? eq(questions.discipline, input.discipline) : undefined;
       const result = await db
         .select()
         .from(questions)
-        .where(input.discipline ? eq(questions.discipline, input.discipline) : undefined);
+        .where(whereClause);
 
       return {
         total: result.length,
@@ -245,7 +240,7 @@ export const questionsRouter = router({
         .select()
         .from(questions)
         .where(eq(questions.id, input.id))
-        .limit(1);
+        .limit(1) as any;
 
       return result[0] || null;
     }),
@@ -257,7 +252,7 @@ export const questionsRouter = router({
     const db = await getDb();
     if (!db) throw new Error("Database not available");
 
-    const allQuestions = await db.select().from(questions);
+    const allQuestions = await db.select().from(questions) as any;
 
     const stats = {
       total: allQuestions.length,
