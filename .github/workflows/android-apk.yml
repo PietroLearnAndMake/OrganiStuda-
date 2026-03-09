@@ -1,0 +1,60 @@
+name: Build APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Puxar código
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Instalar Node + pnpm
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: corepack enable
+      - run: corepack prepare pnpm@latest --activate
+
+      # 3️⃣ Instalar dependências
+      - name: Install Dependencies
+        run: pnpm install
+
+      # 4️⃣ Build Web
+      - name: Build Web Assets
+        run: pnpm build
+
+      # 5️⃣ Setup Java 21 (pra compatibilidade Gradle)
+      - name: Setup Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # 6️⃣ Adicionar plataforma Android no Capacitor
+      - name: Add Android Platform
+        run: npx cap add android
+
+      # 7️⃣ Copiar Web pro Android
+      - name: Copy Web to Android
+        run: npx cap copy
+
+      # 8️⃣ Montar APK Debug
+      - name: Assemble APK
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+      # 9️⃣ Salvar APK como artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: organistuda-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
