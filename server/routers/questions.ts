@@ -144,7 +144,7 @@ export const questionsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      let result = await db
+      const result = await db
         .select()
         .from(questions)
         .where(input.discipline ? eq(questions.discipline, input.discipline) : undefined)
