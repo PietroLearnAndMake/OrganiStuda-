@@ -20,12 +20,12 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
-        "./*"
+        "./src/*"
       ]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["src", "vite.config.ts", "capacitor.config.ts"],
-  "exclude": ["node_modules", "dist", "android", "build"]
+  "include": ["src", "server", "vite.config.ts", "capacitor.config.ts"],
+  "exclude": ["node_modules", "dist", "android", "build", "server/_core", "server/db"]
 }
