@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "../shared/const.js";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { questionsRouter } from "./routers/questions";
+import { institutionsRouter } from "./routers/institutions";
 import { publicProcedure, router } from "./_core/trpc";
 
 export const appRouter = router({
@@ -19,6 +20,7 @@ export const appRouter = router({
   }),
 
   questions: questionsRouter,
+  institutions: institutionsRouter,
 });
 
 export type AppRouter = typeof appRouter;
