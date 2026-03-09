@@ -15,7 +15,13 @@
     "lint": "eslint .",
     "test": "vitest",
     "cap:sync": "cap sync android",
-    "cap:build": "vite build && cap sync android"
+    "cap:build": "vite build && cap sync android",
+    "sync:massive": "tsx scripts/ingestor.ts && npx cap sync android",
+    "build:android": "cd android && ./gradlew assembleDebug",
+    "build:android:release": "cd android && ./gradlew assembleRelease",
+    "db:migrate": "drizzle-kit generate && drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@capacitor/android": "~8.2.0",
@@ -23,8 +29,13 @@
     "@tailwindcss/vite": "^4.1.14",
     "@trpc/server": "^11.12.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-orm": "^0.44.7",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
+    "mysql2": "^3.16.0",
+    "pg": "^8.13.0",
+    "postgres": "^3.4.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^3.8.0",
