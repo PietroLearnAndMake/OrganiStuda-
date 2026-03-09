@@ -55,41 +55,65 @@ const STORAGE_CONFIG: StorageConfig = {
 
 class StorageService {
   private db: IDBDatabase | null = null;
+  private useLocalStorage = false;
 
   async initialize(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(DB_NAME, DB_VERSION);
+      try {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-      request.onerror = () => {
-        console.error('Erro ao abrir IndexedDB:', request.error);
-        reject(request.error);
-      };
+        request.onerror = () => {
+          console.warn('Erro ao abrir IndexedDB, usando localStorage como fallback:', request.error);
+          this.useLocalStorage = true;
+          resolve();
+        };
 
-      request.onsuccess = () => {
-        this.db = request.result;
-        console.log('IndexedDB inicializado com sucesso');
-        resolve();
-      };
+        request.onblocked = () => {
+          console.warn('IndexedDB bloqueado, usando localStorage como fallback');
+          this.useLocalStorage = true;
+          resolve();
+        };
 
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
+        request.onsuccess = () => {
+          this.db = request.result;
+          console.log('✅ IndexedDB inicializado com sucesso');
+          resolve();
+        };
 
-        STORAGE_CONFIG.objectStores.forEach((store) => {
-          if (!db.objectStoreNames.contains(store.name)) {
-            const objectStore = db.createObjectStore(store.name, { keyPath: store.keyPath });
+        request.onupgradeneeded = (event) => {
+          const db = (event.target as IDBOpenDBRequest).result;
 
-            if (store.indexes) {
-              store.indexes.forEach((index) => {
-                objectStore.createIndex(index.name, index.keyPath);
-              });
+          STORAGE_CONFIG.objectStores.forEach((store) => {
+            if (!db.objectStoreNames.contains(store.name)) {
+              const objectStore = db.createObjectStore(store.name, { keyPath: store.keyPath });
+
+              if (store.indexes) {
+                store.indexes.forEach((index) => {
+                  objectStore.createIndex(index.name, index.keyPath);
+                });
+              }
             }
-          }
-        });
-      };
+          });
+        };
+      } catch (error) {
+        console.warn('Erro ao inicializar IndexedDB, usando localStorage:', error);
+        this.useLocalStorage = true;
+        resolve();
+      }
     });
   }
 
   async set<T>(storeName: string, data: T): Promise<void> {
+    if (this.useLocalStorage) {
+      try {
+        localStorage.setItem(`${storeName}:${(data as any).id}`, JSON.stringify(data));
+        return;
+      } catch (error) {
+        console.error('Erro ao salvar em localStorage:', error);
+        throw error;
+      }
+    }
+
     if (!this.db) throw new Error('IndexedDB não inicializado');
 
     return new Promise((resolve, reject) => {

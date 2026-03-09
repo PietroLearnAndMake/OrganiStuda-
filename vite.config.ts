@@ -12,6 +12,26 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false,
+    sourcemap: true,
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: ['log', 'debug'],
+        drop_debugger: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          charts: ['recharts'],
+          ui: ['lucide-react', 'motion'],
+        },
+      },
+    },
   },
 });
