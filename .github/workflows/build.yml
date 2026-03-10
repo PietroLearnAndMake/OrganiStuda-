@@ -25,6 +25,12 @@ jobs:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
+    # CORREÇÃO AQUI: Liberando permissão para criar o Release
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    
     steps:
     - uses: actions/checkout@v4
     
@@ -70,18 +76,19 @@ jobs:
         chmod +x gradlew
         ./gradlew assembleDebug
       
-    - name: Upload APK
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: organistuda-apk
         path: android/app/build/outputs/apk/debug/*.apk
 
-    - name: Create Release
+    - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       with:
         tag_name: v${{ github.run_number }}
         name: OrganiStuda v${{ github.run_number }}
         files: android/app/build/outputs/apk/debug/*.apk
+        generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
