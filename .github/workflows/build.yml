@@ -101,8 +101,9 @@ jobs:
     
     - name: Force Accept Android Licenses
       run: |
-        yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        yes | /usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager --licenses || true
+        echo "Accepting Android SDK licenses..."
+        yes | sdkmanager --licenses 2>&1 || true
+        echo "Licenses acceptance completed"
     
     - name: Sync Capacitor
       run: pnpm cap:sync || true
