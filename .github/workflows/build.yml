@@ -99,8 +99,10 @@ jobs:
       with:
         packages: 'android-34 build-tools-34.0.0'
     
-    - name: Accept Android Licenses
-      run: yes | sdkmanager --licenses
+    - name: Force Accept Android Licenses
+      run: |
+        yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        yes | /usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager --licenses || true
     
     - name: Sync Capacitor
       run: pnpm cap:sync || true
